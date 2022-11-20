@@ -2,7 +2,7 @@
 class Uploader
 {
     protected $_ci;
-    public $_size = 5 * 1024;
+    public $_size = 5;
 
     public function __construct()
     {
@@ -23,7 +23,7 @@ class Uploader
 
             $config['upload_path']      =  "./{$path}/";
             $config['allowed_types']    = 'jpg|png|jpeg|PNG|JPG|JPEG';
-            $config['max_size']         = $this->_size;
+            $config['max_size']         = 5 * 1024;
             $config['file_name']        = "{$filename}.jpg";
 
             $this->_ci->load->library('upload', $config);
@@ -63,12 +63,12 @@ class Uploader
 
             $config['upload_path']      =  "./{$path}/";
             $config['allowed_types']    = 'jpg|png|jpeg|PNG|JPG|JPEG';
-            $config['max_size']         = $this->_size;
+            $config['max_size']         = 5 * 1024;
             $config['overwrite']        = true;
             $config['file_name']        = "{$filename}.jpg";
 
             $this->_ci->load->library('upload', $config);
-
+            
             if (! $this->_ci->upload->do_upload('image')) {
                 $error = array('error' => $this->_ci->upload->display_errors());
                 return [
@@ -103,7 +103,7 @@ class Uploader
 
             $config['upload_path']      =  "./{$path}/";
             $config['allowed_types']    = 'pdf|pptx|doc|docx|xlx|xlxs';
-            $config['max_size']         = $this->_size;
+            $config['max_size']         = 5 * 1024;
             $config['overwrite']        = true;
             $config['file_name']        = "{$filename}";
 

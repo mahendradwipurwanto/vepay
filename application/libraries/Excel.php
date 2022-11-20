@@ -14,7 +14,7 @@ class Excel
         $this->_ci->load->database();
     }
 
-    public function export()
+    public function export($status)
     {
         $semua_pengguna = [];
 

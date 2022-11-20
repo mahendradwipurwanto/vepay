@@ -107,7 +107,7 @@ class CreateDb
             $dynamicDB->query("INSERT INTO `tb_user` (`user_id`, `name`, `gender`, `address`, `phone`) VALUES
                 (1, 'Super Admin', NULL, NULL, NULL),
                 (2, 'Admin', NULL, NULL, NULL),
-                (2, 'Test User', NULL, NULL, NULL),                
+                (3, 'Test User', NULL, NULL, NULL)               
             ");
 
             $dynamicDB->trans_complete();
