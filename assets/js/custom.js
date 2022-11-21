@@ -116,6 +116,10 @@ function addCommaNumeric(evt) {
 	});
 }
 
+function addThousandComma(event) {
+	event.target.value =  event.target.value.toLocaleString('en-US');
+}
+
 function numComma(evt) {
 	evt = (evt) ? evt : window.event;
 	var charCode = (evt.which) ? evt.which : evt.keyCode;

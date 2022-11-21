@@ -9,7 +9,7 @@ class Uploader
         $this->_ci = &get_instance();
         $this->_ci->load->database();
 
-        $this->_size = $this->_ci->db->get_where('tb_settings', ['key' => 'max_upload_size']);
+        $this->_size = $this->_ci->db->get_where('tb_settings', ['key' => 'upload_size']);
     }
 
     public function uploadImageMulti($file, $fileUpload, $path, $custom_name = null)
@@ -23,7 +23,7 @@ class Uploader
 
             $config['upload_path']      =  "./{$path}/";
             $config['allowed_types']    = 'jpg|png|jpeg|PNG|JPG|JPEG';
-            $config['max_size']         = 5 * 1024;
+            $config['max_size']         = ((int) $this->_size * 1024);
             $config['file_name']        = "{$filename}.jpg";
 
             $this->_ci->load->library('upload', $config);
@@ -63,7 +63,7 @@ class Uploader
 
             $config['upload_path']      =  "./{$path}/";
             $config['allowed_types']    = 'jpg|png|jpeg|PNG|JPG|JPEG';
-            $config['max_size']         = 5 * 1024;
+            $config['max_size']         = ((int) $this->_size * 1024);
             $config['overwrite']        = true;
             $config['file_name']        = "{$filename}.jpg";
 
@@ -103,7 +103,7 @@ class Uploader
 
             $config['upload_path']      =  "./{$path}/";
             $config['allowed_types']    = 'pdf|pptx|doc|docx|xlx|xlxs';
-            $config['max_size']         = 5 * 1024;
+            $config['max_size']         = ((int) $this->_size * 1024);
             $config['overwrite']        = true;
             $config['file_name']        = "{$filename}";
 

@@ -59,7 +59,7 @@
 			</div>
 			<div class="card-body">
 				<!-- End Row -->
-				<table id="dataTable" class="table table-borderless table-thead-bordered nowrap w-100">
+				<table id="dataTable" class="table table-borderless table-thead-bordered nowrap w-100 align-middle">
 					<thead class="thead-light">
 						<tr>
 							<th scope="col">No</th>
@@ -161,7 +161,7 @@
 					<div class="modal-footer p-0 pt-3">
 						<button type="button" class="btn btn-outline-secondary btn-sm"
 							data-bs-dismiss="modal">Batal</button>
-						<button type="submit" class="btn btn-soft-success btn-sm">Simpan</button>
+						<button type="submit" class="btn btn-soft-primary btn-sm">Simpan</button>
 					</div>
 				</form>
 			</div>

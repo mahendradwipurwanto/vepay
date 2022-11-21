@@ -220,3 +220,11 @@ if(!function_exists('discordmsg')){
         }
     }
 }
+
+if(!function_exists('deleteFile')){
+    function deleteFile($file_path) {
+        if(file_exists($file_path)){
+            unlink($file_path);
+        }
+    }
+}

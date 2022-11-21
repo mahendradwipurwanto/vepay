@@ -22,15 +22,15 @@
 						<?php endif;?>
 						<!-- Form -->
 						<div class="mb-3">
-							<label class="form-label" for="signupModalFormSignupEmail">Email</label>
+							<label class="form-label" for="signupModalFormSignupEmail">Email/Username</label>
 							<div class="input-group input-group-merge">
 								<div class="input-group-prepend input-group-text" id="inputGroupMergeEmail">
 									<i class="bi-envelope-open"></i>
 								</div>
-								<input type="email" class="form-control" name="email" id="signupModalFormSignupEmail"
-									placeholder="email@site.com" aria-label="email@site.com"
+								<input type="text" class="form-control" name="email" id="signupModalFormSignupEmail"
+									placeholder="email@site.com / jhondoe" aria-label="email@site.com"
 									aria-describedby="inputGroupMergeEmail" required>
-								<span class="invalid-feedback">Please enter a valid email address.</span>
+								<span class="invalid-feedback">Please enter a valid email address / username.</span>
 							</div>
 						</div>
 						<!-- End Form -->

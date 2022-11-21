@@ -10,7 +10,7 @@ class M_admin extends CI_Model
 
     function getCountOverview(){
 
-        $produk = 0;
+        $produk = $this->db->get_where('tb_product', ['is_deleted' => 0])->num_rows();
         $member = $this->db->get_where('tb_auth', ['role' => 2])->num_rows();
         $transaksi = $this->db->get_where('tb_payments', ['is_deleted' => 0])->num_rows();
 
