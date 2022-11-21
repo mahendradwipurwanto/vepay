@@ -89,10 +89,10 @@
   						<a class="nav-link <?= ($this->uri->segment(2) == "produk" ? "active" : "") ?>"
   							href="<?= site_url('master/produk'); ?>"><i class="bi bi-box-seam nav-icon"></i> Produk</a>
   					</li>
-  					<li class="nav-item" id="tour-kupon">
-  						<a class="nav-link <?= ($this->uri->segment(2) == "kupon" ? "active" : "") ?>"
-  							href="<?= site_url('master/kupon'); ?>"><i class="bi bi-file-earmark-break nav-icon"></i>
-  							Kupon</a>
+  					<li class="nav-item" id="tour-promo">
+  						<a class="nav-link <?= ($this->uri->segment(2) == "promo" ? "active" : "") ?>"
+  							href="<?= site_url('master/promo'); ?>"><i class="bi bi-file-earmark-break nav-icon"></i>
+  							Promo</a>
   					</li>
   					<li class="nav-item" id="tour-metode-pembayaran">
   						<a class="nav-link <?= ($this->uri->segment(2) == "faq" ? "active" : "") ?>"

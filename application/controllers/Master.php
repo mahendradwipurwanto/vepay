@@ -40,9 +40,9 @@ class Master extends CI_Controller
         $this->templateback->view('admin/master/produk', $data);
     }
 
-    public function kupon()
+    public function promo()
     {
-        $this->templateback->view('admin/master/kupon');
+        $this->templateback->view('admin/master/promo');
     }
 
     public function metode()
