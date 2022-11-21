@@ -28,6 +28,28 @@ class Master extends CI_Controller
         }
     }
 
+    public function saveKategori()
+    {
+        if ($this->M_master->saveKategori() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menyimpan kategori');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan kategori');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function deleteJabatan()
+    {
+        if ($this->M_master->deleteJabatan() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menghapus kategori');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus kategori');
+            redirect($this->agent->referrer());
+        }
+    }
+
     function addProduct(){
         if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
             $date = date('m/Y');

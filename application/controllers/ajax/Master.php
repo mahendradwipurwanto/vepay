@@ -64,6 +64,7 @@ class Master extends CI_Controller
 		if (!empty($product)) {
         
             $data['product']   = $product;
+            $data['kategori'] = $this->M_master->getAllKategori();
 
             $this->load->view('admin/ajax/detail_product', $data);
 

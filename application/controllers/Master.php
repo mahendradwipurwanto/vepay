@@ -28,9 +28,16 @@ class Master extends CI_Controller
         }
     }
 
+    public function kategori()
+    {
+        $data['kategori'] = $this->M_master->getAllKategori();
+        $this->templateback->view('admin/master/kategori', $data);
+    }
+
     public function produk()
     {
-        $this->templateback->view('admin/master/produk');
+        $data['kategori'] = $this->M_master->getAllKategori();
+        $this->templateback->view('admin/master/produk', $data);
     }
 
     public function kupon()

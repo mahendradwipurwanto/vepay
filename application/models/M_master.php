@@ -8,6 +8,42 @@ class M_master extends CI_Model
         parent::__construct();
     }
 
+    public function getAllKategori()
+    {
+        return $this->db->get_where('m_categories', ['is_deleted' => 0])->result();
+    }
+
+    public function saveKategori()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+        $categories = htmlspecialchars($this->input->post('categories'), true);
+        $description = htmlspecialchars($this->input->post('description'), true);
+
+        $categories = [
+            'categories' => $categories,
+            'description' => $description,
+            'created_at' => time(),
+            'created_by' => $this->session->userdata('user_id')
+        ];
+        if(isset($id) && $id != ''){
+            $this->db->where('id', $id);
+            $this->db->update('m_categories', $categories);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }else{
+            $this->db->insert('m_categories', $categories);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+    }
+
+    public function hapusKategori()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('m_categories', ['is_deleted' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
     public function getAllProduct(){
 
         $offset = $this->input->post('start');
@@ -21,7 +57,7 @@ class M_master extends CI_Model
 
         if($filterName != null || $filterName != '') $filter[] = "a.name like '%{$filterName}%'";
         if($filterPrice != null || $filterPrice != '') $filter[] = "a.price like '%{$filterPrice}%'";
-        if($filterCategories != null || $filterCategories != '') $filter[] = "a.m_categories_id = {$filterCategories}";
+        if($filterCategories != null && $filterCategories > 0) $filter[] = "a.m_categories_id = {$filterCategories}";
 
         if($filter != null){
             $filter = implode(' AND ', $filter);
@@ -50,7 +86,7 @@ class M_master extends CI_Model
             $models[$key]->image        = base_url()."{$val->image}";
             $models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
             $models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
-            $models[$key]->categories   = "<span class='badge bg-soft-info'>{$models[$key]->categories}</span>";
+            $models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
             
             $models[$key]->action       = $btnDetail.$btnDelete;
         }

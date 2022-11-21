@@ -47,8 +47,8 @@
 							<select class="js-select form-select form-select-sm" id="filter_categories"
 								autocomplete="off" data-hs-tom-select-options='{"placeholder": "Semua kategori"}'>
 								<option value="0">Semua kategori</option>
-								<?php if(!empty($categories)):?>
-								<?php foreach($categories as $key => $val):?>
+								<?php if(!empty($kategori)):?>
+								<?php foreach($kategori as $key => $val):?>
 								<option value="<?= $val->id;?>"><?= $val->categories;?></option>
 								<?php endforeach;?>
 								<?php endif;?>
@@ -126,8 +126,8 @@
 							<div class="tom-select-custom">
 								<select class="js-select form-select form-select-sm" name="categories"
 									autocomplete="off" data-hs-tom-select-options='{"placeholder": "Pilih kategori"}'>
-									<?php if(!empty($categories)):?>
-									<?php foreach($categories as $key => $val):?>
+									<?php if(!empty($kategori)):?>
+									<?php foreach($kategori as $key => $val):?>
 									<option value="<?= $val->id;?>"><?= $val->categories;?></option>
 									<?php endforeach;?>
 									<?php endif;?>

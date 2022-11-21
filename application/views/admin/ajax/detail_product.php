@@ -27,8 +27,8 @@
 			<div class="tom-select-custom">
 				<select class="js-select form-select form-select-sm" name="categories" autocomplete="off"
 					data-hs-tom-select-options='{"placeholder": "Pilih kategori"}'>
-					<?php if(!empty($categories)):?>
-					<?php foreach($categories as $key => $val):?>
+					<?php if(!empty($kategori)):?>
+					<?php foreach($kategori as $key => $val):?>
 					<option value="<?= $val->id;?>"
 						<?php if($val->id == $product->m_categories_id):?>selected<?php endif;?>><?= $val->categories;?>
 					</option>
