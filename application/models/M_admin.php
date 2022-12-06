@@ -8,6 +8,40 @@ class M_admin extends CI_Model
         parent::__construct();
     }
 
+    function get_settingsValue($key){
+        return $this->db->get_where('tb_settings', ['key' => $key])->row()->value;
+    }
+
+    function get_allAccount(){
+        $this->db->select('a.email, a.role, a.status, a.online, a.is_deleted, a.log_time, a.device, b.*')
+        ->from('tb_auth a')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
+        ->order_by('a.log_time DESC')
+        ;
+
+        return $this->db->get()->result();
+    }
+
+    function get_superAccount(){
+        $this->db->select('a.email, a.role, a.status, a.online, a.is_deleted, a.log_time, a.device, b.*')
+        ->from('tb_auth a')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
+        ->where(['a.role' => 0])
+        ;
+
+        return $this->db->get()->row();
+    }
+
+    function get_adminAccount(){
+        $this->db->select('a.email, a.role, a.status, a.online, a.is_deleted, a.log_time, a.device, b.*')
+        ->from('tb_auth a')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
+        ->where(['a.role' => 1])
+        ;
+
+        return $this->db->get()->row();
+    }
+
     function getCountOverview(){
 
         $produk = $this->db->get_where('tb_product', ['is_deleted' => 0])->num_rows();

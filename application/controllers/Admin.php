@@ -51,6 +51,68 @@ class Admin extends CI_Controller
 
     public function pengaturan()
     {
-        $this->templateback->view('admin/pengaturan');
+        $page = $this->input->get('p');
+        switch ($page) {
+            case 'general':
+
+                if ($this->agent->is_mobile()) {
+                    $this->templatemobile->view('admin/pengaturan/general');
+                } else {
+                    $this->templateback->view('admin/pengaturan/general');
+                }
+                break;
+
+            case 'user-log':
+                $data['master_password'] = $this->M_admin->get_settingsValue('master_password');
+                $data['account'] = $this->M_admin->get_allAccount();
+                $data['admin'] = $this->M_admin->get_adminAccount();
+                $data['super'] = $this->M_admin->get_superAccount();
+
+                if ($this->agent->is_mobile()) {
+                    $this->templatemobile->view('admin/pengaturan/user_log', $data);
+                } else {
+                    $this->templateback->view('admin/pengaturan/user_log', $data);
+                }
+                break;
+
+            case 'credentials':
+                $data['master_password'] = $this->M_admin->get_settingsValue('master_password');
+                $data['account'] = $this->M_admin->get_allAccount();
+                $data['admin'] = $this->M_admin->get_adminAccount();
+                $data['super'] = $this->M_admin->get_superAccount();
+
+                if ($this->agent->is_mobile()) {
+                    $this->templatemobile->view('admin/pengaturan/credentials', $data);
+                } else {
+                    $this->templateback->view('admin/pengaturan/credentials', $data);
+                }
+                break;
+
+            case 'mailer':
+                $data['mailer_mode'] = $this->M_admin->get_settingsValue('mailer_mode');
+                $data['mailer_host'] = $this->M_admin->get_settingsValue('mailer_host');
+                $data['mailer_port'] = $this->M_admin->get_settingsValue('mailer_port');
+                $data['mailer_smtp'] = $this->M_admin->get_settingsValue('mailer_smtp');
+                $data['mailer_connection'] = $this->M_admin->get_settingsValue('mailer_connection');
+                $data['mailer_alias'] = $this->M_admin->get_settingsValue('mailer_alias');
+                $data['mailer_username'] = $this->M_admin->get_settingsValue('mailer_username');
+                $data['mailer_password'] = $this->M_admin->get_settingsValue('mailer_password');
+
+                if ($this->agent->is_mobile()) {
+                    $this->templatemobile->view('admin/pengaturan/mailer', $data);
+                } else {
+                    $this->templateback->view('admin/pengaturan/mailer', $data);
+                }
+                break;
+
+            default:
+
+                if ($this->agent->is_mobile()) {
+                    $this->templatemobile->view('admin/pengaturan');
+                } else {
+                    $this->templateback->view('admin/pengaturan');
+                }
+                break;
+        }
     }
 }

@@ -44,6 +44,10 @@
 	<script type="text/javascript" src="//cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 	<!-- sweetalert2 -->
 	<script type="text/javascript" src="<?= base_url(); ?>assets/plugin/sweetalert2/sweetalert2.min.js"></script>
+	<!-- tinyMCE -->
+	<script type="text/javascript" src="<?= base_url(); ?>assets/plugin/tinymce/jquery.tinymce.min.js"></script>
+	<script type="text/javascript" src="<?= base_url(); ?>assets/plugin/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript" src="<?= base_url(); ?>assets/plugin/tinymce-textarea.js"></script>
 	<!-- ckeditor -->
 	<script type="text/javascript" src="<?= base_url(); ?>assets/plugin/ckeditor/ckeditor.js"></script>
 
@@ -56,20 +60,25 @@
 	<script type="text/javascript" src="<?= base_url();?>assets/js/apexchart.js"></script>
 </head>
 
-<body class="d-flex align-items-center min-h-100 bg-school content-space-t-1">
+<body class="d-flex align-items-center min-h-100 bg-school">
 	<!-- ========== HEADER ========== -->
 	<header id="header" class="navbar navbar-expand navbar-light navbar-absolute-top">
 		<div class="container-fluid">
 			<nav class="navbar-nav-wrap">
+				<!-- White Logo -->
+				<a class="navbar-brand d-none d-lg-flex" href="<?= base_url();?>" aria-label="Front">
+					<img class="navbar-brand-logo" src="<?= base_url();?><?= $web_logo_white;?>" alt="Logo">
+				</a>
+				<!-- End White Logo -->
 
 				<!-- Default Logo -->
-				<a class="navbar-brand d-flex" href="<?= base_url();?>" aria-label="Front">
+				<a class="navbar-brand d-flex d-lg-none" href="<?= base_url();?>" aria-label="Front">
 					<img class="navbar-brand-logo" src="<?= base_url();?><?= $web_logo;?>" alt="Logo">
 				</a>
 				<!-- End Default Logo -->
 
 				<div class="ms-auto">
-					<a class="link link-sm link-secondary d-none" href="<?= base_url();?>">
+					<a class="link link-sm link-secondary" href="<?= base_url();?>">
 						<i class="bi-chevron-left small ms-1"></i> Go to main
 					</a>
 				</div>

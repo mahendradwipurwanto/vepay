@@ -50,7 +50,8 @@ class Master extends CI_Controller
         }
     }
 
-    function addProduct(){
+    public function addProduct()
+    {
         if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
             $date = date('m/Y');
             $path = "berkas/product/{$date}/";
@@ -78,7 +79,8 @@ class Master extends CI_Controller
         }
     }
 
-    function editProduct(){
+    public function editProduct()
+    {
         if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
             $date = date('m/Y');
             $path = "berkas/product/{$date}/";
@@ -106,12 +108,46 @@ class Master extends CI_Controller
         }
     }
 
-    function deleteProduct(){
+    public function deleteProduct()
+    {
         if ($this->M_master->deleteProduct() == true) {
             $this->session->set_flashdata('notif_success', 'Berhasil menghapus produk ');
             redirect(site_url('master/produk'));
         } else {
             $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus produk, harap coba lagi');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function savePromo()
+    {
+        if ($this->M_master->savePromo() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menambahkan promo ');
+            redirect(site_url('master/promo'));
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menambahkan promo, harap coba lagi');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function editPromo()
+    {
+        if ($this->M_master->editPromo() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil mengubah promo ');
+            redirect(site_url('master/promo'));
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba mengubah promo, harap coba lagi');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function deletePromo()
+    {
+        if ($this->M_master->deletePromo() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menghapus promo ');
+            redirect(site_url('master/promo'));
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus promo, harap coba lagi');
             redirect($this->agent->referrer());
         }
     }

@@ -42,7 +42,6 @@ class Master extends CI_Controller
                 "no"            => ++$no,
                 "action"        => $val->action,
                 "name"          => $val->name,
-                "image"         => $val->image,
                 "price"         => $val->price_txt,
                 "categories"    => $val->categories,
             ];

@@ -71,10 +71,9 @@
 				<table id="dataTable" class="table table-borderless table-thead-bordered nowrap w-100 align-middle">
 					<thead class="thead-light">
 						<tr>
-							<th scope="col">No</th>
-							<th scope="col"></th>
+							<th width="5%" scope="col">No</th>
+							<th width="15%" scope="col"></th>
 							<th scope="col">Nama</th>
-							<th scope="col"></th>
 							<th scope="col">Harga</th>
 							<th scope="col">Kategori</th>
 						</tr>
@@ -241,9 +240,6 @@
 				},
 				{
 					data: 'name'
-				},
-				{
-					data: 'image'
 				},
 				{
 					data: 'price'

@@ -42,7 +42,8 @@ class Master extends CI_Controller
 
     public function promo()
     {
-        $this->templateback->view('admin/master/promo');
+        $data['promo'] = $this->M_master->getAllPromo();
+        $this->templateback->view('admin/master/promo', $data);
     }
 
     public function metode()

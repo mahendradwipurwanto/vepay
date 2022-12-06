@@ -32,10 +32,10 @@
 						<tr>
 							<td><?= $no++;?></td>
 							<td>
-								<button type="button" class="btn btn-info btn-xs" data-bs-toggle="modal"
-									data-bs-target="#edit-<?= $val->id;?>">edit</button>
-								<button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal"
-									data-bs-target="#delete-<?= $val->id;?>">delete</button>
+								<button type="button" class="btn btn-soft-info btn-sm" data-bs-toggle="modal"
+									data-bs-target="#edit-<?= $val->id;?>"><i class="bi-pencil-square"></i></button>
+								<button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
+									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
 							<td><?= $val->categories;?></td>
 							<td><?= $val->description;?></td>
@@ -58,8 +58,8 @@
 
 											<div class="mb-3">
 												<label for="inputSubject" class="form-label">Kategori</label>
-												<input class="form-control form-control-sm" type="text" name="categories"
-													value="<?= $val->categories;?>" required>
+												<input class="form-control form-control-sm" type="text"
+													name="categories" value="<?= $val->categories;?>" required>
 											</div>
 
 											<div class="mb-3">
