@@ -1,5 +1,7 @@
 <?php
 
+ini_set("allow_url_fopen", 1);
+
 // set default time
 date_default_timezone_set("Asia/Bangkok");
 

@@ -71,7 +71,7 @@ class M_master extends CI_Model
         }
 
         $this->db->select('a.*, b.categories')
-        ->from('tb_product a')
+        ->from('m_product a')
         ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
         ->where(['a.is_deleted' => 0])
         ;
@@ -107,7 +107,7 @@ class M_master extends CI_Model
     public function getDetailProduct($product_id = null)
     {
         $this->db->select('a.*, b.categories')
-        ->from('tb_product a')
+        ->from('m_product a')
         ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
         ->where(['a.is_deleted' => 0, 'a.id' => $product_id])
         ;
@@ -132,7 +132,7 @@ class M_master extends CI_Model
             'created_by'        => $this->session->userdata('user_id'),
         ];
 
-        $this->db->insert('tb_product', $data);
+        $this->db->insert('m_product', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
@@ -160,7 +160,7 @@ class M_master extends CI_Model
         }
 
         $this->db->where('id', $this->input->post('id'));
-        $this->db->update('tb_product', $data);
+        $this->db->update('m_product', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
@@ -173,13 +173,13 @@ class M_master extends CI_Model
         ];
 
         $this->db->where('id', $this->input->post('id'));
-        $this->db->update('tb_product', $data);
+        $this->db->update('m_product', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
     public function getAllPromo(){
         $this->db->select('*')
-        ->from('tb_promo')
+        ->from('m_promo')
         ->where(['is_deleted' => 0])
         ;
 
@@ -202,7 +202,7 @@ class M_master extends CI_Model
             'created_by'        => $this->session->userdata('user_id'),
         ];
 
-        $this->db->insert('tb_promo', $data);
+        $this->db->insert('m_promo', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
@@ -221,7 +221,7 @@ class M_master extends CI_Model
         ];
 
         $this->db->where('id', $this->input->post('id'));
-        $this->db->update('tb_promo', $data);
+        $this->db->update('m_promo', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
@@ -234,7 +234,7 @@ class M_master extends CI_Model
         ];
 
         $this->db->where('id', $this->input->post('id'));
-        $this->db->update('tb_promo', $data);
+        $this->db->update('m_promo', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
