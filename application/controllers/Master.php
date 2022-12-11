@@ -48,6 +48,8 @@ class Master extends CI_Controller
 
     public function metode()
     {
-        $this->templateback->view('admin/master/metode');
+        $data['metode'] = $this->M_master->getAllMetode();
+
+        $this->templateback->view('admin/master/metode', $data);
     }
 }

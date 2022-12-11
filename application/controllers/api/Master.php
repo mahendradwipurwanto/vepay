@@ -39,9 +39,9 @@ class Master extends CI_Controller
         }
     }
 
-    public function deleteJabatan()
+    public function deleteKategori()
     {
-        if ($this->M_master->deleteJabatan() == true) {
+        if ($this->M_master->deleteKategori() == true) {
             $this->session->set_flashdata('notif_success', 'Berhasil menghapus kategori');
             redirect($this->agent->referrer());
         } else {
@@ -148,6 +148,28 @@ class Master extends CI_Controller
             redirect(site_url('master/promo'));
         } else {
             $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus promo, harap coba lagi');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function saveMetode()
+    {
+        if ($this->M_master->saveMetode() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menyimpan metode');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan metode');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function deleteMetode()
+    {
+        if ($this->M_master->deleteMetode() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menghapus metode');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus metode');
             redirect($this->agent->referrer());
         }
     }

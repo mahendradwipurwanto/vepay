@@ -14,6 +14,8 @@ $route['reset-password/(:any)'] = 'authentication/ubah_password/$1';
 
 // ADMIN
 $route['admin/dashboard'] = 'admin';
+$route['master/metode-pembayaran'] = 'master/metode';
+
 
 // DEFAULT
 $route['default_controller'] = 'authentication';

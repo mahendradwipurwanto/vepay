@@ -36,7 +36,7 @@ class M_master extends CI_Model
         }
     }
 
-    public function hapusKategori()
+    public function deleteKategori()
     {
         $id = htmlspecialchars($this->input->post('id'), true);
 
@@ -235,6 +235,42 @@ class M_master extends CI_Model
 
         $this->db->where('id', $this->input->post('id'));
         $this->db->update('tb_promo', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function getAllMetode()
+    {
+        return $this->db->get_where('m_metode', ['is_deleted' => 0])->result();
+    }
+
+    public function saveMetode()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+        $metode = htmlspecialchars($this->input->post('metode'), true);
+        $description = htmlspecialchars($this->input->post('description'), true);
+
+        $metode = [
+            'metode' => $metode,
+            'description' => $description,
+            'created_at' => time(),
+            'created_by' => $this->session->userdata('user_id')
+        ];
+        if (isset($id) && $id != '') {
+            $this->db->where('id', $id);
+            $this->db->update('m_metode', $metode);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        } else {
+            $this->db->insert('m_metode', $metode);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+    }
+
+    public function deleteMetode()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('m_metode', ['is_deleted' => 1]);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 }

@@ -44,7 +44,7 @@
 							</td>
 							<td><?= $val->kode;?></td>
 							<td><?= $val->nama;?></td>
-							<td>Rp. <?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
+							<td><?= $val->jenis == 1 ? 'Rp.' : '%';?> <?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
 							<td><?= $val->jenis == 1 ? 'Flat' : 'Presentage';?></td>
 							<td><?= $val->quota;?></td>
 							<td><span
@@ -77,9 +77,8 @@
 																autocomplete="off" name="jenis" id="inputJenisPromo"
 																data-hs-tom-select-options='{"placeholder": "Pilih jenis promo", "hideSearch": true}'
 																required>
-																<option value="">Pilih jenis promo</option>
-																<option value="1">Flat</option>
-																<option value="2">Presentage</option>
+																<option value="1" <?= $val->jenis == 1 ? 'selected' : '';?>>Flat</option>
+																<option value="2" <?= $val->jenis == 2 ? 'selected' : '';?>>Presentage</option>
 															</select>
 														</div>
 													</div>
@@ -123,7 +122,7 @@
 															class="form-label">Nominal/Nilai</label>
 														<div class="input-group input-group-sm flex-nowrap">
 															<span class="input-group-text" id="addon-wrapping"><span
-																	id="symbol_promo">Rp</span></span>
+																	id="symbol_promo"><?= $val->jenis == 1 ? 'Rp.' : '%';?></span></span>
 															<input type="number" class="form-control form-controls-sm"
 																id="value_promo" name="value"
 																onkeypress="return event.charCode >= 48"
@@ -308,14 +307,12 @@
 		e.preventDefault();
 		var jenis_promo = $('#inputJenisPromo :selected').val();
 		if (jenis_promo == 1) {
-			$("#value_promo").val("");
 			$("#value_promo").attr({
 				"max": 9999999999,
 				"min": 1
 			});
 			$('#symbol_promo').text('Rp');
 		} else if (jenis_promo == 2) {
-			$("#value_promo").val("");
 			$("#value_promo").attr({
 				"max": 100,
 				"min": 1
