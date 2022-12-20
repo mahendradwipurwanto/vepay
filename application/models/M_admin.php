@@ -48,7 +48,7 @@ class M_admin extends CI_Model
         $member = $this->db->get_where('tb_auth', ['role' => 2])->num_rows();
         $transaksi = $this->db->get_where('tb_transaksi', ['is_deleted' => 0])->num_rows();
 
-        $this->db->select_sum('amount')
+        $this->db->select_sum('sub_total')
         ->from('tb_transaksi')
         ->where(['status' => 2, 'is_deleted' => 0])
         ;
@@ -59,7 +59,7 @@ class M_admin extends CI_Model
             'produk' => $produk,
             'member' => $member,
             'transaksi' => $transaksi,
-            'pendapatan' => $pendapatan->amount
+            'pendapatan' => $pendapatan->sub_total
         ];
     }
 }

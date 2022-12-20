@@ -8,7 +8,7 @@ class Admin extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['M_admin']);
+        $this->load->model(['M_admin', 'M_member', 'M_master']);
 
         // cek apakah user sudah login
         if ($this->session->userdata('logged_in') == false || !$this->session->userdata('logged_in')) {
@@ -41,12 +41,20 @@ class Admin extends CI_Controller
 
     public function transaksi()
     {
-        $this->templateback->view('admin/transaksi');
+        $data['member']     = $this->M_member->getAllMemberSelect();
+        $data['product']    = $this->M_master->getRateAllProduct();
+        $data['metode']     = $this->M_master->getAllMetode();
+        $this->templateback->view('admin/transaksi', $data);
     }
 
     public function member()
     {
         $this->templateback->view('admin/member');
+    }
+
+    public function vcc_member()
+    {
+        $this->templateback->view('admin/vcc_member');
     }
 
     public function pengaturan()

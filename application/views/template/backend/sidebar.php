@@ -68,12 +68,17 @@
   					<li class="nav-item my-2 my-lg-5"></li>
 
   					<li class="nav-item">
-  						<span class="nav-subtitle">Data</span>
+  						<span class="nav-subtitle">Member</span>
   					</li>
   					<li class="nav-item" id="tour-member">
   						<a class="nav-link <?= ($this->uri->segment(2) == "member" ? "active" : "") ?>"
   							href="<?= site_url('admin/member'); ?>"><i class="bi bi-people nav-icon"></i>
   							Member</a>
+  					</li>
+  					<li class="nav-item" id="tour-vcc">
+  						<a class="nav-link <?= ($this->uri->segment(2) == "vcc-" ? "active" : "") ?>"
+  							href="<?= site_url('admin/vcc-member'); ?>"><i class="bi bi-credit-card nav-icon"></i>
+  							VCC</a>
   					</li>
 
   					<li class="nav-item my-2 my-lg-5"></li>

@@ -14,8 +14,8 @@ $route['reset-password/(:any)'] = 'authentication/ubah_password/$1';
 
 // ADMIN
 $route['admin/dashboard'] = 'admin';
+$route['admin/vcc-member'] = 'admin/vcc_member';
 $route['master/metode-pembayaran'] = 'master/metode';
-
 
 // DEFAULT
 $route['default_controller'] = 'authentication';

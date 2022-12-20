@@ -742,3 +742,7 @@ login-header>img {
 		padding: 18px 15px;
 	}
 }
+
+.ml-3{
+	margin-left: 1rem !important
+}

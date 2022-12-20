@@ -37,14 +37,14 @@
 						<tr>
 							<td><?= $no++;?></td>
 							<td>
-								<button type="button" class="btn btn-soft-info btn-sm" data-bs-toggle="modal"
-									data-bs-target="#edit-<?= $val->id;?>"><i class="bi-pencil-square"></i></button>
+								<button type="button" class="btn btn-soft-info btn-sm" onclick="showMdlPromoEdit(<?= $val->id;?>)"><i class="bi-pencil-square"></i></button>
 								<button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
 							<td><?= $val->kode;?></td>
 							<td><?= $val->nama;?></td>
-							<td><?= $val->jenis == 1 ? 'Rp.' : '%';?> <?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
+							<td><?= $val->jenis == 1 ? 'Rp.' : '%';?>
+								<?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
 							<td><?= $val->jenis == 1 ? 'Flat' : 'Presentage';?></td>
 							<td><?= $val->quota;?></td>
 							<td><span
@@ -53,123 +53,9 @@
 							<td><?= date("d F Y", $val->expired);?></td>
 						</tr>
 
-						<!-- Modal -->
-						<div id="edit-<?= $val->id;?>" class="modal fade" tabindex="-1" role="dialog"
-							aria-labelledby="add" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
-								role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h4 class="modal-title" id="detailUserTitle">Ubah data</h4>
-										<button type="button" class="btn-close" data-bs-dismiss="modal"
-											aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<form action="<?= site_url('api/master/editPromo');?>" method="post"
-											enctype="multipart/form-data" class="js-validate need-validate" novalidate>
-											<input type="hidden" name="id" value="<?= $val->id;?>" required>
-											<div class="row">
-												<div class="col-6">
-													<div class="mb-3">
-														<label for="inputJenisPromo" class="form-label">Jenis</label>
-														<div class="tom-select-custom">
-															<select class="js-select form-select form-select-sm"
-																autocomplete="off" name="jenis" id="inputJenisPromo"
-																data-hs-tom-select-options='{"placeholder": "Pilih jenis promo", "hideSearch": true}'
-																required>
-																<option value="1" <?= $val->jenis == 1 ? 'selected' : '';?>>Flat</option>
-																<option value="2" <?= $val->jenis == 2 ? 'selected' : '';?>>Presentage</option>
-															</select>
-														</div>
-													</div>
-												</div>
-												<div class="col-6">
-													<div class="mb-3">
-														<label for="inputStatusPromo" class="form-label">Status</label>
-														<div class="tom-select-custom">
-															<select class="js-select form-select form-select-sm"
-																autocomplete="off" name="status" id="inputStatusPromo"
-																data-hs-tom-select-options='{"hideSearch": true}'
-																required>
-																<option value="1">Aktif</option>
-																<option value="0">Tidak Aktif</option>
-															</select>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-12">
-													<div class="mb-3">
-														<label for="inputSubject" class="form-label">Nama Promo</label>
-														<input class="form-control form-control-sm" type="text"
-															name="nama" value="<?= $val->nama;?>" required>
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-6">
-													<div class="mb-3">
-														<label for="inputKodePromo" class="form-label">Kode</label>
-														<input class="form-control form-control-sm" id="inputKodePromo"
-															onkeypress="return event.charCode >= 48" type="text"
-															name="kode" value="<?= $val->kode;?>" required>
-													</div>
-												</div>
-												<div class="col-6">
-													<div class="mb-3">
-														<label for="inputNominalPromo"
-															class="form-label">Nominal/Nilai</label>
-														<div class="input-group input-group-sm flex-nowrap">
-															<span class="input-group-text" id="addon-wrapping"><span
-																	id="symbol_promo"><?= $val->jenis == 1 ? 'Rp.' : '%';?></span></span>
-															<input type="number" class="form-control form-controls-sm"
-																id="value_promo" name="value"
-																onkeypress="return event.charCode >= 48"
-																value="<?= $val->value;?>" required>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-6">
-													<div class="mb-3">
-														<label for="inputSubject" class="form-label">Berlaku
-															Sampai</label>
-														<input class="form-control form-control-sm" type="date"
-															name="expired" value="<?= date('Y-m-d', $val->expired);?>"
-															required>
-													</div>
-												</div>
-												<div class="col-6">
-													<div class="mb-3">
-														<label for="inputSubject" class="form-label">Batas
-															penggunaan</label>
-														<input class="form-control form-control-sm" type="number"
-															min="0" max="9999" onkeypress="return event.charCode >= 48"
-															name="quota" value="<?= $val->quota;?>"
-															placeholder="∞ Unlimited" required>
-														<small class="text-secondary">Kosongi untuk set ke tanpa bayas /
-															unlimited.</small>
-													</div>
-												</div>
-											</div>
-
-											<div class="modal-footer px-0 pb-0">
-												<button type="button" class="btn btn-white btn-sm"
-													data-bs-dismiss="modal">batal</button>
-												<button type="submit" class="btn btn-info btn-sm">Simpan</button>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
-
 						<div id="delete-<?= $val->id; ?>" class="modal fade" tabindex="-1" role="dialog"
 							aria-labelledby="delete" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
-								role="document">
+							<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
 										<h4 class="modal-title" id="detailUserTitle">Hapus data</h4>
@@ -203,7 +89,7 @@
 
 <!-- Modal -->
 <div id="tambah" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="detailUserTitle">Tambah Data</h4>
@@ -250,6 +136,19 @@
 									placeholder="Nama promo" required>
 							</div>
 						</div>
+					</div>
+					<div class="mb-3">
+						<figure>
+							<img src="#" id="imgthumbnail" class="img-thumbnail img-fluid" alt="Thumbnail image"
+								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
+						</figure>
+						<label for="poster-product" class="form-label">Gambar <small
+								class="text-muted">(optional)</small>:</label>
+						<div class="input-group">
+							<input type="file" class="form-control form-control-sm imgprev" name="image"
+								accept="image/*" id="poster-product">
+						</div>
+						<small class="text-muted">Max file size 1Mb</small>
 					</div>
 					<div class="row">
 						<div class="col-6">
@@ -302,6 +201,20 @@
 	</div>
 </div>
 
+<!-- Modal -->
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="detailUserTitle">Ubah data</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="edit-content">
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	$("#inputJenisPromo").change(function (e) {
 		e.preventDefault();
@@ -333,5 +246,23 @@
 			}
 		})
 	});
+	
+	const showMdlPromoEdit = id => {
+		$("#edit-content").html(
+			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
+		);
 
+		$('#edit').modal('show')
+
+		jQuery.ajax({
+			url: "<?= site_url('ajax/master/getDetailPromo') ?>",
+			type: 'POST',
+			data: {
+				promo_id: id
+			},
+			success: function (data) {
+				$("#edit-content").html(data);
+			}
+		});
+	}
 </script>

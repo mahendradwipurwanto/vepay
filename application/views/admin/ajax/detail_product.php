@@ -1,4 +1,4 @@
-<form action="<?= site_url('api/master/editProduct');?>" method="post" class="js-validate need-validate m-0" novalidate>
+<form action="<?= site_url('api/master/editProduct');?>" method="post" class="js-validate need-validate m-0" novalidate enctype="multipart/form-data">
 	<input type="hidden" name="id" value="<?= $product->id;?>">
 	<input type="hidden" name="old_image" value="<?= $product->image;?>">
 	<div class="mb-3">
@@ -11,12 +11,12 @@
 	</div>
 	<div class="mb-3">
 		<figure>
-			<img src="#" id="imgthumbnail" class="img-thumbnail img-fluid" alt="<?= $product->image?>"
+			<img src="#" id="imgthumbnailedit" class="img-thumbnail img-fluid" alt="<?= $product->image?>"
 				onerror="this.onerror=null;this.src='<?= $product->image?>';">
 		</figure>
 		<label for="poster-product" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
 		<div class="input-group">
-			<input type="file" class="form-control imgprev" name="image" accept="image/*" id="poster-product">
+			<input type="file" class="form-control form-control-sm imgprevedit" name="image" accept="image/*" id="poster-product">
 		</div>
 		<small class="text-muted">Max file size 1Mb</small>
 	</div>
@@ -39,18 +39,6 @@
 				</select>
 			</div>
 			<span class="invalid-feedback">Harap masukkan nomor kategori yang valid.</span>
-		</div>
-	</div>
-	<div class="mb-3">
-		<div class="js-form-message">
-			<label for="inputHarga" class="form-label">Harga</label>
-			<div class="input-group input-group-sm">
-				<span class="input-group-text" id="basic-addon1">Rp.</span>
-				<input type="text" name="price" id="inputHarga" class="form-control form-control-sm"
-					value="<?= $product->price;?>" onkeypress="return isNumberKey(event)" required>
-				<span class="input-group-text" id="basic-addon1">per satuan</span>
-			</div>
-			<span class="invalid-feedback">Harap masukkan harga yang valid.</span>
 		</div>
 	</div>
 	<div class="mb-3">

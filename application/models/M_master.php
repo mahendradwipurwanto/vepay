@@ -45,6 +45,18 @@ class M_master extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
+    public function getAllProductSelect(){
+        $this->db->select('a.*, b.categories')
+        ->from('m_product a')
+        ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
+        ->where(['a.is_deleted' => 0])
+        ;
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+
     public function getAllProduct()
     {
         $offset = $this->input->post('start');
@@ -53,14 +65,10 @@ class M_master extends CI_Model
         $filter = [];
 
         $filterName = $this->input->post('filterName');
-        $filterPrice = $this->input->post('filterPrice');
         $filterCategories = $this->input->post('filterCategories');
 
         if ($filterName != null || $filterName != '') {
             $filter[] = "a.name like '%{$filterName}%'";
-        }
-        if ($filterPrice != null || $filterPrice != '') {
-            $filter[] = "a.price like '%{$filterPrice}%'";
         }
         if ($filterCategories != null && $filterCategories > 0) {
             $filter[] = "a.m_categories_id = {$filterCategories}";
@@ -86,21 +94,33 @@ class M_master extends CI_Model
         foreach ($models as $key => $val) {
             $btnDetail                  = '<button onclick="showMdlProductDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-pencil-square"></i></button>';
             $btnDelete                  = '<button onclick="showMdlProductDelete(\''.$val->id.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
+            $btnPrice                   = '<button onclick="showMdlProductPrice(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-cash-coin"></i></button>';
 
-            $models[$key]->price_txt    = number_format($val->price, 0, ",", ".");
-            $models[$key]->price_txt    = "Rp. {$models[$key]->price_txt}";
             $models[$key]->image        = base_url()."{$val->image}";
             $models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
             $models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
             $models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
+            $models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100).(strlen($val->description) > 100 ? '...' : '') : '-';
 
-            $models[$key]->action       = $btnDetail.$btnDelete;
+            $models[$key]->price        = "-";
+            $price = $this->db->get_where('m_price', ['m_product_id' => $val->id, 'status' => 1, 'is_deleted' => 0])->result();
+            
+            $price_txt = "";
+            if(!empty($price)){
+                foreach ($price as $k => $v) {
+                    $price_formatted    = number_format($v->price,0,",",".");
+                    $price_txt          .= "<li>Rp. {$price_formatted} - <i class='text-muted'>{$v->type}</i></li>";
+                }
+                $models[$key]->price    = $price_txt; 
+            }
+
+            $models[$key]->action       = $btnDetail.$btnDelete.$btnPrice;
         }
 
         $totalRecords = count($models);
 
         $models = array_slice($models, $offset, $limit);
-
+        
         return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
     }
 
@@ -113,11 +133,49 @@ class M_master extends CI_Model
         ;
 
         $model = $this->db->get()->row();
-        $model->price_txt    = number_format($model->price);
-        $model->price_txt    = "Rp. {$model->price_txt}";
         $model->image    = base_url()."{$model->image}";
 
         return $model;
+    }
+
+    public function getRateProduct($product_id = null)
+    {
+        $this->db->select('a.*, b.name')
+        ->from('m_price a')
+        ->join('m_product b', 'a.m_product_id = b.id', 'inner')
+        ->where(['a.is_deleted' => 0, 'a.m_product_id' => $product_id])
+        ->order_by('a.created_at DESC, a.status DESC')
+        ;
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+
+    public function getRateAllProduct()
+    {
+        $this->db->select('a.*, b.name')
+        ->from('m_price a')
+        ->join('m_product b', 'a.m_product_id = b.id', 'inner')
+        ->where(['a.is_deleted' => 0, 'a.status' => 1])
+        ->order_by('a.created_at DESC, a.status DESC')
+        ;
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+
+    public function getDetailRateProduct($rate_id = null)
+    {
+        $this->db->select('a.*')
+        ->from('m_price a')
+        ->where(['a.is_deleted' => 0, 'a.id' => $rate_id])
+        ;
+
+        $models = $this->db->get()->row();
+
+        return $models;
     }
 
     public function addProduct($image = null)
@@ -188,37 +246,78 @@ class M_master extends CI_Model
         return $models;
     }
 
-    public function savePromo()
+    public function getDetailPromo($id = null){
+        $this->db->select('*')
+        ->from('m_promo')
+        ->where(['id' => $id, 'is_deleted' => 0])
+        ;
+
+        $models = $this->db->get()->row();
+
+        return $models;
+    }
+
+    public function savePromo($image)
     {
-        $data = [
-            'jenis'             => $this->input->post('jenis'),
-            'kode'              => $this->input->post('kode'),
-            'nama'              => $this->input->post('nama'),
-            'value'             => $this->input->post('value'),
-            'expired'           => strtotime($this->input->post('expired')),
-            'quota'             => $this->input->post('quota'),
-            'status'            => $this->input->post('status'),
-            'created_at'        => time(),
-            'created_by'        => $this->session->userdata('user_id'),
-        ];
+        if (is_null($image)) {
+            $data = [
+                'jenis'             => $this->input->post('jenis'),
+                'kode'              => $this->input->post('kode'),
+                'nama'              => $this->input->post('nama'),
+                'value'             => $this->input->post('value'),
+                'expired'           => strtotime($this->input->post('expired')),
+                'quota'             => $this->input->post('quota'),
+                'status'            => $this->input->post('status'),
+                'created_at'        => time(),
+                'created_by'        => $this->session->userdata('user_id'),
+            ];
+        } else {
+            $data = [
+                'jenis'             => $this->input->post('jenis'),
+                'kode'              => $this->input->post('kode'),
+                'nama'              => $this->input->post('nama'),
+                'image'             => $image,
+                'value'             => $this->input->post('value'),
+                'expired'           => strtotime($this->input->post('expired')),
+                'quota'             => $this->input->post('quota'),
+                'status'            => $this->input->post('status'),
+                'created_at'        => time(),
+                'created_by'        => $this->session->userdata('user_id'),
+            ];
+        }
 
         $this->db->insert('m_promo', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    public function editPromo()
+    public function editPromo($image)
     {
-        $data = [
-            'jenis'             => $this->input->post('jenis'),
-            'kode'              => $this->input->post('kode'),
-            'nama'              => $this->input->post('nama'),
-            'value'             => $this->input->post('value'),
-            'expired'           => strtotime($this->input->post('expired')),
-            'quota'             => $this->input->post('quota'),
-            'status'            => $this->input->post('status'),
-            'modified_at'       => time(),
-            'modified_by'       => $this->session->userdata('user_id'),
-        ];
+        if (is_null($image)) {
+            $data = [
+                'jenis'             => $this->input->post('jenis'),
+                'kode'              => $this->input->post('kode'),
+                'nama'              => $this->input->post('nama'),
+                'value'             => $this->input->post('value'),
+                'expired'           => strtotime($this->input->post('expired')),
+                'quota'             => $this->input->post('quota'),
+                'status'            => $this->input->post('status'),
+                'created_at'        => time(),
+                'created_by'        => $this->session->userdata('user_id'),
+            ];
+        } else {
+            $data = [
+                'jenis'             => $this->input->post('jenis'),
+                'kode'              => $this->input->post('kode'),
+                'nama'              => $this->input->post('nama'),
+                'image'             => $image,
+                'value'             => $this->input->post('value'),
+                'expired'           => strtotime($this->input->post('expired')),
+                'quota'             => $this->input->post('quota'),
+                'status'            => $this->input->post('status'),
+                'created_at'        => time(),
+                'created_by'        => $this->session->userdata('user_id'),
+            ];
+        }
 
         $this->db->where('id', $this->input->post('id'));
         $this->db->update('m_promo', $data);
@@ -243,24 +342,40 @@ class M_master extends CI_Model
         return $this->db->get_where('m_metode', ['is_deleted' => 0])->result();
     }
 
-    public function saveMetode()
+    public function getDetailMetode($id = null)
+    {
+        return $this->db->get_where('m_metode', ['id' => $id, 'is_deleted' => 0])->row();
+    }
+
+    public function saveMetode($image)
     {
         $id = htmlspecialchars($this->input->post('id'), true);
         $metode = htmlspecialchars($this->input->post('metode'), true);
         $description = htmlspecialchars($this->input->post('description'), true);
 
-        $metode = [
-            'metode' => $metode,
-            'description' => $description,
-            'created_at' => time(),
-            'created_by' => $this->session->userdata('user_id')
-        ];
+        if (is_null($image)) {
+            $data = [
+                'metode'        => $metode,
+                'description'   => $description,
+                'created_at'    => time(),
+                'created_by'    => $this->session->userdata('user_id')
+            ];
+        } else {
+            $data = [
+                'metode'        => $metode,
+                'image'         => $image,
+                'description'   => $description,
+                'created_at'    => time(),
+                'created_by'    => $this->session->userdata('user_id')
+            ];
+        }
+        
         if (isset($id) && $id != '') {
             $this->db->where('id', $id);
-            $this->db->update('m_metode', $metode);
+            $this->db->update('m_metode', $data);
             return ($this->db->affected_rows() != 1) ? false : true;
         } else {
-            $this->db->insert('m_metode', $metode);
+            $this->db->insert('m_metode', $data);
             return ($this->db->affected_rows() != 1) ? false : true;
         }
     }
@@ -271,6 +386,24 @@ class M_master extends CI_Model
 
         $this->db->where('id', $id);
         $this->db->update('m_metode', ['is_deleted' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function setPriceProduct()
+    {
+        $this->db->where(['m_product_id' => $this->input->post('m_product_id'), 'type' => $this->input->post('type')]);
+        $this->db->update('m_price', ['status' => 0]);
+
+        $data = [
+            'm_product_id'      => $this->input->post('m_product_id'),
+            'type'              => $this->input->post('type'),
+            'price'             => $this->input->post('price'),
+            'status'            => 1,
+            'created_at'        => time(),
+            'created_by'        => $this->session->userdata('user_id')
+        ];
+
+        $this->db->insert('m_price', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 }

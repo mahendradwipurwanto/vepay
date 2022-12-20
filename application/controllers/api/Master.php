@@ -121,12 +121,30 @@ class Master extends CI_Controller
 
     public function savePromo()
     {
-        if ($this->M_master->savePromo() == true) {
-            $this->session->set_flashdata('notif_success', 'Berhasil menambahkan promo ');
-            redirect(site_url('master/promo'));
+        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+            $date = date('m/Y');
+            $path = "berkas/promo/{$date}/";
+            $upload = $this->uploader->uploadImage($_FILES['image'], $path);
+            if ($upload == true) {
+                if ($this->M_master->savePromo($upload['filename']) == true) {
+                    $this->session->set_flashdata('notif_success', 'Berhasil menambahkan promo ');
+                    redirect(site_url('master/promo'));
+                } else {
+                    $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menambahkan promo, harap coba lagi');
+                    redirect($this->agent->referrer());
+                }
+            } else {
+                $this->session->set_flashdata('notif_warning', $upload['message']);
+                redirect($this->agent->referrer());
+            }
         } else {
-            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menambahkan promo, harap coba lagi');
-            redirect($this->agent->referrer());
+            if ($this->M_master->savePromo() == true) {
+                $this->session->set_flashdata('notif_success', 'Berhasil menambahkan promo ');
+                redirect(site_url('master/promo'));
+            } else {
+                $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menambahkan promo, harap coba lagi');
+                redirect($this->agent->referrer());
+            }
         }
     }
 
@@ -154,12 +172,30 @@ class Master extends CI_Controller
 
     public function saveMetode()
     {
-        if ($this->M_master->saveMetode() == true) {
-            $this->session->set_flashdata('notif_success', 'Berhasil menyimpan metode');
-            redirect($this->agent->referrer());
+        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+            $date = date('m/Y');
+            $path = "berkas/metode/{$date}/";
+            $upload = $this->uploader->uploadImage($_FILES['image'], $path);
+            if ($upload == true) {
+                if ($this->M_master->saveMetode($upload['filename']) == true) {
+                    $this->session->set_flashdata('notif_success', 'Berhasil menyimpan metode');
+                    redirect($this->agent->referrer());
+                } else {
+                    $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan metode');
+                    redirect($this->agent->referrer());
+                }
+            } else {
+                $this->session->set_flashdata('notif_warning', $upload['message']);
+                redirect($this->agent->referrer());
+            }
         } else {
-            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan metode');
-            redirect($this->agent->referrer());
+            if ($this->M_master->saveMetode() == true) {
+                $this->session->set_flashdata('notif_success', 'Berhasil menyimpan metode');
+                redirect($this->agent->referrer());
+            } else {
+                $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan metode');
+                redirect($this->agent->referrer());
+            }
         }
     }
 
@@ -170,6 +206,17 @@ class Master extends CI_Controller
             redirect($this->agent->referrer());
         } else {
             $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus metode');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function setPriceProduct()
+    {
+        if ($this->M_master->setPriceProduct() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menyimpan rate harga product');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan rate harga product');
             redirect($this->agent->referrer());
         }
     }

@@ -63,6 +63,15 @@
 					</div>
 				</div>
 			</div>
+			<div class="card-body pb-0">
+				<div class="alert alert-soft-info small">
+					<ul class="list-unstyled mb-0">
+						<li><i class="bi bi-pencil-square me-2 text-info"></i> Ubah data produk</li>
+						<li><i class="bi bi-trash me-2 text-danger"></i> Hapus data produk</li>
+						<li><i class="bi bi-cash-coin me-2 text-success"></i> Atur rate harga produk</li>
+					</ul>
+				</div>
+			</div>
 			<div class="card-header py-3">
 				<h4 class="card-header-title">Data produk</h4>
 			</div>
@@ -74,8 +83,9 @@
 							<th width="5%" scope="col">No</th>
 							<th width="15%" scope="col"></th>
 							<th scope="col">Nama</th>
-							<th scope="col">Harga</th>
 							<th scope="col">Kategori</th>
+							<th scope="col">Harga</th>
+							<th scope="col">Keterangan</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -107,13 +117,13 @@
 					</div>
 					<div class="mb-3">
 						<figure>
-							<img src="#" id="imgthumbnail" class="img-thumbnail img-fluid" alt="Thumbnail image"
+							<img src="#" id="imgthumbnailtambah" class="img-thumbnail img-fluid" alt="Thumbnail image"
 								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 						</figure>
 						<label for="poster-product" class="form-label">Gambar <small
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
-							<input type="file" class="form-control imgprev" name="image" accept="image/*"
+							<input type="file" class="form-control form-control-sm imgprevtambah" name="image" accept="image/*"
 								id="poster-product">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
@@ -133,18 +143,6 @@
 								</select>
 							</div>
 							<span class="invalid-feedback">Harap masukkan nomor kategori yang valid.</span>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="js-form-message">
-							<label for="inputHarga" class="form-label">Harga</label>
-							<div class="input-group input-group-sm">
-								<span class="input-group-text" id="basic-addon1">Rp.</span>
-								<input type="text" name="price" id="inputHarga" class="form-control form-control-sm"
-									placeholder="Harga" onkeypress="return isNumberKey(event)" required>
-								<span class="input-group-text" id="basic-addon1">per satuan</span>
-							</div>
-							<span class="invalid-feedback">Harap masukkan harga yang valid.</span>
 						</div>
 					</div>
 					<div class="mb-3">
@@ -209,86 +207,123 @@
 		</div>
 	</div>
 	<!-- End Modal -->
+</div>
+<!-- Modal -->
+<div class="modal fade" id="productPrice" tabindex="-1" aria-labelledby="mdlDeleteLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mdlDeleteLabel">Atur Rate Harga Produk</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="modalProductPrice">
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Modal -->
 
-	<script>
-		var table = $('#dataTable').DataTable({
-			'processing': true,
-			'serverSide': true,
-			'destroy': true,
-			'ordering': false,
-			'searching': false,
-			'scrollX': true,
-			'responsive': true,
-			'serverMethod': 'post',
-			'ajax': {
-				'url': "<?= site_url('ajax/master/getAjaxProduct')?>",
-				'data': function (d) {
-					d.filterEmail = $('#filter_email').val()
-					d.filterName = $('#filter_name').val()
-					d.filterCategories = $('#filter_categories').val()
-				},
-				'dataSrc': function (json) {
-					doneLoading();
-					return json.data;
-				}
+<script>
+	var table = $('#dataTable').DataTable({
+		'processing': true,
+		'serverSide': true,
+		'destroy': true,
+		'ordering': false,
+		'searching': false,
+		'scrollX': true,
+		'responsive': true,
+		'serverMethod': 'post',
+		'ajax': {
+			'url': "<?= site_url('ajax/master/getAjaxProduct')?>",
+			'data': function (d) {
+				d.filterEmail = $('#filter_email').val()
+				d.filterName = $('#filter_name').val()
+				d.filterCategories = $('#filter_categories').val()
 			},
-			'columns': [{
-					data: 'no'
-				},
-				{
-					data: 'action'
-				},
-				{
-					data: 'name'
-				},
-				{
-					data: 'price'
-				},
-				{
-					data: 'categories'
-				}
-			]
+			'dataSrc': function (json) {
+				doneLoading();
+				return json.data;
+			}
+		},
+		'columns': [{
+				data: 'no'
+			},
+			{
+				data: 'action'
+			},
+			{
+				data: 'name'
+			},
+			{
+				data: 'categories'
+			},
+			{
+				data: 'price'
+			},
+			{
+				data: 'description'
+			}
+		]
+	});
+	const showMdlProductDetail = id => {
+		$("#modalProductContent").html(
+			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
+		);
+
+		$('#mdlProductDetail').modal('show')
+
+		jQuery.ajax({
+			url: "<?= site_url('ajax/master/getDetailProduct') ?>",
+			type: 'POST',
+			data: {
+				product_id: id
+			},
+			success: function (data) {
+				$("#modalProductContent").html(data);
+			}
 		});
-		const showMdlProductDetail = id => {
-			$("#modalProductContent").html(
-				`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
-			);
+	}
 
-			$('#mdlProductDetail').modal('show')
+	const showMdlProductDelete = id => {
+		$('#mdlProduct_id').val(id);
+		$('#mdlProductDelete').modal('show')
+	}
 
-			jQuery.ajax({
-				url: "<?= site_url('ajax/master/getDetailProduct') ?>",
-				type: 'POST',
-				data: {
-					product_id: id
-				},
-				success: function (data) {
-					$("#modalProductContent").html(data);
-				}
-			});
-		}
+	const showMdlProductPrice = id => {
+		$("#modalProductPrice").html(
+			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
+		);
 
-		const showMdlProductDelete = id => {
-			$('#mdlProduct_id').val(id);
-			$('#mdlProductDelete').modal('show')
-		}
+		$('#productPrice').modal('show')
 
-		function doneLoading() {
-			$('#searchBtn').prop("disabled", false);
-			// add spinner to button
-			$('#searchBtn').html(
-				`<i class="bi-search"></i>&nbsp&nbspSearch`
-			);
-		}
+		jQuery.ajax({
+			url: "<?= site_url('ajax/master/getRateProduct') ?>",
+			type: 'POST',
+			data: {
+				product_id: id
+			},
+			success: function (data) {
+				$("#modalProductPrice").html(data);
+			}
+		});
+	}
 
-		function btnSearch() {
-			$('#searchBtn').prop("disabled", true);
-			// add spinner to button
-			$('#searchBtn').html(
-				`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
-			);
+	function doneLoading() {
+		$('#searchBtn').prop("disabled", false);
+		// add spinner to button
+		$('#searchBtn').html(
+			`<i class="bi-search"></i>&nbsp&nbspSearch`
+		);
+	}
 
-			table.ajax.reload();
-		}
+	function btnSearch() {
+		$('#searchBtn').prop("disabled", true);
+		// add spinner to button
+		$('#searchBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
 
-	</script>
+		table.ajax.reload();
+	}
+
+</script>

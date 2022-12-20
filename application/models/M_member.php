@@ -10,6 +10,18 @@ class M_member extends CI_Model
         $this->load->model('M_auth');
     }
 
+    public function getAllMemberSelect(){
+        $this->db->select('*')
+        ->from('tb_auth a')
+        ->join('tb_user b', 'a.user_id = b.user_id')
+        ->where(['a.is_deleted' => 0, 'a.role' => 2])
+        ;
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+
     public function getAllMember(){
 
         $offset = $this->input->post('start');

@@ -9,7 +9,7 @@ class Uploader
         $this->_ci = &get_instance();
         $this->_ci->load->database();
 
-        $this->_size = $this->_ci->db->get_where('tb_settings', ['key' => 'upload_size']);
+        $this->_size = $this->_ci->db->get_where('tb_settings', ['key' => 'upload_size'])->row()->value;
     }
 
     public function uploadImageMulti($file, $fileUpload, $path, $custom_name = null)

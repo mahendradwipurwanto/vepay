@@ -30,6 +30,25 @@ $(document).ready(function () {
 			}
 		})
 	});
+	
+	$('input.imgprevedit').each(function () {
+		$('#' + $(this).attr('id')).bind('change', function () {
+			console.log($('#' + $(this).attr('id')));
+			//this.files[0].size gets the size of your file.
+			if (this.files[0].size > (1 * 1024 * 1024)) {
+				Swal.fire({
+					text: 'File size to large, maximum file size is 1 Mb !',
+					icon: 'warning',
+				})
+				this.value = "";
+			} else {
+				const [file] = this.files
+				if (file) {
+					imgthumbnailedit.src = URL.createObjectURL(file)
+				}
+			}
+		})
+	});
 
 	$('#tag').tagsInput({
 		'width': 'auto',

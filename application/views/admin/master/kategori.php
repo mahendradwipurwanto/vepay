@@ -44,7 +44,7 @@
 						<!-- Modal -->
 						<div id="edit-<?= $val->id;?>" class="modal fade" tabindex="-1" role="dialog"
 							aria-labelledby="add" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+							<div class="modal-dialog modal-dialog-centered" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
 										<h4 class="modal-title" id="detailUserTitle">Ubah data</h4>
@@ -82,7 +82,7 @@
 
 						<div id="delete-<?= $val->id; ?>" class="modal fade" tabindex="-1" role="dialog"
 							aria-labelledby="delete" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+							<div class="modal-dialog modal-dialog-centered modal-sm"
 								role="document">
 								<div class="modal-content">
 									<div class="modal-header">
@@ -117,7 +117,7 @@
 
 <!-- Modal -->
 <div id="tambah" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="detailUserTitle">Tambah Data</h4>
