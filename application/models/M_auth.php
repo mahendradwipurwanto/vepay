@@ -29,7 +29,6 @@ class M_auth extends CI_Model
         $this->db->from('tb_auth a');
         $this->db->join('tb_user b', 'a.user_id = b.user_id');
         $this->db->where('a.email', $email);
-        $this->db->or_where('a.username', $email);
         $query = $this->db->get();
 
         // jika hasil dari query diatas memiliki lebih dari 0 record
@@ -45,7 +44,6 @@ class M_auth extends CI_Model
         $this->db->select('*');
         $this->db->from('tb_auth');
         $this->db->where('email', $email);
-        $this->db->or_where('username', $email);
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

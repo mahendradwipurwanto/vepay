@@ -29,7 +29,7 @@
   		<div id="navbarVerticalNavMenu" class="collapse navbar-collapse">
   			<div class="navbar-brand-wrapper border-end" style="height: auto;">
   				<!-- Default Logo -->
-  				<div class="d-flex align-items-center mb-3">
+  				<div class="d-flex align-items-center mb-0">
   					<a class="navbar-brand" href="<?= site_url('dashboard'); ?>" aria-label="Space">
   						<img class="navbar-brand-logo" src="<?= base_url(); ?>assets/images/logo.png" alt="Logo">
   					</a>
@@ -40,7 +40,7 @@
   				<!-- End Default Logo -->
   			</div>
 
-  			<div class="docs-navbar-sidebar-aside-body navbar-sidebar-aside-body">
+  			<div class="docs-navbar-sidebar-aside-body navbar-sidebar-aside-body" style="padding-top: 9rem !important;">
   				<ul id="navbarSettings" class="navbar-nav nav nav-vertical nav-tabs nav-tabs-borderless nav-sm">
   					<li class="nav-item" id="tour-dashboard">
   						<a class="nav-link <?= ($this->uri->segment(2) == "dashboard" ? "active" : "") ?>"

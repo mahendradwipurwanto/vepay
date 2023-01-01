@@ -2,6 +2,8 @@
     exit('No direct script access allowed');
 }
 
+require_once APPPATH.'third_party/gump-validation/gump.class.php';
+
 if (!function_exists('convertToBase64')) {
     function convertToBase64($path)
     {
@@ -238,5 +240,52 @@ if(!function_exists('generateRandomString')){
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+}
+
+if(!function_exists('validate')){
+    function validate($data, $validasi, $custom = [])
+    {
+        if (!empty($custom)) {
+            $validasiData = array_merge($validasi, $custom);
+        } else {
+            $validasiData = $validasi;
+        }
+        $lang = 'en';
+        $gump = new GUMP($lang);
+        $validate = $gump->is_valid($data, $validasiData);
+
+        if (true === $validate) {
+            return [
+                'status' => true
+            ];
+        }
+
+        return [
+            'status' => false,
+            'data' => $validate
+        ];
+    }
+}
+
+if(!function_exists('base64ToImage')){
+    function base64ToImage($path, $base64)
+    {   
+        $image_parts = explode(';base64,', $base64);
+        $image_type_aux = explode('image/', $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $namaFile = uniqid().'.'.$image_type;
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $file = $path.$namaFile;
+        file_put_contents($file, $image_base64);
+
+        return [
+            'status' => true,
+            'data' => $namaFile,
+            'url' => $file,
+        ];
     }
 }

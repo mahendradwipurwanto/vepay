@@ -184,7 +184,6 @@ class M_master extends CI_Model
             'name'              => $this->input->post('name'),
             'image'             => $image,
             'm_categories_id'   => $this->input->post('categories'),
-            'price'             => $this->input->post('price'),
             'description'       => $this->input->post('description'),
             'created_at'        => time(),
             'created_by'        => $this->session->userdata('user_id'),
@@ -200,7 +199,6 @@ class M_master extends CI_Model
             $data = [
                 'name'              => $this->input->post('name'),
                 'm_categories_id'   => $this->input->post('categories'),
-                'price'             => $this->input->post('price'),
                 'description'       => $this->input->post('description'),
                 'modified_at'       => time(),
                 'modified_by'       => $this->session->userdata('user_id'),
@@ -210,7 +208,6 @@ class M_master extends CI_Model
                 'name'              => $this->input->post('name'),
                 'image'             => $image,
                 'm_categories_id'   => $this->input->post('categories'),
-                'price'             => $this->input->post('price'),
                 'description'       => $this->input->post('description'),
                 'modified_at'       => time(),
                 'modified_by'       => $this->session->userdata('user_id'),
@@ -347,7 +344,7 @@ class M_master extends CI_Model
         return $this->db->get_where('m_metode', ['id' => $id, 'is_deleted' => 0])->row();
     }
 
-    public function saveMetode($image)
+    public function saveMetode($image = null)
     {
         $id = htmlspecialchars($this->input->post('id'), true);
         $metode = htmlspecialchars($this->input->post('metode'), true);

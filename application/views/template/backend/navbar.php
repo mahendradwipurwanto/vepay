@@ -4,9 +4,9 @@
   		<nav class="navbar-nav-wrap">
   			<div class="row flex-grow-1">
   				<!-- Default Logo -->
-  				<div class="docs-navbar-sidebar-container d-flex align-items-center mb-2 mb-lg-0">
+  				<div class="docs-navbar-sidebar-container d-flex align-items-center mb-0 mb-lg-0">
   					<a class="navbar-brand" href="<?= site_url('dashboard'); ?>" aria-label="Space">
-  						<img class="navbar-brand-logo" src="<?= base_url(); ?><?= $web_logo;?>" alt="Logo">
+  						<img class="navbar-brand-logo" src="<?= base_url(); ?><?= $web_logo;?>" alt="Logo" style="max-height: 57px;">
   					</a>
   					<a>
   						<span class="badge bg-soft-primary text-primary">v2.5.2</span>
