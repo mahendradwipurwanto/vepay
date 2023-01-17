@@ -36,7 +36,9 @@ class Mailer
 
       try {
           // SMTP configuration
-          $mail->isSMTP();
+          if($this->get_settingsValue('mailer_smtp') == 1){
+            $mail->isSMTP();
+          }
 
           $mail->SMTPOptions = array(
             'ssl' => array(
@@ -46,7 +48,7 @@ class Mailer
             )
           );
 
-          $mail->SMTPDebug      = 1;
+          $mail->SMTPDebug      = 0;
           $mail->SMTPAuth       = true;
           $mail->SMTPKeepAlive  = true;
           $mail->SMTPSecure     = $this->get_settingsValue('mailer_connection');

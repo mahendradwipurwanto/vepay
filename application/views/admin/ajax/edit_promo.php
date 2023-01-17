@@ -41,15 +41,15 @@
         </div>
     </div>
     <div class="mb-3">
-        <figure>
-            <img src="#" id="imgthumbnailedit" class="img-thumbnail img-fluid" alt="<?= $promo->image?>"
-                onerror="this.onerror=null;this.src='<?= base_url()?><?= $promo->image?>';">
+        <figure class="text-center">
+            <img src="<?= base_url()?><?= $promo->image?>" id="promo-preview" class="img-thumbnail img-fluid" alt="<?= $promo->image?>"
+                onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
         </figure>
-        <label for="poster-product" class="form-label">Gambar <small
+        <label for="promo-upload" class="form-label">Gambar <small
                 class="text-muted">(optional)</small>:</label>
         <div class="input-group">
-            <input type="file" class="form-control form-control-sm imgprevedit" name="image"
-                accept="image/*" id="poster-product">
+            <input type="file" class="form-control form-control-sm imgprev" name="image"
+                accept="image/*" id="promo-upload">
         </div>
         <small class="text-muted">Max file size 1Mb</small>
     </div>

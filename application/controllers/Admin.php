@@ -36,7 +36,9 @@ class Admin extends CI_Controller
 
     public function statistik()
     {
-        $this->templateback->view('admin/statistik');
+        $data['count'] = $this->M_admin->getCountOverview();
+
+        $this->templateback->view('admin/statistik', $data);
     }
 
     public function transaksi()
@@ -54,7 +56,10 @@ class Admin extends CI_Controller
 
     public function vcc_member()
     {
-        $this->templateback->view('admin/vcc_member');
+        $data['member']     = $this->M_member->getAllMemberSelect();
+        $data['vcc']        = $this->M_master->getAllVcc();
+
+        $this->templateback->view('admin/vcc', $data);
     }
 
     public function pengaturan()

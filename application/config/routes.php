@@ -11,6 +11,7 @@ $route['logout'] = 'authentication/logout';
 $route['offline'] = 'authentication/offline';
 $route['lupa-password'] = 'authentication/forgotPassword';
 $route['reset-password/(:any)'] = 'authentication/ubah_password/$1';
+$route['verifikasi-email/(:any)'] = 'authentication/verifikasi_email/$1';
 
 // ADMIN
 $route['admin/dashboard'] = 'admin';

@@ -52,4 +52,11 @@ class Master extends CI_Controller
 
         $this->templateback->view('admin/master/metode', $data);
     }
+
+    public function blockchain()
+    {
+        $data['blockchain'] = $this->M_master->getAllBlockchain();
+
+        $this->templateback->view('admin/master/blockchain', $data);
+    }
 }

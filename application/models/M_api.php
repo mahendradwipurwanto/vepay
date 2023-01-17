@@ -39,7 +39,7 @@ class M_api extends CI_Model
             'user_id' => $user_id,
             'email' => $params['email'],
             'password' => password_hash($params['password'], PASSWORD_DEFAULT),
-            'status' => 1, #change to 1 -> auto verif
+            'status' => 0, #change to 1 -> auto verif
             'created_at' => time(),
         ];
 
@@ -63,7 +63,7 @@ class M_api extends CI_Model
                     'user_id' => $user_id,
                     'key' => $chiper,
                     'type' => 1, #VERIFIKASI email / AKTIVASI AKUN 
-                    'status' => 1, #change to 1 -> auto verif
+                    'status' => 0, #change to 1 -> auto verif
                     'date_created' => time()
                 ];
 
@@ -269,10 +269,29 @@ class M_api extends CI_Model
         return $models;
     }
     
+    public function getAllblockchain($params = [])
+    {
+
+        $this->db->select('a.*')
+        ->from('m_blockchain a')
+        ->where(['a.is_deleted' => 0])
+        ;
+
+        $this->db->order_by('a.blockchain ASC');
+
+        if (!empty($params) && isset($params['limit']) && $params['limit'] > 0) {
+            $this->db->limit($params['limit']);
+        }
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+    
     public function getAllRate($params = [])
     {
 
-        $this->db->select('a.*, b.* ')
+        $this->db->select('a.*, b.*')
         ->from('m_price a')
         ->join('m_product b', 'a.m_product_id = b.id')
         ->where(['a.is_deleted' => 0])
@@ -303,6 +322,8 @@ class M_api extends CI_Model
         ->where(['a.is_deleted' => 0])
         ;
 
+        $this->db->where('a.user_id', $params['user_id']);
+
         $this->db->order_by('a.created_at DESC');
 
         if (!empty($params) && isset($params['limit']) && $params['limit'] > 0) {
@@ -331,7 +352,7 @@ class M_api extends CI_Model
     
     public function getAllTransaksi($params = [])
     {
-        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.status,, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id')
         ->join('tb_auth c', 'a.user_id = c.user_id')
@@ -340,6 +361,8 @@ class M_api extends CI_Model
         ->join('m_price f', 'e.m_price_id = f.id')
         ->join('m_product g', 'f.m_product_id = g.id')
         ;
+
+        $this->db->where('a.user_id', $params['user_id']);
 
         $this->db->order_by('a.created_at DESC');
 
@@ -354,10 +377,10 @@ class M_api extends CI_Model
     
     public function getDetailTransaksi($id = null)
     {
-        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.status, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->join('tb_auth c', 'a.user_id = c.user_id')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'left')
+        ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
         ->join('m_metode d', 'a.m_metode_id = d.id')
         ->join('_transaksi_detail e', 'a.id = e.transaksi_id')
         ->join('m_price f', 'e.m_price_id = f.id')
@@ -397,11 +420,11 @@ class M_api extends CI_Model
             ];
         }
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.user_id, a.sub_total, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.user_id, a.sub_total as total, e.total as sub_total, a.status, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->join('tb_auth c', 'a.user_id = c.user_id')
-        ->join('m_metode d', 'a.m_metode_id = d.id')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'left')
+        ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
+        ->join('m_metode d', 'a.m_metode_id = d.id', 'left')
         ->join('_transaksi_detail e', 'a.id = e.transaksi_id')
         ->join('m_price f', 'e.m_price_id = f.id')
         ->join('m_product g', 'f.m_product_id = g.id')
@@ -431,11 +454,11 @@ class M_api extends CI_Model
             ];
         }
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product')
         ->from('tb_transaksi a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->join('tb_auth c', 'a.user_id = c.user_id')
-        ->join('m_metode d', 'a.m_metode_id = d.id')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'left')
+        ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
+        ->join('m_metode d', 'a.m_metode_id = d.id', 'left')
         ->join('_transaksi_detail e', 'a.id = e.transaksi_id')
         ->join('m_price f', 'e.m_price_id = f.id')
         ->join('m_product g', 'f.m_product_id = g.id')

@@ -130,7 +130,7 @@ class M_auth extends CI_Model
 
                 $aktivasi = [
                     'user_id' => $user_id,
-                    'key' => $chiper,
+                    'key' => generateRandomString(20),
                     'type' => 1, #VERIFIKASI email / AKTIVASI AKUN 
                     'status' => 0, #change to 1 -> auto verif
                     'date_created' => time()
@@ -276,5 +276,29 @@ class M_auth extends CI_Model
 
     public function getUsersOnline(){
         return $this->db->get_where('tb_auth', ['online' => 1])->result();
+    }
+
+    public function getTokenByToken($token = null){
+        $model = $this->db->get_where('tb_token', ['key' => $token, 'type' => '1', 'status' => '0'])->row();
+
+        if(!empty($model)){
+            return [
+                'status' => true,
+                'data' => $model
+            ];
+        }else{
+            return [
+                'status' => false
+            ];
+        }
+    }
+
+    public function verified_user($user_id = null){
+        $this->db->where(['user_id' => $user_id, 'type' => 1]);
+        $this->db->update('tb_token', ['status' => 1]);
+
+        $this->db->where('user_id', $user_id);
+        $this->db->update('tb_auth', ['status' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
     }
 }

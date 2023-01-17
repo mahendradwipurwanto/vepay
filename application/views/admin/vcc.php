@@ -2,11 +2,11 @@
 <div class="docs-page-header">
 	<div class="row align-items-center">
 		<div class="col-sm">
-			<h1 class="docs-page-header-title">Master metode
+			<h1 class="docs-page-header-title">VCC Member
 				<button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
 					data-bs-target="#tambah"><i class="bi bi-tag"></i> Tambah data</button>
 			</h1>
-			<p class="docs-page-header-text">Kelola master metode pada website anda</p>
+			<p class="docs-page-header-text">Kelola VCC pada website anda</p>
 		</div>
 	</div>
 </div>
@@ -22,22 +22,24 @@
 						<tr>
 							<th width="10%">No.</th>
 							<th width="25%"></th>
-							<th>Metode</th>
-							<th>Keterangan</th>
+							<th>Member</th>
+							<th>VCC</th>
+							<th>Saldo</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php if(!empty($metode)):?>
-						<?php $no = 1; foreach($metode as $val):?>
+						<?php if(!empty($vcc)):?>
+						<?php $no = 1; foreach($vcc as $val):?>
 						<tr>
 							<td><?= $no++;?></td>
 							<td>
-								<button type="button" class="btn btn-soft-info btn-sm" onclick="showMdlMetodeEdit(<?= $val->id;?>)"><i class="bi-pencil-square"></i></button>
+								<button type="button" class="btn btn-soft-info btn-sm" onclick="showMdlVccEdit(<?= $val->id;?>)"><i class="bi-pencil-square"></i></button>
 								<button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
-							<td><?= $val->metode;?></td>
-							<td><?= $val->description;?></td>
+							<td><?= $val->name;?></td>
+							<td><?= $val->number;?></td>
+							<td><?= $val->saldo;?></td>
 						</tr>
 
 						<div id="delete-<?= $val->id; ?>" class="modal fade" tabindex="-1" role="dialog"
@@ -51,10 +53,10 @@
 											aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<form action="<?= site_url('api/master/deleteMetode');?>" method="post"
+										<form action="<?= site_url('api/master/deleteVcc');?>" method="post"
 											class="js-validate need-validate" novalidate>
 											<input type="hidden" name="id" value="<?= $val->id;?>">
-											<p>Apakah kamu yakin ingin menghapus data <?= $val->metode;?> ini?</p>
+											<p>Apakah kamu yakin ingin menghapus vcc <?= $val->number;?> ini?</p>
 											<div class="modal-footer px-0 pb-0">
 												<button type="button" class="btn btn-white btn-sm"
 													data-bs-dismiss="modal">Tidak</button>
@@ -84,45 +86,48 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="<?= site_url('api/master/saveMetode');?>" method="post" enctype="multipart/form-data"
+				<form action="<?= site_url('api/master/saveVcc');?>" method="post" enctype="multipart/form-data"
 					class="js-validate need-validate" novalidate>
 
 					<div class="mb-3">
-						<label for="inputSubject" class="form-label">Metode</label>
-						<input class="form-control form-control-sm" type="text" name="metode"
-							placeholder="Ketikkan metode" required>
-					</div>
-					<div class="mb-3">
-						<figure>
-							<img src="#" id="metode-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
-								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
-						</figure>
-						<label for="metode-upload" class="form-label">Gambar <small
-								class="text-muted">(optional)</small>:</label>
-						<div class="input-group">
-							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/*" id="metode-upload">
+						<div class="js-form-message">
+							<label for="inputMember" class="form-label">Member</label>
+							<div class="tom-select-custom">
+								<select class="js-select form-select form-select-sm" autocomplete="off" id="inputMember"
+									name="member" data-hs-tom-select-options='{"placeholder": "Member...", "hideSearch": true}'>
+									<?php if(!empty($member)):?>
+									<?php foreach ($member as $key => $val):?>
+									<option value="<?= $val->user_id;?>"><?= $val->name;?></option>
+									<?php endforeach;?>
+									<?php endif;?>
+								</select>
+							</div>
+							<span class="invalid-feedback">Harap masukkan member yang valid.</span>
 						</div>
-						<small class="text-muted">Max file size 1Mb</small>
 					</div>
 
 					<div class="mb-3">
-						<label for="inputSubject" class="form-label">Atas nama</label>
-						<input class="form-control form-control-sm" type="text" name="atas_nama"
-							placeholder="Ketikkan atas nama" required>
+						<label for="inputSubject" class="form-label">Nomor VCC</label>
+						<input class="form-control form-control-sm" type="text" name="number"
+							placeholder="Ketikkan Nomor VCC" required>
 					</div>
 
 					<div class="mb-3">
-						<label for="inputSubject" class="form-label">No Rekening</label>
-						<input class="form-control form-control-sm" type="text" name="no_rekening"
-							placeholder="Ketikkan nomor rekening" required>
+						<label for="inputSubject" class="form-label">Atas Nama</label>
+						<input class="form-control form-control-sm" type="text" name="holder"
+							placeholder="Ketikkan data" required>
 					</div>
 
 					<div class="mb-3">
-						<label for="inputSubject" class="form-label">Keterangan <small
-								class="text-secondary">(optional)</small></label>
-						<textarea class="form-control form-control-sm" type="text" name="description"
-							placeholder="Ketikkan keterangan"></textarea>
+						<label for="inputSubject" class="form-label">Valid Date</label>
+						<input class="form-control form-control-sm" type="text" name="valid_date"
+							placeholder="Ketikkan data" required>
+					</div>
+
+					<div class="mb-3">
+						<label for="inputSubject" class="form-label">Kode Security</label>
+						<input class="form-control form-control-sm" type="number" name="security_code"
+							placeholder="Ketikkan data" required>
 					</div>
 
 					<div class="modal-footer px-0 pb-0">
@@ -153,7 +158,7 @@
 
 <script>
 	
-	const showMdlMetodeEdit = id => {
+	const showMdlVccEdit = id => {
 		$("#edit-content").html(
 			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
 		);
@@ -161,10 +166,10 @@
 		$('#edit').modal('show')
 
 		jQuery.ajax({
-			url: "<?= site_url('ajax/master/getDetailMetode') ?>",
+			url: "<?= site_url('ajax/master/getDetailVcc') ?>",
 			type: 'POST',
 			data: {
-				metode_id: id
+				VCC_id: id
 			},
 			success: function (data) {
 				$("#edit-content").html(data);

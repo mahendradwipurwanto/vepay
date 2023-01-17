@@ -68,6 +68,8 @@ class M_member extends CI_Model
                 $models[$key]->status  = '<span class="badge bg-soft-success">Aktif</span>';
             }elseif($val->auth_status == 2){
                 $models[$key]->status  = '<span class="badge bg-soft-warning">Suspended</span>';
+            }else{
+                $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
             }
             
             $models[$key]->action = $btnDetail.$btnPass.($val->auth_status > 0 ? $btnEmail : '');

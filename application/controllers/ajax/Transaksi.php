@@ -101,7 +101,7 @@ class Transaksi extends CI_Controller
     }
 
     public function getDetailTrans(){
-        $transaksi                      = $this->M_master->getDetailTrans($this->input->post('transaksi_id'));
+        $transaksi                      = $this->M_transaksi->getDetailTransaksi($this->input->post('transaksi_id'));
 
         $data['transaksi']              = $transaksi;
 

@@ -68,46 +68,40 @@
 		introJs().setOptions({
 			disableInteraction: true,
 			steps: [{
-				intro: "Welcome to Middle East Youth Summit webApp, we will briefly explain our feature`s"
-			}, {
-				element: document.querySelector('#tour-landing-button'),
-				intro: "Go to landing page with ease"
+				intro: "Selamat datang di aplikasi vepay.id, kami akan menjelaskan secara singkat mengenai semua fitur pada aplikasi ini"
 			}, {
 				element: document.querySelector('#tour-dashboard'),
-				intro: "Overview your website on this page"
+				intro: "Anda dapat melihat informasi umum pada halaman ini"
 			}, {
-				element: document.querySelector('#tour-statistics'),
-				intro: "See all statistics of your website in here"
+				element: document.querySelector('#tour-statistik'),
+				intro: "Pantau statistik seputar informasi mengenai website anda"
 			}, {
-				element: document.querySelector('#tour-participans'),
-				intro: "View and manage all participans information on this page"
+				element: document.querySelector('#tour-transaksi'),
+				intro: "Buat dan kelola semua transaksi menyangkut seluruh produk anda"
 			}, {
-				element: document.querySelector('#tour-payments'),
-				intro: "Manage participans payments with ease on this page"
+				element: document.querySelector('#tour-member'),
+				intro: "Kelola data member anda pada halaman ini"
 			}, {
-				element: document.querySelector('#tour-payment-batch'),
-				intro: "Manage payments batch for participans at here"
+				element: document.querySelector('#tour-vcc'),
+				intro: "Tambah dan kelola kartu vcc member anda"
 			}, {
-				element: document.querySelector('#tour-payment-settings'),
-				intro: "Manage payment settings with ease on this page"
+				element: document.querySelector('#tour-kategori'),
+				intro: "Kelolak kategori produk anda"
 			}, {
-				element: document.querySelector('#tour-payment-xendit'),
-				intro: "Manage xendit payment gateway settings with ease on this page"
+				element: document.querySelector('#tour-produk'),
+				intro: "Kelola seluruh produk yang anda jual pada halaman ini"
 			}, {
-				element: document.querySelector('#tour-ambassador'),
-				intro: "You can manage all your ambassador on here"
+				element: document.querySelector('#tour-blockchain'),
+				intro: "Kelola seluruh blockchain yang anda jual pada halaman ini"
 			}, {
-				element: document.querySelector('#tour-eligilibity-countries'),
-				intro: "You can manage all eligilibity countries data on here"
+				element: document.querySelector('#tour-promo'),
+				intro: "Kelola promo pada halaman ini"
 			}, {
-				element: document.querySelector('#tour-announcements'),
-				intro: "You can manage all announcements on here"
-			}, {
-				element: document.querySelector('#tour-landing'),
-				intro: "You can manage landing page setting from home to gallery in here"
+				element: document.querySelector('#tour-metode-pembayaran'),
+				intro: "Buat dan atur metode pembayaran anda"
 			}, {
 				element: document.querySelector('#tour-website'),
-				intro: "You can manage website setting on this page"
+				intro: "Atur seluruh pengaturan mengenai website anda disini"
 			}]
 		}).start();
 	};

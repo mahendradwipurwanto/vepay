@@ -94,13 +94,17 @@
   						<a class="nav-link <?= ($this->uri->segment(2) == "produk" ? "active" : "") ?>"
   							href="<?= site_url('master/produk'); ?>"><i class="bi bi-box-seam nav-icon"></i> Produk</a>
   					</li>
+  					<li class="nav-item" id="tour-blockchain">
+  						<a class="nav-link <?= ($this->uri->segment(2) == "blockchain" ? "active" : "") ?>"
+  							href="<?= site_url('master/blockchain'); ?>"><i class="bi bi-coin nav-icon"></i> Blockchain</a>
+  					</li>
   					<li class="nav-item" id="tour-promo">
   						<a class="nav-link <?= ($this->uri->segment(2) == "promo" ? "active" : "") ?>"
   							href="<?= site_url('master/promo'); ?>"><i class="bi bi-file-earmark-break nav-icon"></i>
   							Promo</a>
   					</li>
   					<li class="nav-item" id="tour-metode-pembayaran">
-  						<a class="nav-link <?= ($this->uri->segment(2) == "faq" ? "active" : "") ?>"
+  						<a class="nav-link <?= ($this->uri->segment(2) == "metode-pembayaran" ? "active" : "") ?>"
   							href="<?= site_url('master/metode-pembayaran'); ?>"><i class="bi bi-credit-card-2-front nav-icon"></i>
   							Metode pembayaran</a>
   					</li>

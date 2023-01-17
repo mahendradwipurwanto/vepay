@@ -56,4 +56,52 @@ class Transaksi extends CI_Controller
             }
         }
     }
+
+    public function verificationPayment()
+    {
+        return $this->M_transaksi->verificationPayment();
+        // if ($this->M_transaksi->verificationPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly verification payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to verification payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function rejectedPayment()
+    {
+        return $this->M_transaksi->rejectedPayment();
+        // if ($this->M_transaksi->rejectedPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly rejected payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to rejected payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function pendingPayment()
+    {
+        return $this->M_transaksi->pendingPayment();
+        // if ($this->M_transaksi->pendingPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly pending payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to pending payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function cancelPayment()
+    {
+        return $this->M_transaksi->cancelPayment();
+        // if ($this->M_transaksi->cancelPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly cancel payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to cancel payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
 }

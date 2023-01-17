@@ -23,11 +23,6 @@
   									Help center <i class="bi-question-diamond-fill ms-1"></i>
   								</a>
   							</li>
-  							<li class="nav-item" id="tour-landing-button">
-  								<a class="btn btn-ghost-secondary btn-sm" href="<?= base_url(); ?>" target="_blank">
-  									Landing page <i class="bi-box-arrow-up-right ms-1"></i>
-  								</a>
-  							</li>
   							<li class="nav-item">
   								<a class="btn btn-outline-secondary btn-sm" href="<?= site_url('sign-out'); ?>">
   									<i class="bi-power me-1"></i> Sign out

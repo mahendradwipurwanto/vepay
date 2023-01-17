@@ -19,6 +19,10 @@ class Mobile extends RestController
         $this->_master_password = $this->M_auth->getSetting('master_password') != false ? $this->M_auth->getSetting('master_password') : 'SU_MHND19';
     }
 
+    function cek_session(){
+        return $this->session->userdata('logged_in') === true ? true : false;
+    }
+
     public function login_post()
     {
 
@@ -75,26 +79,32 @@ class Mobile extends RestController
                 // menyimpan data session
                 $this->session->set_userdata($sessiondata);
 
-                // cek status dari user yang lagin - 0: BELUM AKTIF - 1: AKTIF - 2: SUSPEND;
-                if ($user->status == 0) {
-                    // Set the response and exit
-                    $this->response([
-                        'status' => false,
-                        'message' => 'Harap verifikasi akun anda'
-                    ], 422);
-                } elseif ($user->status == 2) {
-                        // Set the response and exit
-                        $this->response([
-                            'status' => false,
-                            'message' => 'Akun anda tersuspend'
-                        ], 422);
-                } else {
-                    // Set the response and exit
-                    $this->response([
-                        'status' => true,
-                        'data' => $user
-                    ], 200);
-                }
+                // Set the response and exit
+                $this->response([
+                    'status' => true,
+                    'data' => $user
+                ], 200);
+
+                // // cek status dari user yang lagin - 0: BELUM AKTIF - 1: AKTIF - 2: SUSPEND;
+                // if ($user->status == 0) {
+                //     // Set the response and exit
+                //     $this->response([
+                //         'status' => false,
+                //         'message' => 'Harap verifikasi akun anda'
+                //     ], 422);
+                // } elseif ($user->status == 2) {
+                //         // Set the response and exit
+                //         $this->response([
+                //             'status' => false,
+                //             'message' => 'Akun anda tersuspend'
+                //         ], 422);
+                // } else {
+                //     // Set the response and exit
+                //     $this->response([
+                //         'status' => true,
+                //         'data' => $user
+                //     ], 200);
+                // }
             } else {
                 // Set the response and exit
                 $this->response([
@@ -135,9 +145,6 @@ class Mobile extends RestController
         // cek apakahemailvalid
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-            // mengambil data user dengan param email
-            $user = $this->M_auth->get_auth($email);
-
             // cek apakahemailtelah digunakan
             if ($this->M_auth->get_auth($email) == false) {
 
@@ -151,14 +158,33 @@ class Mobile extends RestController
                 // mendaftarkan user ke sistem
                 if ($this->M_api->register_user($body) == true) {
 
+
                     // mengambil data user dengan param email
                     $user = $this->M_auth->get_auth($email);
 
-                    // Set the response and exit
-                    $this->response([
-                        'status' => true,
-                        'data' => $user
-                    ], 200);
+                    $token = $this->M_auth->get_aktivasi($user->user_id);
+
+                    $subject = "Verifikasi email anda - Vepay";
+                    $message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
+
+                    // mengirim email
+                    if (sendMail($email, $subject, $message) == true) {
+                        // mengambil data user dengan param email
+                        $user = $this->M_auth->get_auth($email);
+
+                        // Set the response and exit
+                        $this->response([
+                            'status' => true,
+                            'data' => $user
+                        ], 200);
+                    } else {
+
+                        // Set the response and exit
+                        $this->response([
+                            'status' => false,
+                            'message' => 'Terjadi kesalahan saat mengirim email verifikasi'
+                        ], 422);
+                    }
 
                 } else {
                     // Set the response and exit
@@ -254,6 +280,14 @@ class Mobile extends RestController
     public function update_detail_member_put()
     {
 
+        if($this->cek_session() === false){
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => "Harap masuk keakun anda !"
+            ], 401);
+        }
+
         $validasi = [
             'user_id' => 'required',
             'name' => 'required',
@@ -316,6 +350,14 @@ class Mobile extends RestController
     
     public function update_photo_member_put()
     {
+
+        if($this->cek_session() === false){
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => "Harap masuk keakun anda !"
+            ], 401);
+        }
 
         $validasi = [
             'user_id' => 'required',
@@ -553,6 +595,37 @@ class Mobile extends RestController
         }   
     }
 
+    public function get_all_blockchain_get()
+    {
+
+        $params = [
+            'limit' => $this->get('limit')
+        ];
+
+        $blockchain = $this->M_api->getAllBlockchain($params);
+
+        if (!empty($blockchain)) {
+            foreach ($blockchain as $key => $val) {
+                if(!is_null($val->image)){
+                    $val->image = base_url().$val->image;
+                }else{
+                    $val->image = base_url()."asset/images/placeholder.jpg";
+                }
+            }
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $blockchain
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Tidak ada blockchain yang tersedia'
+            ], 422);
+        }   
+    }
+
     public function get_all_rate_get()
     {
 
@@ -589,8 +662,22 @@ class Mobile extends RestController
     public function get_all_vcc_get()
     {
 
+        $validasi = [
+            'user_id' => 'required',
+        ];
+        \GUMP::set_field_name('user_id', 'User ID');
+
+        if (validate($this->get(), $validasi) === false) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => validate($this->get(), $validasi)
+            ], 422);
+        }
+
         $params = [
-            'limit' => $this->get('limit')
+            'limit' => $this->get('limit'),
+            'user_id' => $this->get('user_id')
         ];
 
         $vcc = $this->M_api->getAllVcc($params);
@@ -661,8 +748,22 @@ class Mobile extends RestController
     public function get_all_transaction_get()
     {
 
+        $validasi = [
+            'user_id' => 'required',
+        ];
+        \GUMP::set_field_name('user_id', 'User ID');
+
+        if (validate($this->get(), $validasi) === false) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => validate($this->get(), $validasi)
+            ], 422);
+        }
+
         $params = [
-            'limit' => $this->get('limit')
+            'limit' => $this->get('limit'),
+            'user_id' => $this->get('user_id')
         ];
 
         $transaction = $this->M_api->getAllTransaksi($params);
@@ -734,17 +835,20 @@ class Mobile extends RestController
 
     public function create_transaction_post()
     {
+
         $validasi = [
             'user_id' => 'required',
             'm_metode_id' => 'required',
             'm_rate_id' => 'required',
             'jumlah' => 'required',
+            'sub_total' => 'required',
             'total_bayar' => 'required'
         ];
         \GUMP::set_field_name('user_id', 'User ID');
         \GUMP::set_field_name('m_metode_id', 'Metode');
         \GUMP::set_field_name('m_rate_id', 'Rate Harga');
         \GUMP::set_field_name('jumlah', 'Jumlah Pembelian');
+        \GUMP::set_field_name('sub_total', 'Sub Total');
         \GUMP::set_field_name('total_bayar', 'Total Bayar');
 
         if (validate($this->post(), $validasi)['status'] === false) {
@@ -760,13 +864,17 @@ class Mobile extends RestController
             'kode' => generateRandomString(),
             'user_id' => $this->post('user_id'),
             'm_metode_id' => $this->post('m_metode_id'),
-            'sub_total' => $this->post('total_bayar')
+            'sub_total' => $this->post('total_bayar'),
+            'created_by' => $this->post('user_id'),
+            'created_at' => time()
         ];
 
         $body_detail = [
             'm_price_id' => $this->post('m_rate_id'),
             'quantity' => $this->post('jumlah'),
-            'total' => $this->post('total_bayar')
+            'total' => $this->post('sub_total'),
+            'created_by' => $this->post('user_id'),
+            'created_at' => time()
         ];
 
         $transaksi = $this->M_api->create_transaction($body_transaction, $body_detail);
@@ -788,12 +896,15 @@ class Mobile extends RestController
 
     public function bayar_transaction_put()
     {
+        
         $validasi = [
             'id' => 'required',
-            'bukti' => 'required'
+            'bukti' => 'required',
+            'user_id' => 'required'
         ];
         \GUMP::set_field_name('id', 'ID Transaksi');
         \GUMP::set_field_name('bukti', 'Bukti Transfer');
+        \GUMP::set_field_name('user_id', 'User ID');
 
         if (validate($this->put(), $validasi)['status'] === false) {
             // Set the response and exit
@@ -821,6 +932,8 @@ class Mobile extends RestController
 
             $body = [
                 'bukti'         =>  "{$path}{$upload['data']}",
+                'modified_by' => $this->post('user_id'),
+                'modified_at' => time()
             ];
 
             $transaksi = $this->M_api->bayar_transaction($id, $body);

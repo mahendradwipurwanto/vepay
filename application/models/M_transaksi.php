@@ -53,7 +53,7 @@ class M_transaksi extends CI_Model
         foreach($models as $key => $val){
             
             $btnDetail          = '<button onclick="showMdlTransDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
-            $btnVerif           = '<button onclick="showMdlTransVerif(\''.$val->id.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
+            $btnVerif           = '<button onclick="showMdlTransVerif(\''.$val->user_id.'\', \''.$val->id.'\', \''.base_url().$val->bukti.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
             
             $status             = '<span class="badge bg-secondary">Pending</span>';
 
@@ -96,11 +96,12 @@ class M_transaksi extends CI_Model
         return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
     }
 
-    function getProductTransaksi($transaksi_di = null){
-        $this->db->select('a.*, b.name, b.image')
+    function getProductTransaksi($id_transaksi = null){
+        $this->db->select('a.*, c.name, c.image')
         ->from('_transaksi_detail a')
-        ->join('m_product b', 'a.m_product_id = b.id')
-        ->where(['a.transaksi_id' => $transaksi_di, 'a.is_deleted' => 0])
+        ->join('m_price b', 'a.m_price_id = b.id')
+        ->join('m_product c', 'b.m_product_id = c.id')
+        ->where(['a.transaksi_id' => $id_transaksi, 'a.is_deleted' => 0])
         ;
 
         $models = $this->db->get()->result();
@@ -108,7 +109,7 @@ class M_transaksi extends CI_Model
         $arrModels = [];
 
         foreach($models as $key => $val){
-            $arrModels[$key]['product_id'] = $val->m_product_id;
+            $arrModels[$key]['price_id'] = $val->m_price_id;
             $arrModels[$key]['product'] = $val->name;
             $arrModels[$key]['product_img'] = $val->image;
             $arrModels[$key]['jumlah'] = $val->quantity;
@@ -122,6 +123,24 @@ class M_transaksi extends CI_Model
         ];
     }
 
+    public function getDetailTransaksi($id_transaksi = null){
+        $this->db->select('a.*, b.quantity as jumlah, d.name as product, e.email, f.name, f.phone, g.metode')
+        ->from('tb_transaksi a')
+        ->join('_transaksi_detail b', 'a.id = b.transaksi_id', 'inner')
+        ->join('m_price c', 'b.m_price_id = c.id', 'inner')
+        ->join('m_product d', 'c.m_product_id = d.id', 'inner')
+        ->join('tb_auth e', 'a.user_id = e.user_id', 'inner')
+        ->join('tb_user f', 'a.user_id = f.user_id', 'inner')
+        ->join('m_metode g', 'a.m_metode_id = g.id', 'inner')
+        ->where(['a.id' => $id_transaksi, 'a.is_deleted' => 0])
+        ;
+
+        $model = $this->db->get()->row();
+        
+        return $model;
+
+    }
+
     function addTransaksi($image = null){
 
         // get detail product
@@ -131,6 +150,7 @@ class M_transaksi extends CI_Model
         
         if (is_null($image)) {
             $data = [
+                'id'                => rand(000000000, 999999999),
                 'kode'              => generateRandomString(),
                 'user_id'           => $this->input->post('member'),
                 'm_metode_id'       => $this->input->post('metode'),
@@ -142,6 +162,7 @@ class M_transaksi extends CI_Model
             ];
         } else {
             $data = [
+                'id'                => rand(000000000, 999999999),
                 'kode'              => generateRandomString(),
                 'user_id'           => $this->input->post('member'),
                 'm_metode_id'       => $this->input->post('metode'),
@@ -159,7 +180,7 @@ class M_transaksi extends CI_Model
 
         $data = [
             'transaksi_id'      => $transaksi_id,
-            'm_product_id'      => $rate_product->m_product_id,
+            'm_price_id'        => $this->input->post('produk'),
             'quantity'          => $this->input->post('jumlah'),
             'price'             => $rate_product->price,
             'total'             => $sub_total,
@@ -168,6 +189,68 @@ class M_transaksi extends CI_Model
         ];
 
         $this->db->insert('_transaksi_detail', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function verificationPayment()
+    {
+        $user_id = $this->input->post('user_id');
+        $id = $this->input->post('id');
+    
+        $data = [
+            'status' => 2,
+            'modified_at' => time(),
+            'modified_by' => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('tb_transaksi', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function rejectedPayment()
+    {
+        $id = $this->input->post('id');
+
+        $data = [
+            'status' => 3,
+            'modified_at' => time(),
+            'modified_by' => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('tb_transaksi', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function pendingPayment()
+    {
+        $id = $this->input->post('id');
+
+        $data = [
+            'status' => 1,
+            'modified_at' => time(),
+            'modified_by' => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('tb_transaksi', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+
+    public function cancelPayment()
+    {
+        $id = $this->input->post('id');
+
+        $data = [
+            'status' => 4,
+            'modified_at' => time(),
+            'modified_by' => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('tb_transaksi', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 }

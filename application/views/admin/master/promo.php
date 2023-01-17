@@ -17,7 +17,7 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-body">
-				<table class="table table-hover table-striped w-100 dataTables" id="table">
+				<table class="table table-borderless table-thead-bordered nowrap w-100 align-middle dataTables" id="table">
 					<thead>
 						<tr>
 							<th width="5%">No.</th>

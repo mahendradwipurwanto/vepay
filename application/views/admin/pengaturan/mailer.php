@@ -80,7 +80,7 @@
 	<div class="col-md-5">
 		<div class="card card-body">
 			<h4>Testing config mailer</h4>
-			<form action="<?= site_url('api/master/testMailer');?>" method="post" class="js-validate needs-validation"
+			<form action="<?= site_url('api/admin/testMailer');?>" method="post" class="js-validate needs-validation"
 				novalidate>
 				<div class="mb-3">
 					<label for="inputEmailTestingMailer">Testing email </label>

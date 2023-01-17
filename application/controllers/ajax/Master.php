@@ -44,6 +44,7 @@ class Master extends CI_Controller
                 "name"          => $val->name,
                 "categories"    => $val->categories,
                 "price"         => "<ul class='list-unstyled list-py-2'>{$val->price}</ul>",
+                "fee"           => $val->fee,
                 "description"   => $val->description,
             ];
         }
@@ -99,5 +100,23 @@ class Master extends CI_Controller
         $data['metode']              = $metode;
 
         $this->load->view('admin/ajax/edit_metode', $data);
+    }
+
+    public function getDetailBlockchain(){
+
+        $blockchain                      = $this->M_master->getDetailBlockchain($this->input->post('blockchain_id'));
+        
+        $data['blockchain']              = $blockchain;
+
+        $this->load->view('admin/ajax/edit_blockchain', $data);
+    }
+
+    public function getDetailVcc(){
+
+        $vcc                      = $this->M_master->getDetailVcc($this->input->post('VCC_id'));
+        
+        $data['vcc']              = $vcc;
+
+        $this->load->view('admin/ajax/edit_vcc', $data);
     }
 }

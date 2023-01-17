@@ -103,14 +103,18 @@ class M_master extends CI_Model
             $models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100).(strlen($val->description) > 100 ? '...' : '') : '-';
 
             $models[$key]->price        = "-";
+            $models[$key]->fee        = "-";
             $price = $this->db->get_where('m_price', ['m_product_id' => $val->id, 'status' => 1, 'is_deleted' => 0])->result();
             
-            $price_txt = "";
+            $price_txt  = "";
+            $fee_txt    = "";
             if(!empty($price)){
                 foreach ($price as $k => $v) {
                     $price_formatted    = number_format($v->price,0,",",".");
                     $price_txt          .= "<li>Rp. {$price_formatted} - <i class='text-muted'>{$v->type}</i></li>";
+                    $fee_txt            = "{$v->fee}%";
                 }
+                $models[$key]->fee      = $fee_txt;
                 $models[$key]->price    = $price_txt; 
             }
 
@@ -349,22 +353,51 @@ class M_master extends CI_Model
         $id = htmlspecialchars($this->input->post('id'), true);
         $metode = htmlspecialchars($this->input->post('metode'), true);
         $description = htmlspecialchars($this->input->post('description'), true);
-
-        if (is_null($image)) {
-            $data = [
-                'metode'        => $metode,
-                'description'   => $description,
-                'created_at'    => time(),
-                'created_by'    => $this->session->userdata('user_id')
-            ];
+        $atas_nama = htmlspecialchars($this->input->post('atas_nama'), true);
+        $no_rekening = htmlspecialchars($this->input->post('no_rekening'), true);
+        
+        if (isset($id) && $id != '') {
+            if (is_null($image)) {
+                $data = [
+                    'metode'        => $metode,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'modified_at'    => time(),
+                    'modified_by'    => $this->session->userdata('user_id')
+                ];
+            } else {
+                $data = [
+                    'metode'        => $metode,
+                    'image'         => $image,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'modified_at'    => time(),
+                    'modified_by'    => $this->session->userdata('user_id')
+                ];
+            }
         } else {
-            $data = [
-                'metode'        => $metode,
-                'image'         => $image,
-                'description'   => $description,
-                'created_at'    => time(),
-                'created_by'    => $this->session->userdata('user_id')
-            ];
+            if (is_null($image)) {
+                $data = [
+                    'metode'        => $metode,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'created_at'    => time(),
+                    'created_by'    => $this->session->userdata('user_id')
+                ];
+            } else {
+                $data = [
+                    'metode'        => $metode,
+                    'image'         => $image,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'created_at'    => time(),
+                    'created_by'    => $this->session->userdata('user_id')
+                ];
+            }
         }
         
         if (isset($id) && $id != '') {
@@ -395,12 +428,168 @@ class M_master extends CI_Model
             'm_product_id'      => $this->input->post('m_product_id'),
             'type'              => $this->input->post('type'),
             'price'             => $this->input->post('price'),
+            'fee'               => $this->input->post('fee'),
             'status'            => 1,
             'created_at'        => time(),
             'created_by'        => $this->session->userdata('user_id')
         ];
 
         $this->db->insert('m_price', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function getAllVcc(){
+        $this->db->select('a.*, b.name')
+        ->from('tb_vcc a')
+        ->join('tb_user b', 'a.user_id = b.user_id')
+        ->where(['a.is_deleted' => 0])
+        ;
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+
+    public function getDetailVcc($id = null)
+    {
+        $this->db->select('a.*, b.name')
+        ->from('tb_vcc a')
+        ->join('tb_user b', 'a.user_id = b.user_id')
+        ->where(['a.id' => $id])
+        ;
+
+        $models = $this->db->get()->row();
+        return $models;
+
+    }
+
+    public function saveVcc()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+        $member = htmlspecialchars($this->input->post('member'), true);
+        $number = htmlspecialchars($this->input->post('number'), true);
+        $holder = htmlspecialchars($this->input->post('holder'), true);
+        $valid_date = htmlspecialchars($this->input->post('valid_date'), true);
+        $security_code = htmlspecialchars($this->input->post('security_code'), true);
+        
+        if (isset($id) && $id != '') {
+            $data = [
+                'number'        => $number,
+                'holder'        => $holder,
+                'valid_date'    => $valid_date,
+                'security_code' => $security_code,
+                'modified_at'   => time(),
+                'modified_by'   => $this->session->userdata('user_id')
+            ];
+        } else {
+            $data = [
+                'user_id'       => $member,
+                'number'        => $number,
+                'holder'        => $holder,
+                'valid_date'    => $valid_date,
+                'security_code' => $security_code,
+                'created_at'    => time(),
+                'created_by'    => $this->session->userdata('user_id')
+            ];
+        }
+        
+        if (isset($id) && $id != '') {
+            $this->db->where('id', $id);
+            $this->db->update('tb_vcc', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        } else {
+            $this->db->insert('tb_vcc', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+    }
+
+    public function deleteVcc()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('tb_vcc', ['is_deleted' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function getAllBlockchain()
+    {
+        return $this->db->get_where('m_blockchain', ['is_deleted' => 0])->result();
+    }
+
+    public function getDetailBlockchain($id = null)
+    {
+        return $this->db->get_where('m_blockchain', ['id' => $id, 'is_deleted' => 0])->row();
+    }
+
+    public function saveBlockchain($image = null)
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+        $blockchain = htmlspecialchars($this->input->post('blockchain'), true);
+        $description = htmlspecialchars($this->input->post('description'), true);
+        $price = htmlspecialchars($this->input->post('price'), true);
+        $fee = htmlspecialchars($this->input->post('fee'), true);
+        
+        if (isset($id) && $id != '') {
+            if (is_null($image)) {
+                $data = [
+                    'blockchain'        => $blockchain,
+                    'description'   => $description,
+                    'price'     => $price,
+                    'fee'   => $fee,
+                    'modified_at'    => time(),
+                    'modified_by'    => $this->session->userdata('user_id')
+                ];
+            } else {
+                $data = [
+                    'blockchain'        => $blockchain,
+                    'image'         => $image,
+                    'description'   => $description,
+                    'price'     => $price,
+                    'fee'   => $fee,
+                    'modified_at'    => time(),
+                    'modified_by'    => $this->session->userdata('user_id')
+                ];
+            }
+        } else {
+            if (is_null($image)) {
+                $data = [
+                    'blockchain'        => $blockchain,
+                    'description'   => $description,
+                    'price'     => $price,
+                    'fee'   => $fee,
+                    'created_at'    => time(),
+                    'created_by'    => $this->session->userdata('user_id')
+                ];
+            } else {
+                $data = [
+                    'blockchain'        => $blockchain,
+                    'image'         => $image,
+                    'description'   => $description,
+                    'price'     => $price,
+                    'fee'   => $fee,
+                    'created_at'    => time(),
+                    'created_by'    => $this->session->userdata('user_id')
+                ];
+            }
+        }
+        
+        if (isset($id) && $id != '') {
+            $this->db->where('id', $id);
+            $this->db->update('m_blockchain', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        } else {
+            $this->db->insert('m_blockchain', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+    }
+
+    public function deleteBlockchain()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('m_blockchain', ['is_deleted' => 1]);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 }

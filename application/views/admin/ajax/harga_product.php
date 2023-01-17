@@ -50,6 +50,17 @@
 					<span class="invalid-feedback">Harap masukkan rate harga yang valid.</span>
 				</div>
 			</div>
+			<div class="mb-4">
+				<div class="js-form-message">
+					<label for="inputFee" class="form-label">FEE</label>
+					<div class="input-group input-group-sm">
+						<input type="text" name="fee" id="inputFee" class="form-control form-control-sm" min="0" max="100"
+							placeholder="Fee" onkeypress="return isNumberKey(event)" required>
+						<span class="input-group-text" id="basic-addon1">%</span>
+					</div>
+					<span class="invalid-feedback">Harap masukkan rate harga yang valid.</span>
+				</div>
+			</div>
 
 			<div class="modal-footer p-0 pt-3">
 				<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
@@ -58,7 +69,7 @@
 		</div>
 		<div class="col-7">
 			<h4 class="text-primary">Riwayat Rate Harga</h4>
-			<ul class="list-group list-group-flush" style="max-height: 235px; overflow-y: auto;">
+			<ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
 				<?php if(!empty($price_history)):?>
 				<?php foreach ($price_history as $key => $val):?>
 				<li class="list-group-item">
@@ -69,6 +80,7 @@
 					<?php if($val->status == 1):?>
 					<span class="badge bg-soft-warning">aktif</span>
 					<?php endif;?>
+					<i class="ml-2">- Fee <?= $val->fee;?>%</i>
 				</li>
 				<?php endforeach;?>
 				<?php else:?>

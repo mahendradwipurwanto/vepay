@@ -204,7 +204,7 @@
 							<label for="inputCatatan" class="form-label">Catatan <small
 									class="text-muted">(optional)</small></label>
 							<textarea type="text" id="inputCatatan" name="notes" class="form-control form-control-sm"
-								placeholder="Catatan" rows="3" required></textarea>
+								placeholder="Catatan" rows="3"></textarea>
 							<span class="invalid-feedback">Harap masukkan Catatan yang valid.</span>
 						</div>
 					</div>
@@ -238,13 +238,41 @@
 
 <!-- Modal -->
 <div class="modal fade" id="mdlTransVerif" tabindex="-1" aria-labelledby="mdlDeleteLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-xl">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="mdlDeleteLabel">Verifikasi Transaksi</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body" id="modalTransVerif">
+			<div class="modal-body">
+				<h5>Payment proff</h5>
+				<img src="<?= base_url();?>assets/images/placeholder.jpg" class="img-thumbnail w-100 mb-3" alt=""
+					id="evidance">
+				<div class="text-center">Verifikasi transaksi ini?</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+				<input type="hidden" name="id" class="mdlVerif_id">
+				<input type="hidden" name="user_id" class="mdlVerif_userid">
+				<button type="button" class="btn btn-soft-success btn-sm" id="verifBtn" onclick="verifData()">Verifikasi</button>
+				<button type="button" class="btn btn-soft-danger btn-sm" id="rejectBtn" onclick="rejectData()">Reject</button>
+				<?php if($this->session->userdata('role') == 0):?>
+				<button type="button" class="btn btn-soft-secondary btn-sm" id="pendingBtn" onclick="pendingData()">Pending</button>
+				<button type="button" class="btn btn-soft-warning btn-sm" id="cancelBtn" onclick="cancelData()">Expired</button>
+				<?php endif;?>
+				<!-- <form action="<?= site_url('api/transaksi/verificationPayment')?> " method="post"
+					class="js-validate need-validate" novalidate>
+					<input type="hidden" name="id" class="mdlVerif_id">
+					<input type="hidden" name="user_id" class="mdlVerif_userid">
+					<button type="submit" class="btn btn-soft-success btn-sm">Verification</button>
+				</form>
+				<form action="<?= site_url('api/transaksi/rejectedPayment')?> " method="post"
+					class="js-validate need-validate" novalidate>
+					<input type="hidden" name="id" class="mdlVerif_id">
+					<input type="hidden" name="user_id" class="mdlVerif_userid">
+					<button type="submit" class="btn btn-soft-danger btn-sm">Rejected</button>
+				</form> -->
 			</div>
 		</div>
 	</div>
@@ -322,23 +350,11 @@
 		});
 	}
 
-	const showMdlTransVerif = id => {
-		$("#modalTransContent").html(
-			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
-		);
-
+	const showMdlTransVerif= function (user_id, id, img) {
+		$('#evidance').prop('src', img);
+		$('.mdlVerif_id').val(id);
+		$('.mdlVerif_userid').val(user_id);
 		$('#mdlTransVerif').modal('show')
-
-		jQuery.ajax({
-			url: "<?= site_url('ajax/transaksi/getVerifTrans') ?>",
-			type: 'POST',
-			data: {
-				transaksi_id: id
-			},
-			success: function (data) {
-				$("#modalTransVerif").html(data);
-			}
-		});
 	}
 
 	function doneLoading() {
@@ -357,6 +373,270 @@
 		);
 
 		table.ajax.reload();
+	}
+
+	function verifData() {
+		var id = $('.mdlVerif_id').val();
+		var user_id = $('.mdlVerif_userid').val();
+
+		$('#verifBtn').prop("disabled", true);
+		// add spinner to button
+		$('#verifBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/transaksi/verificationPayment') ?>",
+			type: 'POST',
+			data: {
+				id: id,
+				user_id: user_id
+			},
+			success: function (data) {
+				$('#verifBtn').prop("disabled", false);
+				$('#verifBtn').html(`Verified`);
+
+				$('#mdlTransVerif').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly verification payment"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
+	}
+
+	function rejectData() {
+		var id = $('.mdlVerif_id').val();
+		var user_id = $('.mdlVerif_userid').val();
+
+		$('#rejectBtn').prop("disabled", true);
+		// add spinner to button
+		$('#rejectBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/transaksi/rejectedPayment') ?>",
+			type: 'POST',
+			data: {
+				id: id,
+				user_id: user_id
+			},
+			success: function (data) {
+				$('#rejectBtn').prop("disabled", false);
+				$('#rejectBtn').html(`Reject`);
+
+				$('#mdlTransVerif').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly rejected payment"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
+	}
+
+	function pendingData() {
+		var id = $('.mdlVerif_id').val();
+		var user_id = $('.mdlVerif_userid').val();
+
+		$('#pendingBtn').prop("disabled", true);
+		// add spinner to button
+		$('#pendingBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/transaksi/pendingPayment') ?>",
+			type: 'POST',
+			data: {
+				id: id,
+				user_id: user_id
+			},
+			success: function (data) {
+				$('#pendingBtn').prop("disabled", false);
+				$('#pendingBtn').html(`Pending`);
+
+				$('#mdlTransVerif').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly set payment to pending"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
+	}
+
+	function cancelData() {
+		var id = $('.mdlVerif_id').val();
+		var user_id = $('.mdlVerif_userid').val();
+
+		$('#cancelBtn').prop("disabled", true);
+		// add spinner to button
+		$('#cancelBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/transaksi/cancelPayment') ?>",
+			type: 'POST',
+			data: {
+				id: id,
+				user_id: user_id
+			},
+			success: function (data) {
+				$('#cancelBtn').prop("disabled", false);
+				$('#cancelBtn').html(`Cancel`);
+
+				$('#mdlTransVerif').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly set payment to cancel"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
 	}
 
 </script>

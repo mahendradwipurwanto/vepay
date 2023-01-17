@@ -1,56 +1,66 @@
-<!-- Page Header -->
-<div class="docs-page-header">
-	<div class="row align-items-center">
-		<div class="col-sm">
-			<h1 class="docs-page-header-title">Dashboard</h1>
-			<p class="docs-page-header-text">Pantau secara singkat informasi website anda.</p>
+<div class="row justify-content-md-between align-items-md-center mb-10">
+	<div class="col-md-7 col-xl-6">
+		<div class="mb-4">
+			<h1 class="display-5 mb-3"><span class="h3">Selamat datang di </span><br><span
+					class="display-6">Aplikasi</span> <span class="text-warning text-highlight-info">Vepay.id</span>
+			</h1>
+			<p class="lead">Kelola produk anda dengan mudah.</p>
 		</div>
 	</div>
+	<!-- End Col -->
+
+	<div class="col-md-5 col-xl-6">
+		<img class="img-fluid" src="<?= base_url(); ?>assets/svg/illustrations/oc-building-apps.svg"
+			alt="Image Description">
+	</div>
+	<!-- End Col -->
 </div>
-<!-- End Page Header -->
-<div class="row">
-	<div class="col-md-3 col-sm-12 mb-4">
-		<div class="card" style="text-align: center;">
+<!-- End Row -->
+
+<span class="divider-center text-cap mb-8">Quick access menu</span>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 mb-6">
+	<div class="col mb-4">
+		<!-- Card -->
+		<a class="card card-sm card-transition h-100" href="<?= site_url('admin/transaksi'); ?>" data-aos="fade-up">
+			<img class="card-img p-2" src="<?= base_url(); ?>assets/svg/design-system/docs-avatars.svg"
+				alt="Image Description">
 			<div class="card-body">
-				<h1 class="h1"><?= number_format($count['produk'],0,",",".")?></h1>
-				<div class="h6">Produk</div>
-				<div style="position: absolute;right: 10px;bottom: 0px;">
-					<i class="bi bi-box-seam text-primary" style="font-size: 2.5em;"></i>
-				</div>
+				<h4 class="card-title text-inherit">Transaksi</h4>
+				<p class="card-text small text-body">Kelola transaksi anda</p>
 			</div>
-		</div>
+		</a>
+		<!-- End Card -->
 	</div>
-	<div class="col-md-3 col-sm-12 mb-4">
-		<div class="card" style="text-align: center;">
+	<!-- End Col -->
+
+	<div class="col mb-4">
+		<!-- Card -->
+		<a class="card card-sm card-transition h-100" href="<?= site_url('master/produk'); ?>"
+			data-aos="fade-up">
+			<img class="card-img p-2" src="<?= base_url(); ?>assets/svg/design-system/docs-toggle-state.svg"
+				alt="Image Description">
 			<div class="card-body">
-				<h1 class="h1"><?= number_format($count['member'],0,",",".")?></h1>
-				<div class="h6">Member</div>
-				<div style="position: absolute;right: 10px;bottom: 0px;">
-					<i class="bi bi-people text-secondary" style="font-size: 2.5em;"></i>
-				</div>
+				<h4 class="card-title text-inherit">Produk</h4>
+				<p class="card-text small text-body">Kelola produk anda</p>
 			</div>
-		</div>
+		</a>
+		<!-- End Card -->
 	</div>
-	<div class="col-md-3 col-sm-12 mb-4">
-		<div class="card" style="text-align: center;">
+	<!-- End Col -->
+
+	<div class="col mb-4">
+		<!-- Card -->
+		<a class="card card-sm card-transition h-100" href="<?= site_url('admin/pengaturan'); ?>" data-aos="fade-up">
+			<img class="card-img p-2" src="<?= base_url(); ?>assets/svg/design-system/docs-sorting.svg"
+				alt="Image Description">
 			<div class="card-body">
-				<h1 class="h1"><?= number_format($count['transaksi'],0,",",".")?></h1>
-				<div class="h6">Transaksi</div>
-				<div style="position: absolute;right: 10px;bottom: 0px;">
-					<i class="bi bi-wallet2 text-warning" style="font-size: 2.5em;"></i>
-				</div>
+				<h4 class="card-title text-inherit">Settings</h4>
+				<p class="card-text small text-body">Atur website anda</p>
 			</div>
-		</div>
+		</a>
+		<!-- End Card -->
 	</div>
-	<div class="col-md-3 col-sm-12 mb-4">
-		<div class="card" style="text-align: center;">
-			<div class="card-body">
-				<h1 class="h1">Rp. <?= number_format($count['pendapatan'],0,",",".")?></h1>
-				<div class="h6">Pendapatan</div>
-				<div style="position: absolute;right: 10px;bottom: 0px;">
-					<i class="bi bi-cash-stack text-success" style="font-size: 2.5em;"></i>
-				</div>
-			</div>
-		</div>
-	</div>
+	<!-- End Col -->
 </div>
+<!-- End Row -->
