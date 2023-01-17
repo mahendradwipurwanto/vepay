@@ -40,6 +40,7 @@ class Transaksi extends CI_Controller
             $arr[$key] = [
                 "no"            => ++$no,
                 "action"        => $val->action,
+                "tanggal"       => $val->tanggal,
                 "kode"          => $val->kode,
                 "name"          => $val->name,
                 "metode"        => $val->metode,

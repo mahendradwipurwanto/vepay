@@ -87,6 +87,7 @@
 							<th scope="col">No</th>
 							<th scope="col"></th>
 							<th scope="col">Kode</th>
+							<th scope="col">Tanggal</th>
 							<th scope="col">Nama</th>
 							<th scope="col">Metode</th>
 							<th scope="col">Produk</th>
@@ -194,7 +195,7 @@
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
 							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/*" id="poster-product">
+								accept="image/* .svg" id="poster-product">
 						</div>
 						<small class="text-muted">Max file size 1Mb. Anda dapat melawati field ini jika pembayaran dalam
 							proses</small>
@@ -312,6 +313,9 @@
 			},
 			{
 				data: 'kode'
+			},
+			{
+				data: 'tanggal'
 			},
 			{
 				data: 'name'

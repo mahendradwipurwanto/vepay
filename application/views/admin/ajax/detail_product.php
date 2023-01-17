@@ -16,7 +16,7 @@
 		</figure>
 		<label for="poster-product" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
 		<div class="input-group">
-			<input type="file" class="form-control form-control-sm imgprevedit" name="image" accept="image/*" id="poster-product">
+			<input type="file" class="form-control form-control-sm imgprevedit" name="image" accept="image/* .svg" id="poster-product">
 		</div>
 		<small class="text-muted">Max file size 1Mb</small>
 	</div>

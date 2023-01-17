@@ -190,7 +190,7 @@ class M_api extends CI_Model
         $this->db->select('a.*, b.categories')
         ->from('m_product a')
         ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
-        ->where(['a.is_deleted' => 0])
+        ->where(['a.is_active' => 1, 'a.is_deleted' => 0])
         ;
 
         $this->db->order_by('a.name ASC');
@@ -294,7 +294,7 @@ class M_api extends CI_Model
         $this->db->select('a.*, b.*')
         ->from('m_price a')
         ->join('m_product b', 'a.m_product_id = b.id')
-        ->where(['a.is_deleted' => 0])
+        ->where(['b.is_active' => 1, 'a.status' => 1, 'a.is_deleted' => 0])
         ;
 
         if(!empty($params) && isset($params['type'])){
@@ -352,7 +352,7 @@ class M_api extends CI_Model
     
     public function getAllTransaksi($params = [])
     {
-        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.status,, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.status,, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id')
         ->join('tb_auth c', 'a.user_id = c.user_id')
@@ -377,7 +377,7 @@ class M_api extends CI_Model
     
     public function getDetailTransaksi($id = null)
     {
-        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.status, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.status, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
@@ -420,7 +420,7 @@ class M_api extends CI_Model
             ];
         }
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.user_id, a.sub_total as total, e.total as sub_total, a.status, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.user_id, a.sub_total as total, e.total as sub_total, a.status, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
@@ -454,7 +454,7 @@ class M_api extends CI_Model
             ];
         }
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.sub_total as total, e.total as sub_total, a.bukti, a.user_id, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')

@@ -3,7 +3,7 @@
 	<div class="row align-items-center">
 		<div class="col-sm">
 			<h1 class="docs-page-header-title">Produk
-				<div class="btn-group float-end">
+				<div class="btn-group float-end d-none">
 					<button class="btn btn-sm btn-success dropdown-toggle" type="button"
 						id="dropdownMenuButtonClickAnimation" data-bs-toggle="dropdown" aria-expanded="false"
 						data-bs-dropdown-animation>
@@ -84,6 +84,7 @@
 							<th width="15%" scope="col"></th>
 							<th scope="col">Nama</th>
 							<th scope="col">Kategori</th>
+							<th scope="col">Status</th>
 							<th scope="col">Harga</th>
 							<th scope="col">FEE</th>
 							<th scope="col">Keterangan</th>
@@ -118,14 +119,14 @@
 					</div>
 					<div class="mb-3">
 						<figure>
-							<img src="#" id="imgthumbnailtambah" class="img-thumbnail img-fluid" alt="Thumbnail image"
+							<img src="#" id="product-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
 								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 						</figure>
-						<label for="poster-product" class="form-label">Gambar <small
+						<label for="product-upload" class="form-label">Gambar <small
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
-							<input type="file" class="form-control form-control-sm imgprevtambah" name="image" accept="image/*"
-								id="poster-product">
+							<input type="file" class="form-control form-control-sm imgprev" name="image" accept="image/* .svg"
+								id="product-upload">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
 					</div>
@@ -198,10 +199,64 @@
 				<div class="modal-footer p-0 pt-2 m-0">
 					<form action="<?= site_url('api/master/deleteProduct')?> " method="post"
 						class="js-validate need-validate m-0" novalidate>
-						<input type="hidden" name="id" id="mdlProduct_id">
+						<input type="hidden" name="id" class="mdlProduct_id">
 						<button type="button" class="btn btn-outline-secondary btn-sm"
 							data-bs-dismiss="modal">Batal</button>
 						<button type="submit" class="btn btn-soft-danger btn-sm">Hapus</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Modal -->
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mdlProductActive" tabindex="-1" aria-labelledby="mdlActiveLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mdlActiveLabel">Aktivasi produk</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="mb-2">Apakah anda yakin ingin mengaktifkan produk ini?
+				</div>
+				<div class="modal-footer p-0 pt-2 m-0">
+					<form action="<?= site_url('api/master/aktifProduct')?> " method="post"
+						class="js-validate need-validate m-0" novalidate>
+						<input type="hidden" name="id" class="mdlProduct_id">
+						<button type="button" class="btn btn-outline-secondary btn-sm"
+							data-bs-dismiss="modal">Batal</button>
+						<button type="submit" class="btn btn-soft-success btn-sm">Aktivasi</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Modal -->
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mdlProductNonActive" tabindex="-1" aria-labelledby="mdlNonActiveLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="mdlNonActiveLabel">Non-Aktivasi produk</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="mb-2">Apakah anda yakin ingin nonaktifkan produk ini?
+				</div>
+				<div class="modal-footer p-0 pt-2 m-0">
+					<form action="<?= site_url('api/master/nonaktifProduct')?> " method="post"
+						class="js-validate need-validate m-0" novalidate>
+						<input type="hidden" name="id" class="mdlProduct_id">
+						<button type="button" class="btn btn-outline-secondary btn-sm"
+							data-bs-dismiss="modal">Batal</button>
+						<button type="submit" class="btn btn-soft-secondary btn-sm">Non-Aktivasi</button>
 					</form>
 				</div>
 			</div>
@@ -259,6 +314,9 @@
 				data: 'categories'
 			},
 			{
+				data: 'status'
+			},
+			{
 				data: 'price'
 			},
 			{
@@ -289,8 +347,18 @@
 	}
 
 	const showMdlProductDelete = id => {
-		$('#mdlProduct_id').val(id);
+		$('.mdlProduct_id').val(id);
 		$('#mdlProductDelete').modal('show')
+	}
+
+	const showMdlProductActive = id => {
+		$('.mdlProduct_id').val(id);
+		$('#mdlProductActive').modal('show')
+	}
+
+	const showMdlProductNonActive = id => {
+		$('.mdlProduct_id').val(id);
+		$('#mdlProductNonActive').modal('show')
 	}
 
 	const showMdlProductPrice = id => {

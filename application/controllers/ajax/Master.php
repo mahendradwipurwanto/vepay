@@ -43,6 +43,7 @@ class Master extends CI_Controller
                 "action"        => $val->action,
                 "name"          => $val->name,
                 "categories"    => $val->categories,
+                "status"        => $val->status,
                 "price"         => "<ul class='list-unstyled list-py-2'>{$val->price}</ul>",
                 "fee"           => $val->fee,
                 "description"   => $val->description,

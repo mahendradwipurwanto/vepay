@@ -80,6 +80,7 @@ class M_transaksi extends CI_Model
             }
 
             $models[$key]->kode     = $val->kode;
+            $models[$key]->tanggal  = date("d F Y, H:i", $val->created_at);
             $models[$key]->name     = $val->name;
             $models[$key]->metode   = $val->metode;
             $product = $this->getProductTransaksi($val->id)['product'];

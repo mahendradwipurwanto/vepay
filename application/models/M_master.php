@@ -93,6 +93,8 @@ class M_master extends CI_Model
 
         foreach ($models as $key => $val) {
             $btnDetail                  = '<button onclick="showMdlProductDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-pencil-square"></i></button>';
+            $btnActive                  = '<button onclick="showMdlProductActive(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-check-square"></i></button>';
+            $btnNonActive               = '<button onclick="showMdlProductNonActive(\''.$val->id.'\')" class="btn btn-soft-secondary btn-icon btn-sm me-2"><i class="bi-dash-square"></i></button>';
             $btnDelete                  = '<button onclick="showMdlProductDelete(\''.$val->id.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
             $btnPrice                   = '<button onclick="showMdlProductPrice(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-cash-coin"></i></button>';
 
@@ -100,6 +102,7 @@ class M_master extends CI_Model
             $models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
             $models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
             $models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
+            $models[$key]->status       = ($val->is_active == 1 ? "<span class='badge bg-soft-success'>aktif</span>" : "<span class='badge bg-soft-secondary'>nonaktif</span>");
             $models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100).(strlen($val->description) > 100 ? '...' : '') : '-';
 
             $models[$key]->price        = "-";
@@ -118,7 +121,7 @@ class M_master extends CI_Model
                 $models[$key]->price    = $price_txt; 
             }
 
-            $models[$key]->action       = $btnDetail.$btnDelete.$btnPrice;
+            $models[$key]->action       = $btnDetail.$btnDelete.$btnPrice. ($val->is_active == 1 ? $btnNonActive : $btnActive);
         }
 
         $totalRecords = count($models);
@@ -227,6 +230,32 @@ class M_master extends CI_Model
     {
         $data = [
             'is_deleted'        => 1,
+            'modified_at'       => time(),
+            'modified_by'       => $this->session->userdata('user_id'),
+        ];
+
+        $this->db->where('id', $this->input->post('id'));
+        $this->db->update('m_product', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function aktifProduct()
+    {
+        $data = [
+            'is_active'         => 1,
+            'modified_at'       => time(),
+            'modified_by'       => $this->session->userdata('user_id'),
+        ];
+
+        $this->db->where('id', $this->input->post('id'));
+        $this->db->update('m_product', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function nonaktifProduct()
+    {
+        $data = [
+            'is_active'         => 0,
             'modified_at'       => time(),
             'modified_by'       => $this->session->userdata('user_id'),
         ];
@@ -467,27 +496,33 @@ class M_master extends CI_Model
     {
         $id = htmlspecialchars($this->input->post('id'), true);
         $member = htmlspecialchars($this->input->post('member'), true);
+        $jenis_vcc = htmlspecialchars($this->input->post('jenis_vcc'), true);
         $number = htmlspecialchars($this->input->post('number'), true);
         $holder = htmlspecialchars($this->input->post('holder'), true);
         $valid_date = htmlspecialchars($this->input->post('valid_date'), true);
         $security_code = htmlspecialchars($this->input->post('security_code'), true);
+        $saldo = htmlspecialchars($this->input->post('saldo'), true);
         
         if (isset($id) && $id != '') {
             $data = [
                 'number'        => $number,
+                'jenis_vcc'     => $jenis_vcc,
                 'holder'        => $holder,
                 'valid_date'    => $valid_date,
                 'security_code' => $security_code,
+                'saldo'         => $saldo,
                 'modified_at'   => time(),
                 'modified_by'   => $this->session->userdata('user_id')
             ];
         } else {
             $data = [
                 'user_id'       => $member,
+                'jenis_vcc'     => $jenis_vcc,
                 'number'        => $number,
                 'holder'        => $holder,
                 'valid_date'    => $valid_date,
                 'security_code' => $security_code,
+                'saldo' =>      $saldo,
                 'created_at'    => time(),
                 'created_by'    => $this->session->userdata('user_id')
             ];

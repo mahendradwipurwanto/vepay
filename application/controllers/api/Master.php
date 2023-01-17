@@ -119,6 +119,28 @@ class Master extends CI_Controller
         }
     }
 
+    public function aktifProduct()
+    {
+        if ($this->M_master->aktifProduct() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil mengaktifkan produk ');
+            redirect(site_url('master/produk'));
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba mengaktifkan produk, harap coba lagi');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function nonaktifProduct()
+    {
+        if ($this->M_master->nonaktifProduct() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menonaktifkan produk ');
+            redirect(site_url('master/produk'));
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menonaktifkan produk, harap coba lagi');
+            redirect($this->agent->referrer());
+        }
+    }
+
     public function savePromo()
     {
         if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {

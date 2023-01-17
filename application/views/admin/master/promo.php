@@ -139,14 +139,14 @@
 					</div>
 					<div class="mb-3">
 						<figure>
-							<img src="#" id="imgthumbnail" class="img-thumbnail img-fluid" alt="Thumbnail image"
+							<img src="#" id="promo-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
 								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 						</figure>
-						<label for="poster-product" class="form-label">Gambar <small
+						<label for="promo-upload" class="form-label">Gambar <small
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
 							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/*" id="poster-product">
+								accept="image/* .svg" id="promo-upload">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
 					</div>

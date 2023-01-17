@@ -16,7 +16,7 @@
                 class="text-muted">(optional)</small>:</label>
         <div class="input-group">
             <input type="file" class="form-control form-control-sm imgprev" name="image"
-                accept="image/*" id="blockchain-upload">
+                accept="image/* .svg" id="blockchain-upload">
         </div>
         <small class="text-muted">Max file size 1Mb</small>
     </div>

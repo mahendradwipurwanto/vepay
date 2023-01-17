@@ -101,14 +101,14 @@
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
 							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/*" id="blockchain-upload">
+								accept="image/* .svg" id="blockchain-upload">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
 					</div>
 
 					<div class="mb-3">
 						<label for="inputSubject" class="form-label">Harga</label>
-						<input class="form-control form-control-sm" type="text" name="harga"
+						<input class="form-control form-control-sm" type="text" name="price"
 							placeholder="Ketikkan harga" required>
 					</div>
 
