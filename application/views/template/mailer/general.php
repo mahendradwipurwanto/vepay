@@ -513,7 +513,7 @@
 	<div class="card">
 		<div class="card-body">
 			<div class="mb-4" style="text-align: center;">
-				<img src="<?= base_url(); ?><?= $web_logo;?>" style="width: 100px;" />
+				<img src="https://i.ibb.co/zbVZVP3/logo.png" style="width: 100px;" />
 			</div>
 			<p style="text-align: center"><?= $message;?></p>
 			<br>

@@ -234,30 +234,12 @@ class Master extends CI_Controller
 
     public function saveBlockchain()
     {
-        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
-            $date = date('m/Y');
-            $path = "berkas/blockchain/{$date}/";
-            $upload = $this->uploader->uploadImage($_FILES['image'], $path);
-            if ($upload == true) {
-                if ($this->M_master->saveBlockchain($upload['filename']) == true) {
-                    $this->session->set_flashdata('notif_success', 'Berhasil menyimpan blockchain');
-                    redirect($this->agent->referrer());
-                } else {
-                    $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan blockchain');
-                    redirect($this->agent->referrer());
-                }
-            } else {
-                $this->session->set_flashdata('notif_warning', $upload['message']);
-                redirect($this->agent->referrer());
-            }
+        if ($this->M_master->saveBlockchain() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menyimpan blockchain');
+            redirect($this->agent->referrer());
         } else {
-            if ($this->M_master->saveBlockchain() == true) {
-                $this->session->set_flashdata('notif_success', 'Berhasil menyimpan blockchain');
-                redirect($this->agent->referrer());
-            } else {
-                $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan blockchain');
-                redirect($this->agent->referrer());
-            }
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan blockchain');
+            redirect($this->agent->referrer());
         }
     }
 

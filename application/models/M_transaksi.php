@@ -54,9 +54,10 @@ class M_transaksi extends CI_Model
             
             $btnDetail          = '<button onclick="showMdlTransDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
             $btnVerif           = '<button onclick="showMdlTransVerif(\''.$val->user_id.'\', \''.$val->id.'\', \''.base_url().$val->bukti.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
+            $models[$key]->action = $btnDetail.($val->status == 2 ? '' : $btnVerif);
             
             $status             = '<span class="badge bg-secondary">Pending</span>';
-
+            
             switch ($val->status) {
                 case 1:
                         $status = '<span class="badge bg-secondary">Pending</span>';
@@ -88,7 +89,6 @@ class M_transaksi extends CI_Model
             $models[$key]->total    = $val->sub_total;
             $models[$key]->status   = $status;
 
-            $models[$key]->action = $btnDetail.$btnVerif;
         }
 
         $totalRecords = count($models);

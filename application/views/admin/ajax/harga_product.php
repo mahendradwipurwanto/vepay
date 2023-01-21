@@ -81,6 +81,7 @@
 					<span class="badge bg-soft-warning">aktif</span>
 					<?php endif;?>
 					<i class="ml-2">- Fee <?= $val->fee;?>%</i>
+					<i role="button" class="bi bi-trash text-secondary" style="margin-left: 5px"></i>
 				</li>
 				<?php endforeach;?>
 				<?php else:?>

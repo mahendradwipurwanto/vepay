@@ -452,7 +452,7 @@ class Authentication extends CI_Controller
         if($verifikasi['status'] === true){
             if($this->M_auth->verified_user($verifikasi['data']->user_id)){
                 $this->session->set_flashdata('success', 'Berhasil verifikasi email anda');
-                redirect(base_url());
+                redirect('https://vepay.id/verifikasi.html');
             }else{
                 $this->session->set_flashdata('error', 'Token anda tidak valid');
                 redirect(base_url());

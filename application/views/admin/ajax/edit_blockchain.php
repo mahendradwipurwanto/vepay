@@ -7,30 +7,15 @@
         <input class="form-control form-control-sm" type="text"
             name="blockchain" value="<?= $blockchain->blockchain;?>" required>
     </div>
-    <div class="mb-3">
-        <figure class="text-center">
-            <img src="<?= base_url()?><?= $blockchain->image?>" id="blockchain-preview" class="img-thumbnail img-fluid" alt="<?= $blockchain->image?>"
-                onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
-        </figure>
-        <label for="blockchain-upload" class="form-label">Gambar <small
-                class="text-muted">(optional)</small>:</label>
-        <div class="input-group">
-            <input type="file" class="form-control form-control-sm imgprev" name="image"
-                accept="image/* .svg" id="blockchain-upload">
-        </div>
-        <small class="text-muted">Max file size 1Mb</small>
-    </div>
-
-    <div class="mb-3">
-        <label for="inputSubject" class="form-label">Harga</label>
-        <input class="form-control form-control-sm" type="text" name="price"
-            placeholder="Ketikkan harga" value="<?= $blockchain->price;?>" required>
-    </div>
 
     <div class="mb-3">
         <label for="inputSubject" class="form-label">Fee</label>
-        <input class="form-control form-control-sm" type="text" name="fee"
-            placeholder="Ketikkan fee" value="<?= $blockchain->fee;?>" required>
+        <div class="input-group input-group-sm">
+            <input type="text" name="fee" id="inputFee" class="form-control form-control-sm" min="0" max="100"
+                placeholder="Fee" value="<?= $blockchain->fee;?>" onkeypress="return isNumberKey(event)" required>
+            <span class="input-group-text" id="basic-addon1">%</span>
+        </div>
+        <span class="invalid-feedback">Harap masukkan rate harga yang valid.</span>
     </div>
 
     <div class="mb-3">

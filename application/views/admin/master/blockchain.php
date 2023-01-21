@@ -23,6 +23,7 @@
 							<th width="10%">No.</th>
 							<th width="25%"></th>
 							<th>Blockchain</th>
+							<th>FEE %</th>
 							<th>Keterangan</th>
 						</tr>
 					</thead>
@@ -37,6 +38,7 @@
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
 							<td><?= $val->blockchain;?></td>
+							<td><?= $val->fee;?></td>
 							<td><?= $val->description;?></td>
 						</tr>
 
@@ -92,30 +94,15 @@
 						<input class="form-control form-control-sm" type="text" name="blockchain"
 							placeholder="Ketikkan blockchain" required>
 					</div>
-					<div class="mb-3">
-						<figure>
-							<img src="#" id="blockchain-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
-								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
-						</figure>
-						<label for="blockchain-poster" class="form-label">Gambar <small
-								class="text-muted">(optional)</small>:</label>
-						<div class="input-group">
-							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/* .svg" id="blockchain-upload">
-						</div>
-						<small class="text-muted">Max file size 1Mb</small>
-					</div>
-
-					<div class="mb-3">
-						<label for="inputSubject" class="form-label">Harga</label>
-						<input class="form-control form-control-sm" type="text" name="price"
-							placeholder="Ketikkan harga" required>
-					</div>
-
+					
 					<div class="mb-3">
 						<label for="inputSubject" class="form-label">Fee</label>
-						<input class="form-control form-control-sm" type="text" name="fee"
-							placeholder="Ketikkan fee" required>
+						<div class="input-group input-group-sm">
+							<input type="text" name="fee" id="inputFee" class="form-control form-control-sm" min="0" max="100"
+								placeholder="Fee" onkeypress="return isNumberKey(event)" required>
+							<span class="input-group-text" id="basic-addon1">%</span>
+						</div>
+						<span class="invalid-feedback">Harap masukkan rate harga yang valid.</span>
 					</div>
 
 					<div class="mb-3">

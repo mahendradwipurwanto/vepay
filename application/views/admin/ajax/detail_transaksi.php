@@ -130,7 +130,7 @@
         <div class="row">
             <div class="col-sm-12 mb-2 mb-sm-0">
                 <figure class="text-center mb-2">
-                    <img id="imgthumbnail" class="img-thumbnail img-fluid"
+                    <img id="imgthumbnail" class="img-thumbnail img-fluid w-100"
                         alt="Thumbnail image"
                         src="<?= base_url();?><?= isset($transaksi->bukti) ? $transaksi->bukti : 'assets/images/placeholder.jpg';?>">
                 </figure>

@@ -87,12 +87,9 @@
 							<th scope="col">No</th>
 							<th scope="col"></th>
 							<th scope="col">Kode</th>
-							<th scope="col">Tanggal</th>
-							<th scope="col">Nama</th>
-							<th scope="col">Metode</th>
-							<th scope="col">Produk</th>
-							<th scope="col">Total</th>
 							<th scope="col">Status</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Produk</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -315,22 +312,13 @@
 				data: 'kode'
 			},
 			{
+				data: 'status'
+			},
+			{
 				data: 'tanggal'
 			},
 			{
-				data: 'name'
-			},
-			{
-				data: 'metode'
-			},
-			{
 				data: 'produk'
-			},
-			{
-				data: 'total'
-			},
-			{
-				data: 'status'
 			}
 		]
 	});

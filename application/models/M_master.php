@@ -121,7 +121,7 @@ class M_master extends CI_Model
                 $models[$key]->price    = $price_txt; 
             }
 
-            $models[$key]->action       = $btnDetail.$btnDelete.$btnPrice. ($val->is_active == 1 ? $btnNonActive : $btnActive);
+            $models[$key]->action       = $btnDetail.(!strpos($val->name, 'VCC') ? $btnDelete : '').$btnPrice. ($val->is_active == 1 ? $btnNonActive : $btnActive);
         }
 
         $totalRecords = count($models);
@@ -557,56 +557,29 @@ class M_master extends CI_Model
         return $this->db->get_where('m_blockchain', ['id' => $id, 'is_deleted' => 0])->row();
     }
 
-    public function saveBlockchain($image = null)
+    public function saveBlockchain()
     {
         $id = htmlspecialchars($this->input->post('id'), true);
         $blockchain = htmlspecialchars($this->input->post('blockchain'), true);
         $description = htmlspecialchars($this->input->post('description'), true);
-        $price = htmlspecialchars($this->input->post('price'), true);
         $fee = htmlspecialchars($this->input->post('fee'), true);
         
         if (isset($id) && $id != '') {
-            if (is_null($image)) {
-                $data = [
-                    'blockchain'        => $blockchain,
-                    'description'   => $description,
-                    'price'     => $price,
-                    'fee'   => $fee,
-                    'modified_at'    => time(),
-                    'modified_by'    => $this->session->userdata('user_id')
-                ];
-            } else {
-                $data = [
-                    'blockchain'        => $blockchain,
-                    'image'         => $image,
-                    'description'   => $description,
-                    'price'     => $price,
-                    'fee'   => $fee,
-                    'modified_at'    => time(),
-                    'modified_by'    => $this->session->userdata('user_id')
-                ];
-            }
+            $data = [
+                'blockchain'        => $blockchain,
+                'description'   => $description,
+                'fee'   => $fee,
+                'modified_at'    => time(),
+                'modified_by'    => $this->session->userdata('user_id')
+            ];
         } else {
-            if (is_null($image)) {
-                $data = [
-                    'blockchain'        => $blockchain,
-                    'description'   => $description,
-                    'price'     => $price,
-                    'fee'   => $fee,
-                    'created_at'    => time(),
-                    'created_by'    => $this->session->userdata('user_id')
-                ];
-            } else {
-                $data = [
-                    'blockchain'        => $blockchain,
-                    'image'         => $image,
-                    'description'   => $description,
-                    'price'     => $price,
-                    'fee'   => $fee,
-                    'created_at'    => time(),
-                    'created_by'    => $this->session->userdata('user_id')
-                ];
-            }
+            $data = [
+                'blockchain'        => $blockchain,
+                'description'   => $description,
+                'fee'   => $fee,
+                'created_at'    => time(),
+                'created_by'    => $this->session->userdata('user_id')
+            ];
         }
         
         if (isset($id) && $id != '') {
