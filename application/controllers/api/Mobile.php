@@ -84,6 +84,14 @@ class Mobile extends RestController
                 // menyimpan data session
                 $this->session->set_userdata($sessiondata);
 
+				if (!empty($user)) {
+					if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
+						$user->photo = base_url().$user->photo;
+					}else{
+						$user->photo = base_url()."assets/images/profile.png";
+					}
+				}
+
                 // Set the response and exit
                 $this->response([
                     'status' => true,
@@ -112,6 +120,14 @@ class Mobile extends RestController
                 // menyimpan data session
                 $this->session->set_userdata($sessiondata);
 
+				if (!empty($user)) {
+					if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
+						$user->photo = base_url().$user->photo;
+					}else{
+						$user->photo = base_url()."assets/images/profile.png";
+					}
+				}
+
                 // Set the response and exit
                 $this->response([
                     'status' => true,
@@ -138,8 +154,7 @@ class Mobile extends RestController
             $validasi = [
                 'email' => 'required',
                 'password' => 'required',
-                'nama' => 'required',
-                'phone' => 'required'
+                'nama' => 'required'
             ];
         }
 
@@ -192,27 +207,55 @@ class Mobile extends RestController
 
                     $token = $this->M_auth->get_aktivasi($user->user_id);
 
-                    $subject = "Verifikasi email anda - Vepay";
-                    $message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
+					if(is_null($this->post('is_google')) && $this->post('is_google') == true){
 
-                    // mengirim email
-                    if (sendMail($email, $subject, $message) == true) {
-                        // mengambil data user dengan param email
-                        $user = $this->M_auth->get_auth($email);
+						$subject = "Verifikasi email anda - Vepay";
+						$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
 
-                        // Set the response and exit
-                        $this->response([
-                            'status' => true,
-                            'data' => $user
-                        ], 200);
-                    } else {
+						// mengirim email
+						if (sendMail($email, $subject, $message) == true) {
+							// mengambil data user dengan param email
+							$user = $this->M_auth->get_auth($email);
 
-                        // Set the response and exit
-                        $this->response([
-                            'status' => false,
-                            'message' => 'Terjadi kesalahan saat mengirim email verifikasi'
-                        ], 422);
-                    }
+							if (!empty($user)) {
+								if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
+									$user->photo = base_url().$user->photo;
+								}else{
+									$user->photo = base_url()."assets/images/profile.png";
+								}
+							}
+
+							// Set the response and exit
+							$this->response([
+								'status' => true,
+								'data' => $user
+							], 200);
+						} else {
+
+							// Set the response and exit
+							$this->response([
+								'status' => false,
+								'message' => 'Terjadi kesalahan saat mengirim email verifikasi'
+							], 422);
+						}
+					}else{
+						// mengambil data user dengan param email
+						$user = $this->M_auth->get_auth($email);
+
+						if (!empty($user)) {
+							if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
+								$user->photo = base_url().$user->photo;
+							}else{
+								$user->photo = base_url()."assets/images/profile.png";
+							}
+						}
+
+						// Set the response and exit
+						$this->response([
+							'status' => true,
+							'data' => $user
+						], 200);
+					}
 
                 } else {
                     // Set the response and exit
@@ -263,20 +306,36 @@ class Mobile extends RestController
             ], 422);
         }
 
-        $token = $this->M_auth->get_aktivasi($user->user_id);
+		// menghapus token permintaan lupa password sebelumnya
+		$this->M_auth->del_token($user->user_id, 2);
+
+		// create token for recovery
+		do {
+			$token = bin2hex(random_bytes(32));
+		} while ($this->M_auth->cek_tokenRecovery($token) == true);
+
+		$token = $token;
+		// atur data untuk menyimpan token recovery password
+		$data = [
+			'user_id' => $user->user_id,
+			'key' => $token,
+			'type' => 2, //2. CHANGE PASSWORD
+			'date_created' => time()
+		];
+
+		// simpan data token recovery password
+		$this->M_auth->insert_token($data);
 
         $subject = "Permintaan lupa password - Vepay";
-        $message = "Hai, kami mendapatkan permintaan reset password atas akun anda. Anda dapat mengatur ulang password anda dengan menekan tombol dibawah ini<br><br><a href='".base_url()."reset-password/".$token->key."' class='btn btn-soft-primary'>Reset Passwrd</a>";
+        $message = "Hai, kami mendapatkan permintaan reset password atas akun anda. Anda dapat mengatur ulang password anda dengan menekan tombol dibawah ini<br><br><a href='".base_url()."reset-password/".$token."' class='btn btn-soft-primary'>Reset Password</a>";
 
         // mengirim email
-        if (sendMail($this->post('email'), $subject, $message) == true) {
-            // mengambil data user dengan param email
-            $user = $this->M_auth->get_auth($this->post('email'));
+        if (sendMail($user->email, $subject, $message) == true) {
 
             // Set the response and exit
             $this->response([
                 'status' => true,
-                'data' => "Berhasil mengirim link reset password ke email"
+                'data' => "Berhasil mengirim link reset password ke email {$user->email}"
             ], 200);
         } else {
 
@@ -348,7 +407,7 @@ class Mobile extends RestController
                 if (!is_null($val->photo) && isset($val->photo) && $val->photo !== "") {
                     $val->photo = base_url().$val->photo;
                 } else {
-                    $val->photo = base_url()."asset/images/placeholder.jpg";
+                    $val->photo = base_url()."assets/images/profile.png";
                 }
             }
 
@@ -390,7 +449,7 @@ class Mobile extends RestController
             if(!is_null($member->photo) && isset($member->photo) && $member->photo !== ""){
                 $member->photo = base_url().$member->photo;
             }else{
-                $member->photo = base_url()."asset/images/placeholder.jpg";
+                $member->photo = base_url()."assets/images/profile.png";
             }
             // Set the response and exit
             $this->response([
@@ -410,14 +469,6 @@ class Mobile extends RestController
     public function update_detail_member_put()
     {
 
-        if($this->cek_session() === false){
-            // Set the response and exit
-            $this->response([
-                'status' => false,
-                'message' => "Harap masuk keakun anda !"
-            ], 401);
-        }
-
         $validasi = [
             'user_id' => 'required',
             'name' => 'required',
@@ -433,7 +484,7 @@ class Mobile extends RestController
         \GUMP::set_field_name('phone', 'Nomor Telepon');
         \GUMP::set_field_name('address', 'Alamat');
 
-        if(validate($this->put(), $validasi)){
+        if(validate($this->put(), $validasi) === false){
             // Set the response and exit
             $this->response([
                 'status' => false,
@@ -481,14 +532,6 @@ class Mobile extends RestController
     public function update_photo_member_put()
     {
 
-        if($this->cek_session() === false){
-            // Set the response and exit
-            $this->response([
-                'status' => false,
-                'message' => "Harap masuk keakun anda !"
-            ], 401);
-        }
-
         $validasi = [
             'user_id' => 'required',
             'photo' => 'required'
@@ -526,17 +569,26 @@ class Mobile extends RestController
 
             $result = $this->M_api->updateDetailMember($user_id, $body);
 
+			$member = $this->M_api->getDetailMember($user_id);
+
+			if (!empty($member)) {
+				if(!is_null($member->photo) && isset($member->photo) && $member->photo !== ""){
+					$member->photo = base_url().$member->photo;
+				}else{
+					$member->photo = base_url()."assets/images/profile.png";
+				}
+			}
             if($result == true){
                 // Set the response and exit
                 $this->response([
                     'status' => true,
-                    'data' => $this->M_api->getDetailMember($user_id)
+                    'data' => $member
                 ], 200);
             }else{
                 // Set the response and exit
                 $this->response([
                     'status' => true,
-                    'data' => $this->M_api->getDetailMember($user_id)
+                    'data' => $member
                 ], 200);
             }
         } else {
@@ -563,7 +615,7 @@ class Mobile extends RestController
                 if(!is_null($val->image)){
                     $val->image = base_url().$val->image;
                 }else{
-                    $val->image = base_url()."asset/images/placeholder.jpg";
+                    $val->image = base_url()."assets/images/profile.png";
                 }
             }
 
@@ -605,7 +657,7 @@ class Mobile extends RestController
             if(!is_null($product->image)){
                 $product->image = base_url().$product->image;
             }else{
-                $product->image = base_url()."asset/images/placeholder.jpg";
+                $product->image = base_url()."assets/images/profile.png";
             }
             // Set the response and exit
             $this->response([
@@ -636,8 +688,12 @@ class Mobile extends RestController
                 if(!is_null($val->image)){
                     $val->image = base_url().$val->image;
                 }else{
-                    $val->image = base_url()."asset/images/placeholder.jpg";
+                    $val->image = base_url()."assets/images/profile.png";
                 }
+				if($val->maksimal_promo > 0){
+					$val->maksimal_promo = (int) $val->maksimal_promo;
+				}
+				$val->jenis_pengguna_txt = $val->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             }
             // Set the response and exit
             $this->response([
@@ -657,38 +713,64 @@ class Mobile extends RestController
     public function get_detail_promo_get()
     {
 
-        $validasi = [
-            'id' => 'required',
-        ];
-        \GUMP::set_field_name('id', 'ID Promo');
+        // $validasi = [
+        //     'id' => 'required',
+        // ];
+        // \GUMP::set_field_name('id', 'ID Promo');
 
-        if (validate($this->get(), $validasi) === false) {
-            // Set the response and exit
-            $this->response([
-                'status' => false,
-                'message' => validate($this->get(), $validasi)
-            ], 422);
-        }
+        // if (validate($this->get(), $validasi) === false) {
+        //     // Set the response and exit
+        //     $this->response([
+        //         'status' => false,
+        //         'message' => validate($this->get(), $validasi)
+        //     ], 422);
+        // }
 
         $id = $this->get('id');
-        $promo = $this->M_api->getDetailPromo($id);
+        $kode = $this->get('kode');
+        $promo = $this->M_api->getDetailPromo($id, $kode);
 
         if (!empty($promo)) {
+
+			if($promo->quota <= 0){
+				// Set the response and exit
+				$this->response([
+					'status' => false,
+					'message' => "Mohon maaf quota untuk promo ini telah mencapai batas"
+				], 422);
+			}
+			
+			if($promo->expired < time()){
+				// Set the response and exit
+				$this->response([
+					'status' => false,
+					'message' => "Mohon maaf promo telah kadaluarsa"
+				], 422);
+			}
+
             if(!is_null($promo->image)){
                 $promo->image = base_url().$promo->image;
             }else{
-                $promo->image = base_url()."asset/images/placeholder.jpg";
+                $promo->image = base_url()."assets/images/profile.png";
             }
+			
+			if($promo->maksimal_promo > 0){
+				$promo->maksimal_promo = (int) $promo->maksimal_promo;
+			}
+			$promo->jenis_pengguna_txt = $promo->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             // Set the response and exit
             $this->response([
                 'status' => true,
                 'data' => $promo
             ], 200);
         } else {
+
+			$kode = isset($kode) ? "kode" : "id";
+
             // Set the response and exit
             $this->response([
                 'status' => false,
-                'message' => 'Promo dengan id tersebut tidak tersedia'
+                'message' => "Promo dengan {$kode} tersebut tidak tersedia"
             ], 422);
         }
 
@@ -708,7 +790,7 @@ class Mobile extends RestController
                 if(!is_null($val->image)){
                     $val->image = base_url().$val->image;
                 }else{
-                    $val->image = base_url()."asset/images/placeholder.jpg";
+                    $val->image = base_url()."assets/images/profile.png";
                 }
             }
             // Set the response and exit
@@ -764,7 +846,7 @@ class Mobile extends RestController
                 if(!is_null($val->image)){
                     $val->image = base_url().$val->image;
                 }else{
-                    $val->image = base_url()."asset/images/placeholder.jpg";
+                    $val->image = base_url()."assets/images/profile.png";
                 }
                 if(!is_null($val->categories)){
                     $val->categories = strtolower($val->categories);
@@ -813,7 +895,7 @@ class Mobile extends RestController
                 if(!is_null($val->photo)){
                     $val->photo = base_url().$val->photo;
                 }else{
-                    $val->photo = base_url()."asset/images/placeholder.jpg";
+                    $val->photo = base_url()."assets/images/profile.png";
                 }
             }
             // Set the response and exit
@@ -854,7 +936,7 @@ class Mobile extends RestController
             if(!is_null($vcc->photo)){
                 $vcc->photo = base_url().$vcc->photo;
             }else{
-                $vcc->photo = base_url()."asset/images/placeholder.jpg";
+                $vcc->photo = base_url()."assets/images/profile.png";
             }
             // Set the response and exit
             $this->response([
@@ -1002,8 +1084,10 @@ class Mobile extends RestController
             'account' => $this->post('akun_tujuan'),
             'no_tujuan' => $this->post('no_tujuan'),
             'm_blockchain_id' => $this->post('blockchain'),
-            'm_vcc_id' => $this->post('vcc_id'),
+            'm_vcc_id' => $this->post('id_vcc'),
+            'jenis_transaksi_vcc' => $this->post('jenis_transaksi_vcc'),
             'm_metode_id' => $this->post('m_metode_id'),
+            'm_promo_id' => $this->post('m_promo_id'),
             'sub_total' => $this->post('total_bayar'),
             'created_by' => $this->post('user_id'),
             'created_at' => time()

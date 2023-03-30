@@ -389,7 +389,7 @@ class Authentication extends CI_Controller
 
                 $data['email'] = $user->email;
                 $data['token'] = $token;
-                $this->templateauth->view('authentication/reset', $data);
+                $this->templatereset->view('authentication/reset', $data);
             } else {
 
                 // menghapus token recovery, meminta mengulangi proses
@@ -431,35 +431,36 @@ class Authentication extends CI_Controller
 
                     // menghapus session
                     $this->session->set_flashdata('success', 'Berhasil merubah password anda, harap login dengan password baru anda');
-                    redirect(site_url('logout'));
+					// $this->logout();
+                    redirect("https://vepay.id");
                 } else {
                     $this->session->set_flashdata('notif_error', 'Terjadi kesalahan saat mencoba merubah password anda, coba lagi nanti');
-                    redirect($this->agent->referrer());
+                redirect('https://vepay.id/reset.html');
                 }
             } else {
                 $this->session->set_flashdata('notif_warning', 'Konfirmasi password tidak sama');
-                redirect($this->agent->referrer());
+                redirect('https://vepay.id/reset.html');
             }
         } else {
             $this->session->set_flashdata('error', 'Email unknown, contact admin if this still happens.');
-            redirect($this->agent->referrer());
+            redirect('https://vepay.id/reset.html');
         }
     }
 
     public function verifikasi_email($token = null){
         $verifikasi = $this->M_auth->getTokenByToken($token);
         
-        if($verifikasi['status'] === true){
+        if($verifikasi['status'] == true){
             if($this->M_auth->verified_user($verifikasi['data']->user_id)){
                 $this->session->set_flashdata('success', 'Berhasil verifikasi email anda');
                 redirect('https://vepay.id/verifikasi.html');
             }else{
                 $this->session->set_flashdata('error', 'Token anda tidak valid');
-                redirect(base_url());
+                redirect('https://vepay.id/reset.html');
             }
         }else{
-            $this->session->set_flashdata('error', 'Token anda tidak valid');
-            redirect(base_url());
+            $this->session->set_flashdata('success', 'Telah verifikasi');
+            redirect('https://vepay.id/verifikasi.html');
         }
 
     }

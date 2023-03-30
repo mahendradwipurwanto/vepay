@@ -54,3 +54,22 @@
 		</div>
 	</div>
 </div>
+
+<div class="row">
+	<div class="col-md-12 com-sm-12 mb-4">
+		<div class="card card-body">
+			<h4 class="card-title">Transaksi harian</h4>
+			<div id="chartGraphRegister"></div>
+		</div>
+	</div>
+	<div class="col-md-6 com-sm-12 mb-4">
+		<div class="card card-body">
+			<h4 class="card-title">Top 10 Produk</h4>
+		</div>
+	</div>
+	<div class="col-md-6 com-sm-12 mb-4">
+		<div class="card card-body">
+			<h4 class="card-title">Top 10 Member</h4>
+		</div>
+	</div>
+</div>

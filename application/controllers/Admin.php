@@ -37,7 +37,8 @@ class Admin extends CI_Controller
     public function statistik()
     {
         $data['count'] = $this->M_admin->getCountOverview();
-
+        $data['top_product'] = $this->M_admin->getTopProduk();
+        $data['top_member'] = $this->M_admin->getTopmember();
         $this->templateback->view('admin/statistik', $data);
     }
 

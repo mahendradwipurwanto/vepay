@@ -81,47 +81,47 @@ class M_master extends CI_Model
         $this->db->select('a.*, b.categories')
         ->from('m_product a')
         ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
-        ->where(['a.is_deleted' => 0])
+        ->where(['a.is_deleted' => 0, 'a.name !=' => "More"])
         ;
 
         $this->db->where($filter);
-        $this->db->order_by('a.name ASC');
+        $this->db->order_by('a.name ASC, a.order ASC');
 
         // $this->db->limit($limit)->offset($offset);
 
         $models = $this->db->get()->result();
 
         foreach ($models as $key => $val) {
-            $btnDetail                  = '<button onclick="showMdlProductDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-pencil-square"></i></button>';
-            $btnActive                  = '<button onclick="showMdlProductActive(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-check-square"></i></button>';
-            $btnNonActive               = '<button onclick="showMdlProductNonActive(\''.$val->id.'\')" class="btn btn-soft-secondary btn-icon btn-sm me-2"><i class="bi-dash-square"></i></button>';
-            $btnDelete                  = '<button onclick="showMdlProductDelete(\''.$val->id.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
-            $btnPrice                   = '<button onclick="showMdlProductPrice(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-cash-coin"></i></button>';
+			$btnDetail                  = '<button onclick="showMdlProductDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-pencil-square"></i></button>';
+			$btnActive                  = '<button onclick="showMdlProductActive(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-check-square"></i></button>';
+			$btnNonActive               = '<button onclick="showMdlProductNonActive(\''.$val->id.'\')" class="btn btn-soft-secondary btn-icon btn-sm me-2"><i class="bi-dash-square"></i></button>';
+			$btnDelete                  = '<button onclick="showMdlProductDelete(\''.$val->id.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
+			$btnPrice                   = '<button onclick="showMdlProductPrice(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-cash-coin"></i></button>';
 
-            $models[$key]->image        = base_url()."{$val->image}";
-            $models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
-            $models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
-            $models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
-            $models[$key]->status       = ($val->is_active == 1 ? "<span class='badge bg-soft-success'>aktif</span>" : "<span class='badge bg-soft-secondary'>nonaktif</span>");
-            $models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100).(strlen($val->description) > 100 ? '...' : '') : '-';
+			$models[$key]->image        = base_url()."{$val->image}";
+			$models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
+			$models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
+			$models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
+			$models[$key]->status       = ($val->is_active == 1 ? "<span class='badge bg-soft-success'>aktif</span>" : "<span class='badge bg-soft-secondary'>nonaktif</span>");
+			$models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100).(strlen($val->description) > 100 ? '...' : '') : '-';
 
-            $models[$key]->price        = "-";
-            $models[$key]->fee        = "-";
-            $price = $this->db->get_where('m_price', ['m_product_id' => $val->id, 'status' => 1, 'is_deleted' => 0])->result();
-            
-            $price_txt  = "";
-            $fee_txt    = "";
-            if(!empty($price)){
-                foreach ($price as $k => $v) {
-                    $price_formatted    = number_format($v->price,0,",",".");
-                    $price_txt          .= "<li>Rp. {$price_formatted} - <i class='text-muted'>{$v->type}</i></li>";
-                    $fee_txt            = "{$v->fee}%";
-                }
-                $models[$key]->fee      = $fee_txt;
-                $models[$key]->price    = $price_txt; 
-            }
-
-            $models[$key]->action       = $btnDetail.(!strpos($val->name, 'VCC') ? $btnDelete : '').$btnPrice. ($val->is_active == 1 ? $btnNonActive : $btnActive);
+			$models[$key]->price        = "-";
+			$models[$key]->fee        = "-";
+			$price = $this->db->get_where('m_price', ['m_product_id' => $val->id, 'status' => 1, 'is_deleted' => 0])->result();
+			
+			$price_txt  = "";
+			$fee_txt    = "";
+			if(!empty($price)){
+				foreach ($price as $k => $v) {
+					$price_formatted    = number_format($v->price,0,",",".");
+					$price_txt          .= "<li>Rp. {$price_formatted} - <i class='text-muted'>{$v->type}</i></li>";
+					$fee_txt            = "{$v->fee}%";
+				}
+				$models[$key]->fee      = $fee_txt;
+				$models[$key]->price    = $price_txt; 
+			}
+			$models[$key]->name 		= ((stripos($val->name, 'VCC') === false) ? $val->name : "{$val->name} - <small class='text-secondary'><i>default</i></small>");
+			$models[$key]->action       = $btnDetail.((stripos($val->name, 'VCC') === false) ? $btnDelete : '').$btnPrice. ($val->is_active == 1 ? $btnNonActive : $btnActive);
         }
 
         $totalRecords = count($models);
@@ -298,6 +298,8 @@ class M_master extends CI_Model
                 'expired'           => strtotime($this->input->post('expired')),
                 'quota'             => $this->input->post('quota'),
                 'status'            => $this->input->post('status'),
+                'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
+                'desc'           	=> $this->input->post('desc'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
             ];
@@ -311,6 +313,8 @@ class M_master extends CI_Model
                 'expired'           => strtotime($this->input->post('expired')),
                 'quota'             => $this->input->post('quota'),
                 'status'            => $this->input->post('status'),
+                'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
+                'desc'           	=> $this->input->post('desc'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
             ];
@@ -320,7 +324,7 @@ class M_master extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    public function editPromo($image)
+    public function editPromo($image = null)
     {
         if (is_null($image)) {
             $data = [
@@ -328,8 +332,11 @@ class M_master extends CI_Model
                 'kode'              => $this->input->post('kode'),
                 'nama'              => $this->input->post('nama'),
                 'value'             => $this->input->post('value'),
+                'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
                 'quota'             => $this->input->post('quota'),
+                'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
+                'desc'           	=> $this->input->post('desc'),
                 'status'            => $this->input->post('status'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
@@ -341,8 +348,11 @@ class M_master extends CI_Model
                 'nama'              => $this->input->post('nama'),
                 'image'             => $image,
                 'value'             => $this->input->post('value'),
+                'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
                 'quota'             => $this->input->post('quota'),
+                'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
+                'desc'           	=> $this->input->post('desc'),
                 'status'            => $this->input->post('status'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),

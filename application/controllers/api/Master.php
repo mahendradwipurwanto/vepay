@@ -172,12 +172,30 @@ class Master extends CI_Controller
 
     public function editPromo()
     {
-        if ($this->M_master->editPromo() == true) {
-            $this->session->set_flashdata('notif_success', 'Berhasil mengubah promo ');
-            redirect(site_url('master/promo'));
+        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+            $date = date('m/Y');
+            $path = "berkas/promo/{$date}/";
+            $upload = $this->uploader->uploadImage($_FILES['image'], $path);
+            if ($upload == true) {
+				if ($this->M_master->editPromo($upload['filename']) == true) {
+					$this->session->set_flashdata('notif_success', 'Berhasil mengubah promo ');
+					redirect(site_url('master/promo'));
+				} else {
+					$this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba mengubah promo, harap coba lagi');
+					redirect($this->agent->referrer());
+				}
+            } else {
+                $this->session->set_flashdata('notif_warning', $upload['message']);
+                redirect($this->agent->referrer());
+            }
         } else {
-            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba mengubah promo, harap coba lagi');
-            redirect($this->agent->referrer());
+			if ($this->M_master->editPromo() == true) {
+				$this->session->set_flashdata('notif_success', 'Berhasil mengubah promo ');
+				redirect(site_url('master/promo'));
+			} else {
+				$this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba mengubah promo, harap coba lagi');
+				redirect($this->agent->referrer());
+			}
         }
     }
 

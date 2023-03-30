@@ -279,7 +279,7 @@ class M_auth extends CI_Model
     }
 
     public function getTokenByToken($token = null){
-        $model = $this->db->get_where('tb_token', ['key' => $token, 'type' => '1', 'status' => '0'])->row();
+        $model = $this->db->get_where('tb_token', ['key' => $token, 'type' => 1, 'status' => 0])->row();
 
         if(!empty($model)){
             return [

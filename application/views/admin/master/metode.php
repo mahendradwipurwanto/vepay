@@ -105,7 +105,7 @@
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
 							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/* .svg" id="metode-upload">
+								accept="image/*, .svg" id="metode-upload">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
 					</div>

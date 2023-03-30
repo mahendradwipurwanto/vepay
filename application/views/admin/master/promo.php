@@ -17,7 +17,8 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-body">
-				<table class="table table-borderless table-thead-bordered nowrap w-100 align-middle dataTables" id="table">
+				<table class="table table-borderless table-thead-bordered nowrap w-100 align-middle dataTables"
+					id="table">
 					<thead>
 						<tr>
 							<th width="5%">No.</th>
@@ -25,6 +26,7 @@
 							<th>Kode</th>
 							<th>Promo</th>
 							<th>Nilai/Nominal</th>
+							<th>Maksimal promo</th>
 							<th>Jenis</th>
 							<th>Tersisa</th>
 							<th>Status</th>
@@ -37,7 +39,9 @@
 						<tr>
 							<td><?= $no++;?></td>
 							<td>
-								<button type="button" class="btn btn-soft-info btn-sm" onclick="showMdlPromoEdit(<?= $val->id;?>)"><i class="bi-pencil-square"></i></button>
+								<button type="button" class="btn btn-soft-info btn-sm"
+									onclick="showMdlPromoEdit(<?= $val->id;?>)"><i
+										class="bi-pencil-square"></i></button>
 								<button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
@@ -45,6 +49,8 @@
 							<td><?= $val->nama;?></td>
 							<td><?= $val->jenis == 1 ? 'Rp.' : '%';?>
 								<?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
+							<td><?= !is_null($val->maksimal_promo) ? number_format($val->maksimal_promo, 0, ",", ".") : '-';?>
+							</td>
 							<td><?= $val->jenis == 1 ? 'Flat' : 'Presentage';?></td>
 							<td><?= $val->quota;?></td>
 							<td><span
@@ -86,6 +92,20 @@
 	</div>
 </div>
 
+<!-- Modal -->
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="detailUserTitle">Ubah data</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="edit-content">
+
+			</div>
+		</div>
+	</div>
+</div>
 
 <!-- Modal -->
 <div id="tambah" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
@@ -129,24 +149,37 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-12">
+						<div class="col-7">
 							<div class="mb-3">
 								<label for="inputSubject" class="form-label">Nama Promo</label>
 								<input class="form-control form-control-sm" type="text" name="nama"
-									placeholder="Nama promo" required>
+									placeholder="Nama Promo" required>
+							</div>
+						</div>
+						<div class="col-5">
+							<div class="mb-3">
+								<label for="inputSubject" class="form-label">Pengguna</label>
+								<select class="js-select form-select form-select-sm" autocomplete="off"
+									name="jenis_pengguna" id="inputJenisPenggunaPromo"
+									data-hs-tom-select-options='{"hideSearch": true}' required>
+									<option value="0">
+										Semua Pengguna</option>
+									<option value="1">
+										Pengguna Baru</option>
+								</select>
 							</div>
 						</div>
 					</div>
 					<div class="mb-3">
 						<figure>
-							<img src="#" id="promo-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
+							<img src="#" id="promotambah-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
 								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 						</figure>
-						<label for="promo-upload" class="form-label">Gambar <small
+						<label for="promotambah-upload" class="form-label">Gambar <small
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
 							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/* .svg" id="promo-upload">
+								accept="image/*, .svg" id="promotambah-upload">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
 					</div>
@@ -171,6 +204,20 @@
 								</div>
 							</div>
 						</div>
+						<div class="col-12" style="display:none" id="maksimal-nominal">
+							<div class="mb-3">
+								<label for="inputNominalPromo" class="form-label">Maksimal nominal promo</label>
+								<div class="input-group input-group-sm flex-nowrap">
+									<span class="input-group-text" id="addon-wrapping"><span
+											id="symbol_promo">Rp</span></span>
+									<input type="number" class="form-control form-controls-sm" name="maksimal_promo"
+										onkeypress="return event.charCode >= 48" placeholder="Nominal/Nilai Promo"
+										required>
+								</div>
+								<small class="text-secondary">Maksimal nominal promo digunakan untuk memberi batasan
+									pemotongan berapa persen dari promo yang digunakan</small>
+							</div>
+						</div>
 					</div>
 					<div class="row">
 						<div class="col-6">
@@ -190,6 +237,15 @@
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="mb-3">
+								<label for="inputKeterangan" class="form-label">Keterangan</label>
+								<textarea name="desc" id="inputKeterangan" class="form-control form-control-sm" rows="3"
+									placeholder="Keterangan promo"></textarea>
+							</div>
+						</div>
+					</div>
 
 					<div class="modal-footer px-0 pb-0">
 						<button type="button" class="btn btn-white btn-sm" data-bs-dismiss="modal">batal</button>
@@ -201,31 +257,19 @@
 	</div>
 </div>
 
-<!-- Modal -->
-<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="detailUserTitle">Ubah data</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body" id="edit-content">
-			</div>
-		</div>
-	</div>
-</div>
-
 <script>
 	$("#inputJenisPromo").change(function (e) {
 		e.preventDefault();
 		var jenis_promo = $('#inputJenisPromo :selected').val();
 		if (jenis_promo == 1) {
+			$("#maksimal-nominal").hide();
 			$("#value_promo").attr({
 				"max": 9999999999,
 				"min": 1
 			});
 			$('#symbol_promo').text('Rp');
 		} else if (jenis_promo == 2) {
+			$("#maksimal-nominal").show();
 			$("#value_promo").attr({
 				"max": 100,
 				"min": 1
@@ -246,7 +290,7 @@
 			}
 		})
 	});
-	
+
 	const showMdlPromoEdit = id => {
 		$("#edit-content").html(
 			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
@@ -265,4 +309,5 @@
 			}
 		});
 	}
+
 </script>

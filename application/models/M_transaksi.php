@@ -85,7 +85,21 @@ class M_transaksi extends CI_Model
             $models[$key]->name     = $val->name;
             $models[$key]->metode   = $val->metode;
             $product = $this->getProductTransaksi($val->id)['product'];
-            $models[$key]->produk   = "<b>{$product['product']}</b> x{$product['jumlah']}";
+
+			$jenis_vcc = "";
+			if(isset($val->jenis_transaksi_vcc)){
+				if($val->jenis_transaksi_vcc == 0){
+					$jenis_vcc = " - <i>(Top Up VCC)</i>";
+				}else{
+					$jenis_vcc = " - <i>(Withdraw VCC)</i>";
+				}
+			}
+
+			if(!is_null($product)){
+				$models[$key]->produk   = "<b>{$product['product']}</b> x{$product['jumlah']} {$jenis_vcc}";
+			}else{
+				$models[$key]->produk   = "-";
+			}
             $models[$key]->total    = $val->sub_total;
             $models[$key]->status   = $status;
 
@@ -109,23 +123,25 @@ class M_transaksi extends CI_Model
 
         $arrModels = [];
 
-        foreach($models as $key => $val){
-            $arrModels[$key]['price_id'] = $val->m_price_id;
-            $arrModels[$key]['product'] = $val->name;
-            $arrModels[$key]['product_img'] = $val->image;
-            $arrModels[$key]['jumlah'] = $val->quantity;
-            $arrModels[$key]['harga'] = $val->price;
-            $arrModels[$key]['total'] = $val->total;
-        }
+		if(!empty($models)){
+			foreach($models as $key => $val){
+				$arrModels[$key]['price_id'] = $val->m_price_id;
+				$arrModels[$key]['product'] = $val->name;
+				$arrModels[$key]['product_img'] = $val->image;
+				$arrModels[$key]['jumlah'] = $val->quantity;
+				$arrModels[$key]['harga'] = $val->price;
+				$arrModels[$key]['total'] = $val->total;
+			}
+		}
 
         return [
             'list_product' => $arrModels,
-            'product' => $arrModels[0]
+            'product' => !empty($models) ? $arrModels[0] : null
         ];
     }
 
     public function getDetailTransaksi($id_transaksi = null){
-        $this->db->select('a.*, b.quantity as jumlah, d.name as product, e.email, f.name, f.phone, g.metode')
+        $this->db->select('a.*, b.quantity as jumlah, d.name as product, d.is_vcc, e.email, f.name, f.phone, g.metode, h.blockchain, i.number as vcc_number, i.holder as vcc_holder, i.jenis_vcc')
         ->from('tb_transaksi a')
         ->join('_transaksi_detail b', 'a.id = b.transaksi_id', 'inner')
         ->join('m_price c', 'b.m_price_id = c.id', 'inner')
@@ -133,6 +149,8 @@ class M_transaksi extends CI_Model
         ->join('tb_auth e', 'a.user_id = e.user_id', 'inner')
         ->join('tb_user f', 'a.user_id = f.user_id', 'inner')
         ->join('m_metode g', 'a.m_metode_id = g.id', 'inner')
+        ->join('m_blockchain h', 'a.m_blockchain_id = h.id', 'left')
+        ->join('tb_vcc i', 'a.m_vcc_id = i.id', 'left')
         ->where(['a.id' => $id_transaksi, 'a.is_deleted' => 0])
         ;
 
