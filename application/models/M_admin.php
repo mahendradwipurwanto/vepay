@@ -63,9 +63,42 @@ class M_admin extends CI_Model
         ];
     }
 
-    function getTopTransaksi(){
+	function getDailyTransaksi(){
+		// Calculate date 30 days ago
+		$date30DaysAgo = date('Y-m-d', strtotime('-30 days'));
 
-    }
+		$this->db->select('DATE_FORMAT(FROM_UNIXTIME(tb_transaksi.created_at), "%Y-%m-%d") as tanggal, sum(_transaksi_detail.quantity) as jumlah')
+		->from('tb_transaksi')
+		->join('_transaksi_detail', 'tb_transaksi.id = _transaksi_detail.transaksi_id', 'left')
+		->where('FROM_UNIXTIME(tb_transaksi.created_at) >=', strtotime($date30DaysAgo))
+		->where('tb_transaksi.is_deleted', 0)
+		->group_by('DATE_FORMAT(FROM_UNIXTIME(tb_transaksi.created_at), "%Y-%m-%d")');
+		
+		$models = $this->db->get()->result();
+
+		$arr["created_at"] = [];
+		$arr["jumlah"] = [];
+
+		// Initialize array with zeros for the last 30 days
+		for ($i = 0; $i < 30; $i++) {
+			$date = date('Y-m-d', strtotime("-$i days"));
+			$arr["created_at"][] = "'$date'";
+			$arr["jumlah"][] = 0;
+		}
+
+		if(!empty($models)){
+			foreach ($models as $key => $val) {
+				// Find the index of the date in the array
+				$index = array_search("'".$val->tanggal."'", $arr["created_at"]);
+				if ($index !== false) {
+					// If the date is found, insert the jumlah into the array
+					$arr["jumlah"][$index] = $val->jumlah;
+				}
+			}
+		}
+
+		return $arr;
+	}
 
 	function getTopProduk(){
 		$this->db->select('m_product.name, SUM(_transaksi_detail.quantity) as total_sales')
@@ -73,6 +106,7 @@ class M_admin extends CI_Model
 		->join('m_price', 'm_price.m_product_id = m_product.id')
 		->join('_transaksi_detail', '_transaksi_detail.m_price_id = m_price.id')
 		->join('tb_transaksi', 'tb_transaksi.id = _transaksi_detail.transaksi_id')
+		->where('m_product.is_deleted', 0)
 		->where('tb_transaksi.is_deleted', 0)
 		->group_by('m_product.id')
 		->order_by('total_sales', 'DESC')
@@ -82,7 +116,7 @@ class M_admin extends CI_Model
 	}
 
 	function getTopmember(){
-		$this->db->select('tb_user.name, SUM(_transaksi_detail.quantity) as total_sales')
+		$this->db->select('tb_user.name, COUNT(tb_transaksi.id) as total_sales')
 		->from('tb_user')
 		->join('tb_transaksi', 'tb_transaksi.user_id = tb_user.user_id')
 		->join('_transaksi_detail', '_transaksi_detail.transaksi_id = tb_transaksi.id')

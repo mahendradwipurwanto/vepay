@@ -59,17 +59,129 @@
 	<div class="col-md-12 com-sm-12 mb-4">
 		<div class="card card-body">
 			<h4 class="card-title">Transaksi harian</h4>
-			<div id="chartGraphRegister"></div>
+			<div id="chartGraphPenjualan"></div>
 		</div>
 	</div>
 	<div class="col-md-6 com-sm-12 mb-4">
 		<div class="card card-body">
 			<h4 class="card-title">Top 10 Produk</h4>
+			<!-- Table -->
+			<table class="table table-borderless table-thead-bordered">
+				<thead class="thead-light">
+					<tr>
+						<th scope="col" class="text-center">#</th>
+						<th scope="col">Produk</th>
+						<th scope="col">Jumlah</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if(!empty($top_product)):?>
+					<?php $no = 1; foreach ($top_product as $key => $val):?>
+					<tr>
+						<th scope="row" class="text-center">
+							<?php if($no == 1):?>
+							<span class="text-warning" style="font-size: 1.5rem;">🥇</span>
+							<?php elseif($no == 2):?>
+							<span class="text-secondary" style="font-size: 1.5rem;">🥈</span>
+							<?php elseif($no == 3):?>
+							<span style="font-size: 1.5rem; color: #924b18;">🥉</span>
+							<?php else:?>
+							<?= $no;?>
+							<?php endif;?>
+						</th>
+						<td><?= $val->name;?></td>
+						<td><?= $val->total_sales;?> Pembelian</td>
+					</tr>
+					<?php $no++; endforeach;?>
+					<?php else:?>
+					<tr>
+						<th colspan="3" class="text-center">Belum ada data</th>
+					</tr>
+					<?php endif;?>
+				</tbody>
+			</table>
+			<!-- End Table -->
 		</div>
 	</div>
 	<div class="col-md-6 com-sm-12 mb-4">
 		<div class="card card-body">
 			<h4 class="card-title">Top 10 Member</h4>
+			<!-- Table -->
+			<table class="table table-borderless table-thead-bordered">
+				<thead class="thead-light">
+					<tr>
+						<th scope="col" class="text-center">#</th>
+						<th scope="col">Member</th>
+						<th scope="col">Jumlah</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if(!empty($top_member)):?>
+					<?php $no = 1; foreach ($top_member as $key => $val):?>
+					<tr>
+						<th scope="row" class="text-center">
+							<?php if($no == 1):?>
+							<span class="text-warning" style="font-size: 1.5rem;">🥇</span>
+							<?php elseif($no == 2):?>
+							<span class="text-secondary" style="font-size: 1.5rem;">🥈</span>
+							<?php elseif($no == 3):?>
+							<span style="font-size: 1.5rem; color: #924b18;">🥉</span>
+							<?php else:?>
+							<?= $no;?>
+							<?php endif;?>
+						</th>
+						<td><?= $val->name;?></td>
+						<td><?= $val->total_sales;?> Pembelian</td>
+					</tr>
+					<?php $no++; endforeach;?>
+					<?php else:?>
+					<tr>
+						<th colspan="3" class="text-center">Belum ada data</th>
+					</tr>
+					<?php endif;?>
+				</tbody>
+			</table>
+			<!-- End Table -->
 		</div>
 	</div>
 </div>
+<script>
+	$(document).ready(function () {
+
+		var penjualan = [ <?= implode(',', $daily_transaksi['jumlah']) ?> ];
+		var tanggal = [ <?= implode(',', $daily_transaksi['created_at']) ?> ];
+
+		var graphPenjualan = {
+			series: [{
+				name: 'Penjualan Harian',
+				data: penjualan
+			}],
+			chart: {
+				height: 350,
+				type: 'area'
+			},
+			dataLabels: {
+				enabled: false
+			},
+			stroke: {
+				curve: 'straight'
+			},
+			xaxis: {
+				type: 'datetime',
+				categories: tanggal
+			},
+			tooltip: {
+				x: {
+					format: 'dd/MM/yy HH:mm'
+				},
+			},
+		};
+
+		var chartGraphPenjualan = new ApexCharts(document.querySelector("#chartGraphPenjualan"),
+			graphPenjualan);
+
+		chartGraphPenjualan.render();
+
+	})
+
+</script>

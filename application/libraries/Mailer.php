@@ -99,7 +99,9 @@ class Mailer
 
       try {
           // SMTP configuration
-          $mail->isSMTP();
+          if($this->get_settingsValue('mailer_smtp') == 1){
+            $mail->isSMTP();
+          }
 
           $mail->SMTPOptions = array(
             'ssl' => array(
