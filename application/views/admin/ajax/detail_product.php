@@ -1,4 +1,5 @@
-<form action="<?= site_url('api/master/editProduct');?>" method="post" class="js-validate need-validate m-0" novalidate enctype="multipart/form-data">
+<form action="<?= site_url('api/master/editProduct');?>" method="post" class="js-validate need-validate m-0" novalidate
+	enctype="multipart/form-data">
 	<input type="hidden" name="id" value="<?= $product->id;?>">
 	<input type="hidden" name="old_image" value="<?= $product->image;?>">
 	<div class="mb-3">
@@ -16,29 +17,42 @@
 		</figure>
 		<label for="poster-product" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
 		<div class="input-group">
-			<input type="file" class="form-control form-control-sm imgprevedit" name="image" accept="image/* .svg" id="poster-product">
+			<input type="file" class="form-control form-control-sm imgprevedit" name="image" accept="image/* .svg"
+				id="poster-product">
 		</div>
 		<small class="text-muted">Max file size 1Mb</small>
 	</div>
 	<div class="mb-3">
-		<div class="js-form-message">
-			<label for="inputKategori" class="form-label">Kategori <small
-					class="text-secondary">(optional)</small></label>
-			<div class="tom-select-custom">
-				<select class="js-select form-select form-select-sm" name="categories" autocomplete="off"
-					data-hs-tom-select-options='{"placeholder": "Pilih kategori"}'>
-					<?php if(!empty($kategori)):?>
-					<?php foreach($kategori as $key => $val):?>
-					<option value="<?= $val->id;?>"
-						<?php if($val->id == $product->m_categories_id):?>selected<?php endif;?>><?= $val->categories;?>
-					</option>
-					<?php endforeach;?>
-					<?php else:?>
-					<option>Harap tambahkan master kategori</option>
-					<?php endif;?>
-				</select>
+		<div class="row">
+			<div class="col-6">
+				<div class="js-form-message">
+					<label for="inputKategori" class="form-label">Kategori <small
+							class="text-secondary">(optional)</small></label>
+					<div class="tom-select-custom">
+						<select class="js-select form-select form-select-sm" name="categories" autocomplete="off"
+							data-hs-tom-select-options='{"placeholder": "Pilih kategori"}'>
+							<?php if(!empty($kategori)):?>
+							<?php foreach($kategori as $key => $val):?>
+							<option value="<?= $val->id;?>"
+								<?php if($val->id == $product->m_categories_id):?>selected<?php endif;?>>
+								<?= $val->categories;?>
+							</option>
+							<?php endforeach;?>
+							<?php else:?>
+							<option>Harap tambahkan master kategori</option>
+							<?php endif;?>
+						</select>
+					</div>
+					<span class="invalid-feedback">Harap masukkan nomor kategori yang valid.</span>
+				</div>
 			</div>
-			<span class="invalid-feedback">Harap masukkan nomor kategori yang valid.</span>
+			<div class="col-6">
+				<div class="js-form-message">
+					<label for="inputName" class="form-label">Order <small class="text-secondary">nomor urut</small></label>
+					<input type="number" name="order" id="inputName" class="form-control form-control-sm"
+						value="<?= $product->order;?>" required>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="mb-3">
@@ -80,4 +94,5 @@
 			}
 		})
 	});
+
 </script>

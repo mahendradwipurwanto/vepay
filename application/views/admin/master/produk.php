@@ -59,7 +59,7 @@
 						<button class="btn btn-sm btn-soft-info mt-4 me-1" type="button" id="searchBtn"
 							onclick="btnSearch()"><i class="bi-search"></i>&nbsp&nbspPencarian</button>
 						<button class="btn btn-sm btn-soft-primary mt-4" type="button" data-bs-toggle="modal"
-							data-bs-target="#tambah"><i class="bi bi-person-plus"></i> Tambah produk</button>
+							data-bs-target="#tambah"><i class="bi bi-person-plus"></i> Tambah</button>
 					</div>
 				</div>
 			</div>

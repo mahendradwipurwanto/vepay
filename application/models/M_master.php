@@ -50,6 +50,7 @@ class M_master extends CI_Model
         ->from('m_product a')
         ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
         ->where(['a.is_deleted' => 0])
+		->order_by("a.order ASC")
         ;
 
         $models = $this->db->get()->result();
@@ -85,7 +86,7 @@ class M_master extends CI_Model
         ;
 
         $this->db->where($filter);
-        $this->db->order_by('a.name ASC, a.order ASC');
+        $this->db->order_by('a.order ASC, a.name ASC');
 
         // $this->db->limit($limit)->offset($offset);
 
@@ -187,17 +188,29 @@ class M_master extends CI_Model
 
     public function addProduct($image = null)
     {
+		$all = $this->getAllProductSelect();
+
+		$order = count($all);
+
         $data = [
             'name'              => $this->input->post('name'),
             'image'             => $image,
             'm_categories_id'   => $this->input->post('categories'),
             'description'       => $this->input->post('description'),
+            'order'       		=> $order,
             'created_at'        => time(),
             'created_by'        => $this->session->userdata('user_id'),
         ];
 
         $this->db->insert('m_product', $data);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        $cek = ($this->db->affected_rows() != 1);
+		
+		if($cek){
+			$this->db->where('id', 8);
+			$this->db->update('m_products', ['order' => ($order+1)]);
+		}
+
+		return $cek;
     }
 
     public function editProduct($image = null)
@@ -207,6 +220,7 @@ class M_master extends CI_Model
                 'name'              => $this->input->post('name'),
                 'm_categories_id'   => $this->input->post('categories'),
                 'description'       => $this->input->post('description'),
+                'order'       		=> $this->input->post('order'),
                 'modified_at'       => time(),
                 'modified_by'       => $this->session->userdata('user_id'),
             ];
@@ -216,6 +230,7 @@ class M_master extends CI_Model
                 'image'             => $image,
                 'm_categories_id'   => $this->input->post('categories'),
                 'description'       => $this->input->post('description'),
+                'order'       		=> $this->input->post('order'),
                 'modified_at'       => time(),
                 'modified_by'       => $this->session->userdata('user_id'),
             ];

@@ -179,9 +179,9 @@ class M_api extends CI_Model
     
     public function getDetailMember($user_id = null)
     {
-        $this->db->select('a.status as auth_status, a.email, b.*')
-        ->from('tb_auth a')
-        ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
+        $this->db->select('*');
+        $this->db->from('tb_auth a');
+        $this->db->join('tb_user b', 'a.user_id = b.user_id')
         ->where(['a.role' => 2, 'a.user_id' => $user_id])
         ;
 
