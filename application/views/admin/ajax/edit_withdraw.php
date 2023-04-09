@@ -1,21 +1,21 @@
-<form action="<?= site_url('api/master/saveMetode');?>" method="post" enctype="multipart/form-data"
+<form action="<?= site_url('api/master/saveWithdraw');?>" method="post" enctype="multipart/form-data"
 	class="js-validate need-validate" novalidate>
-	<input type="hidden" name="id" value="<?= $metode->id;?>" required>
+	<input type="hidden" name="id" value="<?= $withdraw->id;?>" required>
 
 	<div class="mb-3">
-		<label for="inputSubject" class="form-label">Metode</label>
-		<input class="form-control form-control-sm" type="text" name="metode" value="<?= $metode->metode;?>" required>
+		<label for="inputSubject" class="form-label">Withdraw</label>
+		<input class="form-control form-control-sm" type="text" name="withdraw" value="<?= $withdraw->withdraw;?>" required>
 	</div>
 	<div class="mb-3">
 		<figure class="text-center">
-			<img src="<?= base_url()?><?= $metode->image?>" id="metode-preview" class="img-thumbnail img-fluid"
-				alt="<?= $metode->image?>"
+			<img src="<?= base_url()?><?= $withdraw->image?>" id="withdraw-preview" class="img-thumbnail img-fluid"
+				alt="<?= $withdraw->image?>"
 				onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 		</figure>
-		<label for="metode-upload" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
+		<label for="withdraw-upload" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
 		<div class="input-group">
 			<input type="file" class="form-control form-control-sm imgprev" name="image" accept="image/*, .svg"
-				id="metode-upload">
+				id="withdraw-upload">
 		</div>
 		<small class="text-muted">Max file size 1Mb</small>
 	</div>
@@ -23,19 +23,19 @@
 	<div class="mb-3">
 		<label for="inputSubject" class="form-label">Atas nama/Email/Nama Akun</label>
 		<input class="form-control form-control-sm" type="text" name="atas_nama" placeholder="Ketikkan atas nama"
-			value="<?= $metode->atas_nama;?>" required>
+			value="<?= $withdraw->atas_nama;?>" required>
 	</div>
 
 	<div class="mb-3">
 		<label for="inputSubject" class="form-label">No Rekening/No Akun/No Telepon</label>
 		<input class="form-control form-control-sm" type="text" name="no_rekening" placeholder="Ketikkan nomor rekening"
-			value="<?= $metode->no_rekening;?>" required>
+			value="<?= $withdraw->no_rekening;?>" required>
 	</div>
 
 	<div class="mb-3">
 		<label for="inputSubject" class="form-label">Keterangan <small class="text-secondary">(optional)</small></label>
 		<textarea class="form-control form-control-sm" type="text"
-			name="description"><?= $metode->description;?></textarea>
+			name="description"><?= $withdraw->description;?></textarea>
 	</div>
 
 	<div class="modal-footer px-0 pb-0">
@@ -48,8 +48,8 @@
 <script>
 	//binds to onchange event of your input field
 	$('input.imgprev').each(function () {
+		console.log('#' + $(this).attr('id'));
 		$('#' + $(this).attr('id')).bind('change', function () {
-			console.log($(this).attr('id'));
 			var parent_id = $(this).attr('id').split('-')
 			//this.files[0].size gets the size of your file.
 			if (this.files[0].size > (1 * 1024 * 1024)) {

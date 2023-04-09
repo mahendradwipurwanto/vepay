@@ -807,6 +807,37 @@ class Mobile extends RestController
         }   
     }
 
+    public function get_all_withdraw_get()
+    {
+
+        $params = [
+            'limit' => $this->get('limit')
+        ];
+
+        $withdraw = $this->M_api->getAllWithdraw($params);
+
+        if (!empty($withdraw)) {
+            foreach ($withdraw as $key => $val) {
+                if(!is_null($val->image)){
+                    $val->image = base_url().$val->image;
+                }else{
+                    $val->image = base_url()."assets/images/profile.png";
+                }
+            }
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $withdraw
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Tidak ada withdraw yang tersedia'
+            ], 422);
+        }   
+    }
+
     public function get_all_blockchain_get()
     {
 

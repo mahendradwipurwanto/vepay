@@ -2,11 +2,11 @@
 <div class="docs-page-header">
 	<div class="row align-items-center">
 		<div class="col-sm">
-			<h1 class="docs-page-header-title">Master metode
+			<h1 class="docs-page-header-title">Master withdraw
 				<button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
 					data-bs-target="#tambah"><i class="bi bi-tag"></i> Tambah data</button>
 			</h1>
-			<p class="docs-page-header-text">Kelola master metode pada website anda</p>
+			<p class="docs-page-header-text">Kelola master withdraw pada website anda</p>
 		</div>
 	</div>
 </div>
@@ -22,23 +22,23 @@
 						<tr>
 							<th width="5%">No.</th>
 							<th width="8%"></th>
-							<th>Metode</th>
+							<th>Withdraw</th>
 							<th>Atas Nama/Email</th>
 							<th>No. Rek/Telepon</th>
 							<th>Keterangan</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php if(!empty($metode)):?>
-						<?php $no = 1; foreach($metode as $val):?>
+						<?php if(!empty($withdraw)):?>
+						<?php $no = 1; foreach($withdraw as $val):?>
 						<tr>
 							<td><?= $no++;?></td>
 							<td>
-								<button type="button" class="btn btn-soft-info btn-sm" onclick="showMdlMetodeEdit(<?= $val->id;?>)"><i class="bi-pencil-square"></i></button>
+								<button type="button" class="btn btn-soft-info btn-sm" onclick="showMdlWithdrawEdit(<?= $val->id;?>)"><i class="bi-pencil-square"></i></button>
 								<button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
-							<td><?= $val->metode;?></td>
+							<td><?= $val->withdraw;?></td>
 							<td><?= $val->atas_nama;?></td>
 							<td><?= $val->no_rekening;?></td>
 							<td><?= $val->description;?></td>
@@ -55,10 +55,10 @@
 											aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<form action="<?= site_url('api/master/deleteMetode');?>" method="post"
+										<form action="<?= site_url('api/master/deleteWithdraw');?>" method="post"
 											class="js-validate need-validate" novalidate>
 											<input type="hidden" name="id" value="<?= $val->id;?>">
-											<p>Apakah kamu yakin ingin menghapus data <?= $val->metode;?> ini?</p>
+											<p>Apakah kamu yakin ingin menghapus data <?= $val->withdraw;?> ini?</p>
 											<div class="modal-footer px-0 pb-0">
 												<button type="button" class="btn btn-white btn-sm"
 													data-bs-dismiss="modal">Tidak</button>
@@ -88,24 +88,24 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="<?= site_url('api/master/saveMetode');?>" method="post" enctype="multipart/form-data"
+				<form action="<?= site_url('api/master/saveWithdraw');?>" method="post" enctype="multipart/form-data"
 					class="js-validate need-validate" novalidate>
 
 					<div class="mb-3">
-						<label for="inputSubject" class="form-label">Metode</label>
-						<input class="form-control form-control-sm" type="text" name="metode"
-							placeholder="Ketikkan metode" required>
+						<label for="inputSubject" class="form-label">Withdraw</label>
+						<input class="form-control form-control-sm" type="text" name="withdraw"
+							placeholder="Ketikkan withdraw" required>
 					</div>
 					<div class="mb-3">
 						<figure>
-							<img src="#" id="metodeTambah-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
+							<img src="#" id="withdrawTambah-preview" class="img-thumbnail img-fluid" alt="Thumbnail image"
 								onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 						</figure>
-						<label for="metodeTambah-upload" class="form-label">Gambar <small
+						<label for="withdrawTambah-upload" class="form-label">Gambar <small
 								class="text-muted">(optional)</small>:</label>
 						<div class="input-group">
 							<input type="file" class="form-control form-control-sm imgprev" name="image"
-								accept="image/*, .svg" id="metodeTambah-upload">
+								accept="image/*, .svg" id="withdrawTambah-upload">
 						</div>
 						<small class="text-muted">Max file size 1Mb</small>
 					</div>
@@ -157,7 +157,7 @@
 
 <script>
 	
-	const showMdlMetodeEdit = id => {
+	const showMdlWithdrawEdit = id => {
 		$("#edit-content").html(
 			`<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
 		);
@@ -165,10 +165,10 @@
 		$('#edit').modal('show')
 
 		jQuery.ajax({
-			url: "<?= site_url('ajax/master/getDetailMetode') ?>",
+			url: "<?= site_url('ajax/master/getDetailWithdraw') ?>",
 			type: 'POST',
 			data: {
-				metode_id: id
+				withdraw_id: id
 			},
 			success: function (data) {
 				$("#edit-content").html(data);

@@ -141,6 +141,7 @@
 <script>
 	//binds to onchange event of your input field
 	$('input.imgprev').each(function () {
+		console.log('#' + $(this).attr('id'));
 		$('#' + $(this).attr('id')).bind('change', function () {
 			console.log($(this).attr('id'));
 			var parent_id = $(this).attr('id').split('-')

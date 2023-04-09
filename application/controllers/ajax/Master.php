@@ -103,6 +103,15 @@ class Master extends CI_Controller
         $this->load->view('admin/ajax/edit_metode', $data);
     }
 
+    public function getDetailWithdraw(){
+
+        $withdraw                      = $this->M_master->getDetailWithdraw($this->input->post('withdraw_id'));
+        
+        $data['withdraw']              = $withdraw;
+
+        $this->load->view('admin/ajax/edit_withdraw', $data);
+    }
+
     public function getDetailBlockchain(){
 
         $blockchain                      = $this->M_master->getDetailBlockchain($this->input->post('blockchain_id'));

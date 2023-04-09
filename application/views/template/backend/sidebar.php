@@ -34,7 +34,7 @@
   						<img class="navbar-brand-logo" src="<?= base_url(); ?>assets/images/logo.png" alt="Logo">
   					</a>
   					<a class="navbar-brand-badge">
-  						<span class="badge bg-soft-primary text-primary ms-2">v1.0.4</span>
+  						<span class="badge bg-soft-primary text-primary ms-2">v1.0.5</span>
   					</a>
   				</div>
   				<!-- End Default Logo -->
@@ -107,6 +107,11 @@
   						<a class="nav-link <?= ($this->uri->segment(2) == "metode-pembayaran" ? "active" : "") ?>"
   							href="<?= site_url('master/metode-pembayaran'); ?>"><i class="bi bi-credit-card-2-front nav-icon"></i>
   							Metode pembayaran</a>
+  					</li>
+  					<li class="nav-item" id="tour-metode-withdraw">
+  						<a class="nav-link <?= ($this->uri->segment(2) == "metode-withdraw" ? "active" : "") ?>"
+  							href="<?= site_url('master/metode-withdraw'); ?>"><i class="bi bi-wallet nav-icon"></i>
+  							Metode withdraw</a>
   					</li>
 
   					<li class="nav-item my-2 my-lg-5"></li>

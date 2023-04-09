@@ -375,7 +375,7 @@ class Authentication extends CI_Controller
         // cek apakah token valid
         if ($this->M_auth->get_tokenRecovery($token) == false) {
             $this->session->set_flashdata('error', 'Link token tidak diketahui, harap hubungi admin');
-            redirect(site_url('login'));
+			redirect('https://vepay.id/reset.html');
         } else {
 
             // mengambil data token
@@ -435,7 +435,7 @@ class Authentication extends CI_Controller
                     redirect("https://vepay.id");
                 } else {
                     $this->session->set_flashdata('notif_error', 'Terjadi kesalahan saat mencoba merubah password anda, coba lagi nanti');
-                redirect('https://vepay.id/reset.html');
+                	redirect('https://vepay.id/reset.html');
                 }
             } else {
                 $this->session->set_flashdata('notif_warning', 'Konfirmasi password tidak sama');

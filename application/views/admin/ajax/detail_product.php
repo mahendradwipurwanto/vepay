@@ -11,14 +11,15 @@
 		</div>
 	</div>
 	<div class="mb-3">
-		<figure>
-			<img src="#" id="imgthumbnailedit" class="img-thumbnail img-fluid" alt="<?= $product->image?>"
-				onerror="this.onerror=null;this.src='<?= $product->image?>';">
+		<figure class="text-center">
+			<img src="<?= $product->image?>" id="product-preview" class="img-thumbnail img-fluid"
+				alt="<?= $product->image?>"
+				onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 		</figure>
-		<label for="poster-product" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
+		<label for="product-upload" class="form-label">Gambar <small class="text-muted">(optional)</small>:</label>
 		<div class="input-group">
-			<input type="file" class="form-control form-control-sm imgprevedit" name="image" accept="image/* .svg"
-				id="poster-product">
+			<input type="file" class="form-control form-control-sm imgprev" name="image" accept="image/*, .svg"
+				id="product-upload">
 		</div>
 		<small class="text-muted">Max file size 1Mb</small>
 	</div>

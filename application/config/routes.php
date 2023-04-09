@@ -17,6 +17,7 @@ $route['verifikasi-email/(:any)'] = 'authentication/verifikasi_email/$1';
 $route['admin/dashboard'] = 'admin';
 $route['admin/vcc-member'] = 'admin/vcc_member';
 $route['master/metode-pembayaran'] = 'master/metode';
+$route['master/metode-withdraw'] = 'master/withdraw';
 
 // DEFAULT
 $route['default_controller'] = 'authentication';

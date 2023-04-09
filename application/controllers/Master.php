@@ -53,6 +53,13 @@ class Master extends CI_Controller
         $this->templateback->view('admin/master/metode', $data);
     }
 
+    public function withdraw()
+    {
+        $data['withdraw'] = $this->M_master->getAllWithdraw();
+
+        $this->templateback->view('admin/master/withdraw', $data);
+    }
+
     public function blockchain()
     {
         $data['blockchain'] = $this->M_master->getAllBlockchain();

@@ -285,6 +285,25 @@ class M_api extends CI_Model
         return $models;
     }
     
+    public function getAllwithdraw($params = [])
+    {
+
+        $this->db->select('a.*')
+        ->from('m_withdraw a')
+        ->where(['a.is_deleted' => 0])
+        ;
+
+        $this->db->order_by('a.withdraw ASC');
+
+        if (!empty($params) && isset($params['limit']) && $params['limit'] > 0) {
+            $this->db->limit($params['limit']);
+        }
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
+    
     public function getAllblockchain($params = [])
     {
 

@@ -473,6 +473,87 @@ class M_master extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
+    public function getAllWithdraw()
+    {
+        return $this->db->get_where('m_withdraw', ['is_deleted' => 0])->result();
+    }
+
+    public function getDetailWithdraw($id = null)
+    {
+        return $this->db->get_where('m_withdraw', ['id' => $id, 'is_deleted' => 0])->row();
+    }
+
+    public function saveWithdraw($image = null)
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+        $withdraw = htmlspecialchars($this->input->post('withdraw'), true);
+        $description = htmlspecialchars($this->input->post('description'), true);
+        $atas_nama = htmlspecialchars($this->input->post('atas_nama'), true);
+        $no_rekening = htmlspecialchars($this->input->post('no_rekening'), true);
+        
+        if (isset($id) && $id != '') {
+            if (is_null($image)) {
+                $data = [
+                    'withdraw'        => $withdraw,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'modified_at'    => time(),
+                    'modified_by'    => $this->session->userdata('user_id')
+                ];
+            } else {
+                $data = [
+                    'withdraw'        => $withdraw,
+                    'image'         => $image,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'modified_at'    => time(),
+                    'modified_by'    => $this->session->userdata('user_id')
+                ];
+            }
+        } else {
+            if (is_null($image)) {
+                $data = [
+                    'withdraw'        => $withdraw,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'created_at'    => time(),
+                    'created_by'    => $this->session->userdata('user_id')
+                ];
+            } else {
+                $data = [
+                    'withdraw'        => $withdraw,
+                    'image'         => $image,
+                    'description'   => $description,
+                    'atas_nama'     => $atas_nama,
+                    'no_rekening'   => $no_rekening,
+                    'created_at'    => time(),
+                    'created_by'    => $this->session->userdata('user_id')
+                ];
+            }
+        }
+        
+        if (isset($id) && $id != '') {
+            $this->db->where('id', $id);
+            $this->db->update('m_withdraw', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        } else {
+            $this->db->insert('m_withdraw', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+    }
+
+    public function deleteWithdraw()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('m_withdraw', ['is_deleted' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
     public function setPriceProduct()
     {
         $this->db->where(['m_product_id' => $this->input->post('m_product_id'), 'type' => $this->input->post('type')]);

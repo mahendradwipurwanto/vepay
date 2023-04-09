@@ -250,6 +250,46 @@ class Master extends CI_Controller
         }
     }
 
+    public function saveWithdraw()
+    {
+        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+            $date = date('m/Y');
+            $path = "berkas/withdraw/{$date}/";
+            $upload = $this->uploader->uploadImage($_FILES['image'], $path);
+            if ($upload == true) {
+                if ($this->M_master->saveWithdraw($upload['filename']) == true) {
+                    $this->session->set_flashdata('notif_success', 'Berhasil menyimpan withdraw');
+                    redirect($this->agent->referrer());
+                } else {
+                    $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan withdraw');
+                    redirect($this->agent->referrer());
+                }
+            } else {
+                $this->session->set_flashdata('notif_warning', $upload['message']);
+                redirect($this->agent->referrer());
+            }
+        } else {
+            if ($this->M_master->saveWithdraw() == true) {
+                $this->session->set_flashdata('notif_success', 'Berhasil menyimpan withdraw');
+                redirect($this->agent->referrer());
+            } else {
+                $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan withdraw');
+                redirect($this->agent->referrer());
+            }
+        }
+    }
+
+    public function deleteWithdraw()
+    {
+        if ($this->M_master->deleteWithdraw() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menghapus withdraw');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus withdraw');
+            redirect($this->agent->referrer());
+        }
+    }
+
     public function saveBlockchain()
     {
         if ($this->M_master->saveBlockchain() == true) {
