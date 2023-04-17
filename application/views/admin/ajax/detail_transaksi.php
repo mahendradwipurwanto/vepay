@@ -107,11 +107,28 @@
 
 			<div class="col-sm-8 mb-2 mb-sm-0">
 				<span><?= $transaksi->metode;?></span>
+				<img src="<?= base_url();?><?= $transaksi->img_metode;?>" alt="<?= $transaksi->metode;?>" onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';" style="width: 65px; margin-left: 5px;">
 			</div>
 			<!-- End Col -->
 		</div>
 		<!-- End Row -->
 	</li>
+	<?php if(!is_null($transaksi->no_rek)):?>
+	<li class="list-group-item p-3">
+		<div class="row">
+			<div class="col-sm-4 mb-2 mb-sm-0">
+				<span class="h6">No rekening/ No Ewallet</span>
+			</div>
+			<!-- End Col -->
+
+			<div class="col-sm-8 mb-2 mb-sm-0">
+				<span><?= $transaksi->no_rek;?></span>
+			</div>
+			<!-- End Col -->
+		</div>
+		<!-- End Row -->
+	</li>
+	<?php endif;?>
 	<?php if((!isset($transaksi->m_vcc_id) && is_null($transaksi->m_vcc_id)) || $transaksi->is_vcc == 0):?>
 	<li class="list-group-item p-3">
 		<div class="row">

@@ -128,6 +128,21 @@ class Mobile extends RestController
 					}
 				}
 
+				if($user->status == 0){
+
+                    $token = $this->M_auth->get_aktivasi($user->user_id);
+
+					$subject = "Verifikasi email anda - Vepay";
+					$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
+
+					sendMail($email, $subject, $message);
+
+					$this->response([
+						'status' => false,
+						'data' => "Harap verifikasi email, email verifikasi telah dikirim ke email anda!"
+					], 403);	
+				}
+
                 // Set the response and exit
                 $this->response([
                     'status' => true,
@@ -207,7 +222,7 @@ class Mobile extends RestController
 
                     $token = $this->M_auth->get_aktivasi($user->user_id);
 
-					if(is_null($this->post('is_google')) && $this->post('is_google') == true){
+					if(is_null($this->post('is_google')) || $this->post('is_google') == false){
 
 						$subject = "Verifikasi email anda - Vepay";
 						$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
@@ -1114,6 +1129,7 @@ class Mobile extends RestController
             'user_id' => $this->post('user_id'),
             'account' => $this->post('akun_tujuan'),
             'no_tujuan' => $this->post('no_tujuan'),
+            'no_rek' => $this->post('no_rek'),
             'm_blockchain_id' => $this->post('blockchain'),
             'm_vcc_id' => $this->post('id_vcc'),
             'jenis_transaksi_vcc' => $this->post('jenis_transaksi_vcc'),

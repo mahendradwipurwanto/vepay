@@ -96,7 +96,7 @@ class M_transaksi extends CI_Model
 			}
 
 			if(!is_null($product)){
-				$models[$key]->produk   = "<b>{$product['product']}</b> x{$product['jumlah']} {$jenis_vcc}";
+				$models[$key]->produk   = "<b>{$product['product']}</b> x{$product['jumlah']} {$jenis_vcc} - <i>{$product['type']}</i>";
 			}else{
 				$models[$key]->produk   = "-";
 			}
@@ -112,7 +112,7 @@ class M_transaksi extends CI_Model
     }
 
     function getProductTransaksi($id_transaksi = null){
-        $this->db->select('a.*, c.name, c.image')
+        $this->db->select('a.*, b.type, c.name, c.image')
         ->from('_transaksi_detail a')
         ->join('m_price b', 'a.m_price_id = b.id')
         ->join('m_product c', 'b.m_product_id = c.id')
@@ -128,6 +128,7 @@ class M_transaksi extends CI_Model
 				$arrModels[$key]['price_id'] = $val->m_price_id;
 				$arrModels[$key]['product'] = $val->name;
 				$arrModels[$key]['product_img'] = $val->image;
+				$arrModels[$key]['type'] = $val->type;
 				$arrModels[$key]['jumlah'] = $val->quantity;
 				$arrModels[$key]['harga'] = $val->price;
 				$arrModels[$key]['total'] = $val->total;
@@ -141,7 +142,7 @@ class M_transaksi extends CI_Model
     }
 
     public function getDetailTransaksi($id_transaksi = null){
-        $this->db->select('a.*, b.quantity as jumlah, d.name as product, d.is_vcc, e.email, f.name, f.phone, g.metode, h.blockchain, i.number as vcc_number, i.holder as vcc_holder, i.jenis_vcc')
+        $this->db->select('a.*, b.quantity as jumlah, d.name as product, d.is_vcc, e.email, f.name, f.phone, g.metode, g.image as img_metode, h.blockchain, i.number as vcc_number, i.holder as vcc_holder, i.jenis_vcc')
         ->from('tb_transaksi a')
         ->join('_transaksi_detail b', 'a.id = b.transaksi_id', 'inner')
         ->join('m_price c', 'b.m_price_id = c.id', 'inner')

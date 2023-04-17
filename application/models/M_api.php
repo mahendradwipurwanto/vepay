@@ -389,7 +389,7 @@ class M_api extends CI_Model
     public function getAllTransaksi($params = [])
     {
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.no_tujuan, a.no_rek, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
@@ -400,7 +400,11 @@ class M_api extends CI_Model
         ->join('m_blockchain h', 'a.m_blockchain_id = h.id', 'left')
         ;
 
-        $this->db->where(['a.user_id' => $params['user_id'], 'a.is_deleted' => 0]);
+        $this->db->where(['a.is_deleted' => 0]);
+
+		if (!empty($params) && isset($params['user_id']) && !is_null($params['user_id'])) {
+            $this->db->where('a.user_id', $params['user_id']);
+        }
 
         if (!empty($params) && isset($params['type']) && !is_null($params['type'])) {
             $type = $params['type'] == 'top_up' ? 'Top Up' : "Withdraw";
@@ -431,7 +435,7 @@ class M_api extends CI_Model
     public function getDetailTransaksi($id = null)
     {
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.no_tujuan, a.no_rek, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
@@ -475,7 +479,7 @@ class M_api extends CI_Model
             ];
         }
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.no_tujuan, a.no_rek, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
@@ -508,7 +512,7 @@ class M_api extends CI_Model
             ];
         }
 
-        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
+        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.no_tujuan, a.no_rek, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
         ->from('tb_transaksi a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'left')
         ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
