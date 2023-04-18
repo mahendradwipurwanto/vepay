@@ -11,9 +11,9 @@
     <div class="mb-3">
         <label for="inputSubject" class="form-label">Fee</label>
         <div class="input-group input-group-sm">
+            <span class="input-group-text" id="basic-addon1">Rp. </span>
             <input type="text" name="fee" id="inputFee" class="form-control form-control-sm" min="0" max="100"
                 placeholder="Fee" value="<?= $blockchain->fee;?>" onkeypress="return isNumberKey(event)" required>
-            <span class="input-group-text" id="basic-addon1">%</span>
         </div>
         <span class="invalid-feedback">Harap masukkan rate harga yang valid.</span>
     </div>

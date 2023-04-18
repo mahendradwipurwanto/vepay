@@ -78,7 +78,6 @@ class Master extends CI_Controller
     public function getRateProduct(){
 
         $price_history              = $this->M_master->getRateProduct($this->input->post('product_id'));
-        
         $data['price_history']      = $price_history;
         $data['m_product_id']       = $this->input->post('product_id');
 
