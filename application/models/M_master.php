@@ -152,7 +152,7 @@ class M_master extends CI_Model
         ->from('m_price a')
         ->join('m_product b', 'a.m_product_id = b.id', 'inner')
         ->where(['a.is_deleted' => 0, 'a.m_product_id' => $product_id])
-        ->order_by('a.created_at DESC, a.status DESC')
+        ->order_by('a.status DESC, a.price DESC, a.created_at DESC')
         ;
 
         $models = $this->db->get()->result();
@@ -571,6 +571,70 @@ class M_master extends CI_Model
 
         $this->db->insert('m_price', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function activePriceProduct()
+    {
+        $this->db->where(['m_product_id' => $this->input->post('m_product_id'), 'type' => $this->input->post('type')]);
+        $this->db->update('m_price', ['status' => 0]);
+
+        $data = [
+            'status'            => 1,
+            'modified_at'        => time(),
+            'modified_by'        => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $this->input->post('m_price_id'));
+        $this->db->update('m_price', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function deletePriceProduct()
+    {
+
+        if($this->input->post('status') == 1){
+            $this->db->where(['m_product_id' => $this->input->post('m_product_id'), 'type' => $this->input->post('type')]);
+            $this->db->update('m_price', ['status' => 0]);
+        }
+
+        // get latest data
+        $latest = $this->getLatestPrice($this->input->post('m_product_id'),
+        $this->input->post('type'),$this->input->post('m_price_id'));
+
+        if(!is_null($latest)){
+            $change = [
+                'status'            => 1,
+                'modified_at'        => time(),
+                'modified_by'        => $this->session->userdata('user_id')
+            ];
+    
+            $this->db->where('id', $latest->id);
+            $this->db->update('m_price', $change);
+        }
+
+        $data = [
+            'is_deleted'            => 1,
+            'modified_at'        => time(),
+            'modified_by'        => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $this->input->post('m_price_id'));
+        $this->db->update('m_price', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+    
+    function getLatestPrice($m_product_id = null, $type = null, $price_id = null){
+        $this->db->select('a.*, b.name')
+        ->from('m_price a')
+        ->join('m_product b', 'a.m_product_id = b.id', 'inner')
+        ->where(['a.is_deleted' => 0, 'a.m_product_id' => $m_product_id, 'a.type' => $type, 'a.id !=' => $price_id])
+        ->order_by('a.created_at DESC')
+        ->limit(1)
+        ;
+
+        $models = $this->db->get()->row();
+
+        return $models;
     }
 
     public function getAllVcc(){

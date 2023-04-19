@@ -323,6 +323,28 @@ class Master extends CI_Controller
         }
     }
 
+    public function activePriceProduct()
+    {
+        if ($this->M_master->activePriceProduct() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil mengaktifkan rate harga product');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba mengaktifkan rate harga product');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function deletePriceProduct()
+    {
+        if ($this->M_master->deletePriceProduct() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menghapus rate harga product');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus rate harga product');
+            redirect($this->agent->referrer());
+        }
+    }
+
     public function saveVcc()
     {
         if ($this->M_master->saveVcc() == true) {

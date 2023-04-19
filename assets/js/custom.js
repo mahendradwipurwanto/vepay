@@ -15,7 +15,7 @@ $(document).ready(function () {
 	//binds to onchange event of your input field
 	$('input.imgprev').each(function () {
 		$('#' + $(this).attr('id')).bind('change', function () {
-					console.log($(this).attr('id'));
+			console.log($(this).attr('id'));
 			var parent_id = $(this).attr('id').split('-')
 			//this.files[0].size gets the size of your file.
 			if (this.files[0].size > (1 * 1024 * 1024)) {
@@ -27,7 +27,7 @@ $(document).ready(function () {
 			} else {
 				const [file] = this.files
 				if (file) {
-					$('#'+parent_id[0]+'-preview').attr('src', URL.createObjectURL(file));
+					$('#' + parent_id[0] + '-preview').attr('src', URL.createObjectURL(file));
 				}
 			}
 		})
@@ -119,7 +119,7 @@ function addCommaNumeric(evt) {
 }
 
 function addThousandComma(event) {
-	event.target.value =  event.target.value.toLocaleString('en-US');
+	event.target.value = event.target.value.toLocaleString('en-US');
 }
 
 function numComma(evt) {
