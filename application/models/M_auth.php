@@ -175,7 +175,7 @@ class M_auth extends CI_Model
     public function get_aktivasi($user_id)
     {
         $user_id = $this->db->escape($user_id);
-        $query = $this->db->query("SELECT * FROM tb_token WHERE user_id = $user_id AND type = 1");
+        $query = $this->db->query("SELECT * FROM tb_token WHERE user_id = $user_id AND type = 1 AND status = 0");
         if ($query->num_rows() > 0) {
             return $query->row();
         } else {

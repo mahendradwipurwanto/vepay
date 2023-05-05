@@ -449,7 +449,6 @@ class Authentication extends CI_Controller
 
     public function verifikasi_email($token = null){
         $verifikasi = $this->M_auth->getTokenByToken($token);
-        
         if($verifikasi['status'] == true){
             if($this->M_auth->verified_user($verifikasi['data']->user_id)){
                 $this->session->set_flashdata('success', 'Berhasil verifikasi email anda');
