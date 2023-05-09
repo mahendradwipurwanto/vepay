@@ -44,7 +44,7 @@ class M_member extends CI_Model
         $this->db->select('a.status as auth_status, a.email, b.*')
         ->from('tb_auth a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
-        ->where(['a.role' => 2])
+        ->where(['a.role' => 2, 'a.is_deleted' => 0])
         ;
 
         $this->db->where($filter);
@@ -58,7 +58,9 @@ class M_member extends CI_Model
             
             $btnDetail      = '<button onclick="showMdlMemberDetail(\''.$val->user_id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
             $btnPass        = '<button onclick="showMdlChangePassword(\''.$val->user_id.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-key"></i></button>';
-            $btnEmail       = '<button onclick="showMdlChangeEmail(\''.$val->user_id.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-envelope"></i></button>';
+            $btnEmail       = '<button onclick="showMdlChangeEmail(\''.$val->user_id.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2"><i class="bi-envelope"></i></button>';
+            $btnVerif       = '<button onclick="showMdlVerifEmail(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
+            $btnDelete      = '<button onclick="showMdlDelete(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
 
             $strip_email                    = explode("@", $val->email);
             $models[$key]->name             = is_null($val->name) || $val->name == "" ? $strip_email[0] : $val->name;
@@ -72,7 +74,7 @@ class M_member extends CI_Model
                 $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
             }
             
-            $models[$key]->action = $btnDetail.$btnPass.($val->auth_status > 0 ? $btnEmail : '');
+            $models[$key]->action = $btnDetail.$btnPass.($val->auth_status > 0 ? $btnEmail : $btnVerif).$btnDelete;
         }
 
         $totalRecords = count($models);
@@ -189,6 +191,25 @@ class M_member extends CI_Model
 
         $this->db->where(['user_id' => $user_id]);
         $this->db->update('tb_auth', ['email' => $email]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    function verifMember(){
+        $user_id = $this->input->post('id');
+
+        $this->db->where(['user_id' => $user_id, 'type' => 1]);
+        $this->db->update('tb_token', ['status' => 1]);
+
+        $this->db->where(['user_id' => $user_id]);
+        $this->db->update('tb_auth', ['status' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    function deleteMember(){
+        $user_id = $this->input->post('id');
+
+        $this->db->where(['user_id' => $user_id]);
+        $this->db->update('tb_auth', ['is_deleted' => 1]);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 }

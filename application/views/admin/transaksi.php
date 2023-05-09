@@ -674,7 +674,7 @@
 			},
 			success: function (data) {
 				$('#deleteBtn').prop("disabled", false);
-				$('#deleteBtn').html(`Cancel`);
+				$('#deleteBtn').html(`Ya`);
 
 				$('#mdlTransDelete').modal('hide');
 

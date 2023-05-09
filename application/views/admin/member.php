@@ -248,6 +248,46 @@
 </div>
 <!-- End Modal -->
 
+<div id="mdlMemberDelete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="detailUserTitle">Hapus member</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" name="id" class="mdlDelete_id">
+				<p>Apakah kamu yakin ingin menghapus member <b class="mdlDelete_nama">#Error</b>?</p>
+				<div class="modal-footer px-0 pb-0">
+					<button type="button" class="btn btn-white btn-sm" data-bs-dismiss="modal">Tidak</button>
+					<button type="button" class="btn btn-danger btn-sm" id="deleteBtn" onclick="deleteData()">Ya</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="mdlMemberVerif" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="detailUserTitle">Verifikasi member</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" name="id" class="mdlVerif_id">
+				<p>Apakah kamu yakin ingin memverifikasi member <b class="mdlVerif_nama">#Error</b>?</p>
+				<div class="modal-footer px-0 pb-0">
+					<button type="button" class="btn btn-white btn-sm" data-bs-dismiss="modal">Tidak</button>
+					<button type="button" class="btn btn-warning btn-sm" id="verifBtn" onclick="verifData()">Ya</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	var table = $('#dataTable').DataTable({
 		'processing': true,
@@ -311,6 +351,18 @@
 		});
 	}
 
+	const showMdlDelete = function (id, nama) {
+		$('.mdlDelete_id').val(id);
+		$('.mdlDelete_nama').html(`#${nama}`);
+		$('#mdlMemberDelete').modal('show')
+	}
+
+	const showMdlVerifEmail = function (id, nama) {
+		$('.mdlVerif_id').val(id);
+		$('.mdlVerif_nama').html(`#${nama}`);
+		$('#mdlMemberVerif').modal('show')
+	}
+
 	const showMdlChangePassword = id => {
 		const pass = Math.random().toString(36).slice(-8);
 		$('#mdlChangePass_id').val(id);
@@ -340,6 +392,134 @@
 		);
 
 		table.ajax.reload();
+	}
+
+	function deleteData() {
+		var id = $('.mdlDelete_id').val();
+
+		$('#deleteBtn').prop("disabled", true);
+		// add spinner to button
+		$('#deleteBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/admin/deleteMember') ?>",
+			type: 'POST',
+			data: {
+				id: id
+			},
+			success: function (data) {
+				$('#deleteBtn').prop("disabled", false);
+				$('#deleteBtn').html(`Ya`);
+
+				$('#mdlMemberDelete').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly delete member data"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
+	}
+
+	function verifData() {
+		var id = $('.mdlVerif_id').val();
+
+		$('#verifBtn').prop("disabled", true);
+		// add spinner to button
+		$('#verifBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/admin/verifMember') ?>",
+			type: 'POST',
+			data: {
+				id: id
+			},
+			success: function (data) {
+				$('#verifBtn').prop("disabled", false);
+				$('#verifBtn').html(`Ya`);
+
+				$('#mdlMemberVerif').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly verified member data"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
 	}
 
 </script>

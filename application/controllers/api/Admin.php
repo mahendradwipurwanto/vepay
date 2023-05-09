@@ -106,6 +106,16 @@ class Admin extends CI_Controller
         }
     }
 
+    public function verifMember()
+    {
+        return $this->M_member->verifMember();
+    }
+
+    public function deleteMember()
+    {
+        return $this->M_member->deleteMember();
+    }
+
     function testMailer(){
         sendMailTest($this->input->post('email'), 'Test email mailer', 'This is a Test Email on '.date('d M Y - H:i:s'))['status'];
         $this->session->set_flashdata('notif_success', 'Succesfuly tested mailer for the current setting');
