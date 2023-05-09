@@ -234,6 +234,26 @@
 </div>
 <!-- End Modal -->
 
+<div id="mdlTransDelete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="detailUserTitle">Hapus transaksi</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" name="id" class="mdlDelete_id">
+				<p>Apakah kamu yakin ingin menghapus transaksi <b class="mdlDelete_nomor">#Error</b> ini?</p>
+				<div class="modal-footer px-0 pb-0">
+					<button type="button" class="btn btn-white btn-sm" data-bs-dismiss="modal">Tidak</button>
+					<button type="button" class="btn btn-danger btn-sm" id="deleteBtn" onclick="deleteData()">Ya</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="mdlTransVerif" tabindex="-1" aria-labelledby="mdlDeleteLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
@@ -342,7 +362,13 @@
 		});
 	}
 
-	const showMdlTransVerif= function (user_id, id, img) {
+	const showMdlTransDelete = function (id, nomor) {
+		$('.mdlDelete_id').val(id);
+		$('.mdlDelete_nomor').html(`#${nomor}`);
+		$('#mdlTransDelete').modal('show')
+	}
+
+	const showMdlTransVerif = function (user_id, id, img) {
 		$('#evidance').prop('src', img);
 		$('.mdlVerif_id').val(id);
 		$('.mdlVerif_userid').val(user_id);
@@ -603,6 +629,70 @@
 				Toast.fire({
 					icon: 'success',
 					title: "Succesfuly set payment to cancel"
+				})
+
+				table.ajax.reload();
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+				table.ajax.reload();
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'error',
+					title: thrownError
+				})
+			}
+		});
+	}
+
+	function deleteData() {
+		var id = $('.mdlDelete_id').val();
+
+		$('#deleteBtn').prop("disabled", true);
+		// add spinner to button
+		$('#deleteBtn').html(
+			`<span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span> loading...`
+		);
+
+		jQuery.ajax({
+			url: "<?= site_url('api/transaksi/deletePayment') ?>",
+			type: 'POST',
+			data: {
+				id: id
+			},
+			success: function (data) {
+				$('#deleteBtn').prop("disabled", false);
+				$('#deleteBtn').html(`Cancel`);
+
+				$('#mdlTransDelete').modal('hide');
+
+				var Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'success',
+					title: "Succesfuly delete payment data"
 				})
 
 				table.ajax.reload();

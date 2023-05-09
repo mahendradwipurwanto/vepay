@@ -104,4 +104,16 @@ class Transaksi extends CI_Controller
         //     redirect($this->agent->referrer());
         // }
     }
+
+    public function deletePayment()
+    {
+        return $this->M_transaksi->deletePayment();
+        // if ($this->M_transaksi->cancelPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly cancel payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to cancel payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
 }

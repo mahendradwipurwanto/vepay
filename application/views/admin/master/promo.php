@@ -49,7 +49,7 @@
 							<td><?= $val->nama;?></td>
 							<td><?= $val->jenis == 1 ? 'Rp.' : '%';?>
 								<?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
-							<td><?= !is_null($val->maksimal_promo) ? number_format($val->maksimal_promo, 0, ",", ".") : '-';?>
+							<td>Rp. <?= !is_null($val->maksimal_promo) ? number_format($val->maksimal_promo, 0, ",", ".") : '-';?>
 							</td>
 							<td><?= $val->jenis == 1 ? 'Flat' : 'Presentage';?></td>
 							<td><?= $val->quota;?></td>

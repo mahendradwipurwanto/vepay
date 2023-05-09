@@ -54,7 +54,9 @@ class M_transaksi extends CI_Model
             
             $btnDetail          = '<button onclick="showMdlTransDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
             $btnVerif           = '<button onclick="showMdlTransVerif(\''.$val->user_id.'\', \''.$val->id.'\', \''.base_url().$val->bukti.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
-            $models[$key]->action = $btnDetail.($val->status == 2 ? '' : $btnVerif);
+            $btnHapus          = '<button onclick="showMdlTransDelete(\''.$val->id.'\', \''.$val->kode.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
+
+            $models[$key]->action = $btnDetail.($val->status == 2 ? '' : $btnVerif).$btnHapus;
             
             $status             = '<span class="badge bg-secondary">Pending</span>';
             
@@ -265,6 +267,22 @@ class M_transaksi extends CI_Model
 
         $data = [
             'status' => 4,
+            'modified_at' => time(),
+            'modified_by' => $this->session->userdata('user_id')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('tb_transaksi', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+
+    public function deletePayment()
+    {
+        $id = $this->input->post('id');
+
+        $data = [
+            'is_deleted' => 1,
             'modified_at' => time(),
             'modified_by' => $this->session->userdata('user_id')
         ];

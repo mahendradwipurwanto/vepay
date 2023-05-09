@@ -162,8 +162,7 @@ class Mobile extends RestController
     {
         if(!is_null($this->post('is_google')) && $this->post('is_google') == true){
             $validasi = [
-                'email' => 'required',
-                'nama' => 'required',
+                'email' => 'required'
             ];
         }else{
             $validasi = [
@@ -724,8 +723,10 @@ class Mobile extends RestController
                     $val->image = base_url()."assets/images/profile.png";
                 }
 				if($val->maksimal_promo > 0){
-					$val->maksimal_promo = (int) $val->maksimal_promo;
-				}
+					$val->maksimal_promo = (float) $val->maksimal_promo;
+				}else{
+                    $val->maksimal_promo = (float) 0;
+                }
 				$val->jenis_pengguna_txt = $val->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             }
             // Set the response and exit
@@ -788,8 +789,11 @@ class Mobile extends RestController
             }
 			
 			if($promo->maksimal_promo > 0){
-				$promo->maksimal_promo = (int) $promo->maksimal_promo;
-			}
+				$promo->maksimal_promo = (float) $promo->maksimal_promo;
+			}else{
+                $promo->maksimal_promo = (float) 0;
+            }
+            
 			$promo->jenis_pengguna_txt = $promo->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             // Set the response and exit
             $this->response([
@@ -1120,14 +1124,12 @@ class Mobile extends RestController
 
         $validasi = [
             'user_id' => 'required',
-            'm_metode_id' => 'required',
             'm_rate_id' => 'required',
             'jumlah' => 'required',
             'sub_total' => 'required',
             'total_bayar' => 'required'
         ];
         \GUMP::set_field_name('user_id', 'User ID');
-        \GUMP::set_field_name('m_metode_id', 'Metode');
         \GUMP::set_field_name('m_rate_id', 'Rate Harga');
         \GUMP::set_field_name('jumlah', 'Jumlah Pembelian');
         \GUMP::set_field_name('sub_total', 'Sub Total');

@@ -411,9 +411,10 @@ class M_api extends CI_Model
             $this->db->where('f.type', $type);
         }
 
-        if (!empty($params) && isset($params['product']) && !empty($params['product']) && is_array($params['product'])) {
+        if (!empty($params) && isset($params['product']) && !empty($params['product'])) {
+            $params['product'] = json_decode($params['product'], true);
+            $params['product'] = (array) $params['product'];
             $this->db->where_in('g.name', $params['product']);
-
         }
 
         if (!empty($params) && isset($params['start_date']) && !is_null($params['start_date']) && isset($params['end_date']) && !is_null($params['end_date'])) {
