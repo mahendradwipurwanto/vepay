@@ -130,10 +130,28 @@ class Mobile extends RestController
 
 				if($user->status == 0){
 
-                    $token = $this->M_auth->get_aktivasi($user->user_id);
+                    // menghapus token permintaan lupa password sebelumnya
+                    $this->M_auth->del_token($user->user_id, 1);
+
+                    // create token for recovery
+                    do {
+                        $token = bin2hex(random_bytes(32));
+                    } while ($this->M_auth->cek_tokenRecovery($token) == true);
+
+                    $token = $token;
+                    // atur data untuk menyimpan token recovery password
+                    $data = [
+                        'user_id' => $user->user_id,
+                        'key' => $token,
+                        'type' => 1, //1. Verifikasi
+                        'date_created' => time()
+                    ];
+
+                    // simpan data token recovery password
+                    $this->M_auth->insert_token($data);
 
 					$subject = "Verifikasi email anda - Vepay";
-					$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
+					$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token."' class='btn btn-soft-primary'>Verifikasi Email</a>";
 
 					sendMail($email, $subject, $message);
 

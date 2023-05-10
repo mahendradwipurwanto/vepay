@@ -364,11 +364,31 @@
 	}
 
 	const showMdlChangePassword = id => {
-		const pass = Math.random().toString(36).slice(-8);
+		const pass = generateRandomString(8);
 		$('#mdlChangePass_id').val(id);
 		$('#mdlChangePass_pass').val(pass);
 		$('.mdlChangePass_passLabel').html(pass);
 		$('#mdlChangePass').modal('show')
+	}
+
+	function generateRandomString(length) {
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@#$%^&';
+		let result = '';
+		let hasSpecialChar = false;
+		
+		while (result.length < length) {
+			const randomIndex = Math.floor(Math.random() * chars.length);
+			const randomChar = chars[randomIndex];
+			
+			if (!hasSpecialChar && /[!@#$%^&*(),.?":{}|<>]/.test(randomChar)) {
+			hasSpecialChar = true;
+			result += randomChar;
+			} else if (/[a-zA-Z0-9]/.test(randomChar)) {
+			result += randomChar;
+			}
+		}
+		
+		return result;
 	}
 
 	const showMdlChangeEmail = id => {

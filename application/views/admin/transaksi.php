@@ -393,6 +393,10 @@
 		table.ajax.reload();
 	}
 
+	setInterval(function(){
+		table.ajax.reload();
+	}, 15000);
+
 	function verifData() {
 		var id = $('.mdlVerif_id').val();
 		var user_id = $('.mdlVerif_userid').val();
