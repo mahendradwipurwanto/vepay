@@ -60,6 +60,7 @@
 					</div>
 					<span class="invalid-feedback">Harap masukkan rate harga yang valid.</span>
 				</div>
+				<small class="text-secondary">Gunakan . untuk koma. Misal 2.5%</small>
 			</div>
 
 			<div class="modal-footer p-0 pt-3">

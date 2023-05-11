@@ -47,12 +47,13 @@
 							</td>
 							<td><?= $val->kode;?></td>
 							<td><?= $val->nama;?></td>
-							<td><?= $val->jenis == 1 ? 'Rp.' : '%';?>
-								<?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?></td>
+							<td><?= $val->jenis == 1 ? 'Rp.' : '';?>
+								<?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?>
+								<?= $val->jenis == 1 ? '' : '%';?></td>
 							<td>Rp. <?= !is_null($val->maksimal_promo) ? number_format($val->maksimal_promo, 0, ",", ".") : '-';?>
 							</td>
 							<td><?= $val->jenis == 1 ? 'Flat' : 'Presentage';?></td>
-							<td><?= $val->quota;?></td>
+							<td><?= is_null($val->quota) ? 'Unlimited' : $val->quota;?></td>
 							<td><span
 									class="badge bg-<?= $val->status == 1 ? 'success' : 'danger';?>"><?= $val->status == 1 ? 'Aktif' : 'Tidak aktif';?></span>
 							</td>
@@ -199,9 +200,10 @@
 									<span class="input-group-text" id="addon-wrapping"><span
 											id="symbol_promo">Rp</span></span>
 									<input type="number" class="form-control form-controls-sm" id="value_promo"
-										name="value" onkeypress="return event.charCode >= 48"
+										name="value" onkeypress="return isNumberKey(event)"
 										placeholder="Nominal/Nilai Promo" required>
 								</div>
+								<small class="text-secondary">Gunakan . untuk koma. Misal 2.5%</small>
 							</div>
 						</div>
 						<div class="col-12" style="display:none" id="maksimal-nominal">
@@ -211,8 +213,7 @@
 									<span class="input-group-text" id="addon-wrapping"><span
 											id="symbol_promo">Rp</span></span>
 									<input type="number" class="form-control form-controls-sm" name="maksimal_promo"
-										onkeypress="return event.charCode >= 48" placeholder="Nominal/Nilai Promo"
-										required>
+										onkeypress="return event.charCode >= 48" placeholder="Nominal/Nilai Promo">
 								</div>
 								<small class="text-secondary">Maksimal nominal promo digunakan untuk memberi batasan
 									pemotongan berapa persen dari promo yang digunakan</small>
@@ -231,8 +232,7 @@
 							<div class="mb-3">
 								<label for="inputSubject" class="form-label">Batas penggunaan</label>
 								<input class="form-control form-control-sm" type="number" min="0" max="9999"
-									onkeypress="return event.charCode >= 48" name="quota" placeholder="∞ Unlimited"
-									required>
+									onkeypress="return event.charCode >= 48" name="quota" placeholder="∞ Unlimited">
 								<small class="text-secondary">Kosongi untuk set ke tanpa bayas / unlimited.</small>
 							</div>
 						</div>

@@ -79,8 +79,9 @@
 					<span class="input-group-text" id="addon-wrapping"><span
 							id="symbol_promo"><?= $promo->jenis == 1 ? 'Rp.' : '%';?></span></span>
 					<input type="number" class="form-control form-controls-sm" id="value_promo" name="value"
-						onkeypress="return event.charCode >= 48" value="<?= $promo->value;?>" required>
+						onkeypress="return isNumberKey(event)" value="<?= $promo->value;?>" required>
 				</div>
+				<small class="text-secondary">Gunakan . untuk koma. Misal 2.5%</small>
 			</div>
 		</div>
 		<div class="col-12" <?php if($promo->jenis == 1):?>style="display:none" <?php endif;?> id="maksimal-nominal">
@@ -115,7 +116,7 @@
 					penggunaan</label>
 				<input class="form-control form-control-sm" type="number" min="0" max="9999"
 					onkeypress="return event.charCode >= 48" name="quota" value="<?= $promo->quota;?>"
-					placeholder="∞ Unlimited" required>
+					placeholder="∞ Unlimited">
 				<small class="text-secondary">Kosongi untuk set ke tanpa bayas /
 					unlimited.</small>
 			</div>

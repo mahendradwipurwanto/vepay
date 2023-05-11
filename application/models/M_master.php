@@ -302,7 +302,7 @@ class M_master extends CI_Model
         return $models;
     }
 
-    public function savePromo($image)
+    public function savePromo($image = null)
     {
         if (is_null($image)) {
             $data = [
@@ -311,7 +311,7 @@ class M_master extends CI_Model
                 'nama'              => $this->input->post('nama'),
                 'value'             => $this->input->post('value'),
                 'expired'           => strtotime($this->input->post('expired')),
-                'quota'             => $this->input->post('quota'),
+                'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'status'            => $this->input->post('status'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
                 'desc'           	=> $this->input->post('desc'),
@@ -326,7 +326,7 @@ class M_master extends CI_Model
                 'image'             => $image,
                 'value'             => $this->input->post('value'),
                 'expired'           => strtotime($this->input->post('expired')),
-                'quota'             => $this->input->post('quota'),
+                'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'status'            => $this->input->post('status'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
                 'desc'           	=> $this->input->post('desc'),
@@ -349,7 +349,7 @@ class M_master extends CI_Model
                 'value'             => $this->input->post('value'),
                 'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
-                'quota'             => $this->input->post('quota'),
+                'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
                 'desc'           	=> $this->input->post('desc'),
                 'status'            => $this->input->post('status'),
@@ -365,7 +365,7 @@ class M_master extends CI_Model
                 'value'             => $this->input->post('value'),
                 'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
-                'quota'             => $this->input->post('quota'),
+                'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
                 'desc'           	=> $this->input->post('desc'),
                 'status'            => $this->input->post('status'),

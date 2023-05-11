@@ -237,12 +237,30 @@ class Mobile extends RestController
                     // mengambil data user dengan param email
                     $user = $this->M_auth->get_auth($email);
 
-                    $token = $this->M_auth->get_aktivasi($user->user_id);
+                    // menghapus token permintaan lupa password sebelumnya
+                    $this->M_auth->del_token($user->user_id, 1);
+
+                    // create token for recovery
+                    do {
+                        $token = bin2hex(random_bytes(32));
+                    } while ($this->M_auth->cek_tokenRecovery($token) == true);
+
+                    $token = $token;
+                    // atur data untuk menyimpan token recovery password
+                    $data = [
+                        'user_id' => $user->user_id,
+                        'key' => $token,
+                        'type' => 1, //1. Verifikasi
+                        'date_created' => time()
+                    ];
+
+                    // simpan data token recovery password
+                    $this->M_auth->insert_token($data);
 
 					if(is_null($this->post('is_google')) || $this->post('is_google') == false){
 
 						$subject = "Verifikasi email anda - Vepay";
-						$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token->key."' class='btn btn-soft-primary'>Verifikasi Email</a>";
+						$message = "Hai, selamat bergabung dengan Vepay.id untuk mulai menggunakan akun anda verifikasi email dengan menekan tombol dibawah ini<br><br><a href='".base_url()."authentication/verifikasi_email/".$token."' class='btn btn-soft-primary'>Verifikasi Email</a>";
 
 						// mengirim email
 						if (sendMail($email, $subject, $message) == true) {
@@ -745,6 +763,8 @@ class Mobile extends RestController
 				}else{
                     $val->maksimal_promo = (float) 0;
                 }
+                $val->value = (float) $val->value;
+                $val->quota = is_null($val->quota) ? 'unlimited' : $val->quota;
 				$val->jenis_pengguna_txt = $val->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             }
             // Set the response and exit
@@ -783,8 +803,7 @@ class Mobile extends RestController
         $promo = $this->M_api->getDetailPromo($id, $kode);
 
         if (!empty($promo)) {
-
-			if($promo->quota <= 0){
+			if($promo->quota <= 0 && !is_null($promo->quota)){
 				// Set the response and exit
 				$this->response([
 					'status' => false,
@@ -811,6 +830,8 @@ class Mobile extends RestController
 			}else{
                 $promo->maksimal_promo = (float) 0;
             }
+            $promo->value = (float) $promo->value;
+            $promo->quota = is_null($promo->quota) ? 'unlimited' : $promo->quota;
             
 			$promo->jenis_pengguna_txt = $promo->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             // Set the response and exit
