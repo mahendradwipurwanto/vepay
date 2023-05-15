@@ -59,7 +59,29 @@ class Transaksi extends CI_Controller
 
     public function verificationPayment()
     {
-        return $this->M_transaksi->verificationPayment();
+        // Get the base64 string
+        $base64_string = $this->input->post('base64');
+        $id = $this->input->post('id');
+        $file_name = null;
+        
+        if(!is_null($base64_string)){
+            $image_parts = explode(';base64,', $base64_string);
+            $image_type_aux = explode('image/', $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $namaFile = "bukti-verif-{$id}.{$image_type}";
+
+            $path = FCPATH . "berkas/transaction/{$id}";
+
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $file = "{$path}/{$namaFile}";
+            file_put_contents($file, $image_base64);
+        }
+
+        return $this->M_transaksi->verificationPayment("berkas/transaction/{$id}/{$namaFile}");
         // if ($this->M_transaksi->verificationPayment() == true) {
         //     $this->session->set_flashdata('notif_success', 'Succesfuly verification payment ');
         //     redirect(site_url('admin/payments'));

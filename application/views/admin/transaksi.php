@@ -263,16 +263,45 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<h5>Payment proff</h5>
-				<img src="<?= base_url();?>assets/images/placeholder.jpg" class="img-thumbnail w-100 mb-3" alt=""
-					id="evidance">
-				<div class="text-center">Verifikasi transaksi ini?</div>
+				<!-- Accordion -->
+				<div class="accordion mb-3" id="accordionExample">
+					<div class="accordion-item">
+						<div class="accordion-header" id="headingOne">
+							<a class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+								aria-expanded="false" aria-controls="collapseOne">
+								Payment proff
+							</a>
+						</div>
+						<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+							data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								<img src="<?= base_url();?>assets/images/placeholder.jpg" class="img-thumbnail w-100 mb-3" alt=""
+									id="evidance">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mb-3">
+					<figure class="text-center">
+						<img src="<?= base_url();?><?= 'assets/images/placeholder.jpg'?>" id="verifikasi-preview"
+							class="img-thumbnail img-fluid"
+							alt="Verifikasi"
+							onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
+					</figure>
+					<label for="verifikasi-upload" class="form-label">Bukti verifikasi <small class="text-muted">(optional)</small>:</label>
+					<div class="input-group">
+						<input type="file" class="form-control form-control-sm imgprev-verif" name="image" accept="image/*, .svg"
+							id="verifikasi-upload">
+					</div>
+					<small class="text-muted">Upload bukti verifikasi untuk pengguna. Max file size 1Mb</small>
+				</div>
 			</div>
 
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
 				<input type="hidden" name="id" class="mdlVerif_id">
 				<input type="hidden" name="user_id" class="mdlVerif_userid">
+				<input type="hidden" name="base64" class="mdlVerif_base64">
 				<button type="button" class="btn btn-soft-success btn-sm" id="verifBtn" onclick="verifData()">Verifikasi</button>
 				<button type="button" class="btn btn-soft-danger btn-sm" id="rejectBtn" onclick="rejectData()">Reject</button>
 				<?php if($this->session->userdata('role') == 0):?>
@@ -400,6 +429,7 @@
 	function verifData() {
 		var id = $('.mdlVerif_id').val();
 		var user_id = $('.mdlVerif_userid').val();
+		var base64 = $('.mdlVerif_base64').val();
 
 		$('#verifBtn').prop("disabled", true);
 		// add spinner to button
@@ -412,13 +442,15 @@
 			type: 'POST',
 			data: {
 				id: id,
-				user_id: user_id
+				user_id: user_id,
+				base64: base64
 			},
 			success: function (data) {
 				$('#verifBtn').prop("disabled", false);
 				$('#verifBtn').html(`Verified`);
 
 				$('#mdlTransVerif').modal('hide');
+				$('#verifikasi-preview').attr('src', "<?= base_url();?><?= 'assets/images/placeholder.jpg'?>");
 
 				var Toast = Swal.mixin({
 					toast: true,
@@ -724,5 +756,31 @@
 			}
 		});
 	}
+
+	//binds to onchange event of your input field
+	$('input.imgprev-verif').each(function () {
+		console.log('#' + $(this).attr('id'));
+		$('#' + $(this).attr('id')).bind('change', function () {
+			console.log($(this).attr('id'));
+			var parent_id = $(this).attr('id').split('-')
+			//this.files[0].size gets the size of your file.
+			if (this.files[0].size > (1 * 1024 * 1024)) {
+				Swal.fire({
+					text: 'File size to large, maximum file size is 1 Mb !',
+					icon: 'warning',
+				})
+				this.value = "";
+			} else {
+				const [file] = this.files
+				
+				if (file) {
+					$('#' + parent_id[0] + '-preview').attr('src', URL.createObjectURL(file));
+                    toBase64(file).then(
+                        data => $('.mdlVerif_base64').val(data)
+                    );
+				}
+			}
+		})
+	});
 
 </script>

@@ -800,9 +800,20 @@ class Mobile extends RestController
 
         $id = $this->get('id');
         $kode = $this->get('kode');
-        $promo = $this->M_api->getDetailPromo($id, $kode);
+        $user_id = $this->get('user_id');
+        $data = $this->M_api->getDetailPromo($id, $kode, $user_id);
+        if ($data['status']) {
+            if(empty($data['data'])){
+                $kode = isset($kode) ? "kode" : "id";
 
-        if (!empty($promo)) {
+                // Set the response and exit
+                $this->response([
+                    'status' => false,
+                    'message' => "Promo dengan {$kode} tersebut tidak tersedia"
+                ], 422);
+            }
+
+            $promo = $data['data'];
 			if($promo->quota <= 0 && !is_null($promo->quota)){
 				// Set the response and exit
 				$this->response([
@@ -846,7 +857,7 @@ class Mobile extends RestController
             // Set the response and exit
             $this->response([
                 'status' => false,
-                'message' => "Promo dengan {$kode} tersebut tidak tersedia"
+                'message' => $data['error']
             ], 422);
         }
 
@@ -1086,11 +1097,17 @@ class Mobile extends RestController
         ];
 
         $transaction = $this->M_api->getAllTransaksi($params);
-
         if (!empty($transaction)) {
             foreach ($transaction as $key => $val) {
-                if(!is_null($val->bukti)){
+                if(!is_null($val->bukti) && $val->bukti != ""){
                     $val->bukti = base_url().$val->bukti;
+                }else{
+                    $val->bukti = null;
+                }
+                if(!is_null($val->bukti_verif) && $val->bukti_verif != ""){
+                    $val->bukti_verif = base_url().$val->bukti_verif;
+                }else{
+                    $val->bukti_verif = null;
                 }
                 if(!is_null($val->img_method)){
                     $val->img_method = base_url().$val->img_method;
@@ -1134,8 +1151,15 @@ class Mobile extends RestController
         $transaction = $this->M_api->getDetailTransaksi($id);
 
         if (!empty($transaction)) {
-            if(!is_null($transaction->bukti)){
+            if(!is_null($transaction->bukti) && $transaction->bukti != ""){
                 $transaction->bukti = base_url().$transaction->bukti;
+            }else{
+                $transaction->bukti = null;
+            }
+            if(!is_null($transaction->bukti_verif) && $transaction->bukti_verif != ""){
+                $transaction->bukti_verif = base_url().$transaction->bukti_verif;
+            }else{
+                $transaction->bukti_verif = null;
             }
             if(!is_null($transaction->img_method)){
                 $transaction->img_method = base_url().$transaction->img_method;
@@ -1211,8 +1235,15 @@ class Mobile extends RestController
         
         if($transaksi['status'] === true){
             
-            if(!is_null($transaksi['data']->bukti)){
+            if(!is_null($transaksi['data']->bukti) && $transaksi['data']->bukti != ""){
                 $transaksi['data']->bukti = base_url().$transaksi['data']->bukti;
+            }else{
+                $transaksi['data']->bukti = null;
+            }
+            if(!is_null($transaksi['data']->bukti_verif && $transaksi['data']->bukti_verif != "")){
+                $transaksi['data']->bukti_verif = base_url().$transaksi['data']->bukti_verif;
+            }else{
+                $transaksi['data']->bukti_verif = null;
             }
             if(!is_null($transaksi['data']->img_method)){
                 $transaksi['data']->img_method = base_url().$transaksi['data']->img_method;
@@ -1283,6 +1314,13 @@ class Mobile extends RestController
             
                 if(!is_null($transaksi['data']->bukti)){
                     $transaksi['data']->bukti = base_url().$transaksi['data']->bukti;
+                }else{
+                    $transaksi['data']->bukti = null;
+                }
+                if(!is_null($transaksi['data']->bukti_verif)){
+                    $transaksi['data']->bukti_verif = base_url().$transaksi['data']->bukti_verif;
+                }else{
+                    $transaksi['data']->bukti_verif = null;
                 }
                 if(!is_null($transaksi['data']->img_method)){
                     $transaksi['data']->img_method = base_url().$transaksi['data']->img_method;

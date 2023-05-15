@@ -214,12 +214,13 @@ class M_transaksi extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    public function verificationPayment()
+    public function verificationPayment($filename = null)
     {
         $user_id = $this->input->post('user_id');
         $id = $this->input->post('id');
     
         $data = [
+            'bukti_verif' => $filename,
             'status' => 2,
             'modified_at' => time(),
             'modified_by' => $this->session->userdata('user_id')
