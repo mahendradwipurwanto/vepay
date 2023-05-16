@@ -21,14 +21,14 @@
 						<li class="step-item">
 							<a class="step-content-wrapper" href="javascript:;"
 								data-hs-step-form-next-options='{"targetSelector": "#riwayatTransaksi"}'>
-								<span class="step-icon step-icon-soft-dark">2</span>
+								<span class="step-icon step-icon-soft-dark stepy-last">2</span>
 								<div class="step-content pb-5">
 									<span class="step-title mt-2">Riwayat transaksi</span>
 								</div>
 							</a>
 						</li>
 
-						<li class="step-item">
+						<!-- <li class="step-item">
 							<a class="step-content-wrapper" href="javascript:;"
 								data-hs-step-form-next-options='{"targetSelector": "#aksesLog"}'>
 								<span class="step-icon step-icon-soft-dark stepy-last">3</span>
@@ -36,7 +36,7 @@
 									<span class="step-title mt-2">Akses log</span>
 								</div>
 							</a>
-						</li>
+						</li> -->
 					</ul>
 					<!-- End Step -->
 				</div>
@@ -48,7 +48,8 @@
 							<!-- List Striped -->
 							<ul class="list-group list-group-lg">
 								<li class="list-group-item p-2 active">
-									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Data pribadi</span>
+									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Data
+										pribadi</span>
 								</li>
 								<li class="list-group-item p-3">
 									<div class="row">
@@ -114,8 +115,44 @@
 							<!-- List Striped -->
 							<ul class="list-group list-group-lg">
 								<li class="list-group-item p-2 active">
-									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Riwayat transaksi member</span>
+									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Riwayat transaksi
+										member</span>
 								</li>
+								<div style="max-height: 300px; overflow-y: auto;">
+									<?php if(!empty($transaksi)):?>
+									<?php foreach($transaksi as $key => $val):?>
+										<li class="list-group-item p-3">
+											<div class="row">
+												<div class="col-sm-8 mb-2 mb-sm-0">
+													<span><?= $val->produk;?></span>
+												</div>
+												<!-- End Col -->
+	
+												<div class="col-sm-3 mb-2 mb-sm-0">
+													<span class="texat-secondary small"><?= $val->tanggal;?></span>
+												</div>
+												<!-- End Col -->
+
+												<div class="col-sm-1 mb-2 mb-sm-0">
+													<a href="<?= site_url('transaksi/detail/'.$val->id);?>" target="_blank" class="btn btn-white btn-xs"><i class="bi bi-box-arrow-up-right"></i></a>
+												</div>
+												<!-- End Col -->
+											</div>
+											<!-- End Row -->
+										</li>
+									<?php endforeach; ?>
+									<?php else:?>
+										<li class="list-group-item p-3">
+											<div class="row">
+												<div class="col text-center">
+													<span class="h6">Belum ada transaksi</span>
+												</div>
+												<!-- End Col -->
+											</div>
+											<!-- End Row -->
+										</li>
+									<?php endif;?>
+								</div>
 							</ul>
 						</div>
 
@@ -123,7 +160,8 @@
 							<!-- List Striped -->
 							<ul class="list-group list-group-lg">
 								<li class="list-group-item p-2 active">
-									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Akses log member</span>
+									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Akses log
+										member</span>
 								</li>
 							</ul>
 						</div>

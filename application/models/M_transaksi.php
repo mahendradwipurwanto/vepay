@@ -22,7 +22,8 @@ class M_transaksi extends CI_Model
 
         $filterKode = $this->input->post('filterKode');   
         $filterProduct = $this->input->post('filterProduct');   
-        $filterMetode = $this->input->post('filterMetode');   
+        $filterMetode = $this->input->post('filterMetode');
+        $filterStatus = $this->input->post('filterStatus');
 
         if($filterEmail != null || $filterEmail != '') $filter[] = "b.email like '%{$filterEmail}%'";
         if($filterName != null || $filterName != '') $filter[] = "c.name like '%{$filterName}%'";
@@ -30,6 +31,7 @@ class M_transaksi extends CI_Model
 
         if($filterKode != null || $filterKode != '') $filter[] = "a.kode like '%{$filterKode}%'";
         if($filterMetode != null && $filterMetode > 0) $filter[] = "a.m_metode_id = {$filterMetode}";
+        if($filterStatus != null && $filterStatus > 0) $filter[] = "a.status = {$filterStatus}";
 
         if($filter != null){
             $filter = implode(' AND ', $filter);
@@ -39,7 +41,7 @@ class M_transaksi extends CI_Model
         ->from('tb_transaksi a')
         ->join('tb_auth b', 'a.user_id = b.user_id', 'inner')
         ->join('tb_user c', 'a.user_id = c.user_id', 'inner')
-        ->join('m_metode d', 'a.m_metode_id = d.id', 'inner')
+        ->join('m_metode d', 'a.m_metode_id = d.id', 'left')
         ->where(['a.is_deleted' => 0])
         ;
 
@@ -143,6 +145,75 @@ class M_transaksi extends CI_Model
         ];
     }
 
+    public function getAllTransaksiUser($params = [])
+    {
+        $this->db->select('a.*, b.email, c.*, d.metode')
+        ->from('tb_transaksi a')
+        ->join('tb_auth b', 'a.user_id = b.user_id', 'inner')
+        ->join('tb_user c', 'a.user_id = c.user_id', 'inner')
+        ->join('m_metode d', 'a.m_metode_id = d.id', 'left')
+        ->where(['a.is_deleted' => 0])
+        ;
+
+        $this->db->where(['a.user_id' => $params['user_id']]);
+        $this->db->order_by('a.created_at DESC');
+
+        // $this->db->limit($limit)->offset($offset);
+
+        $models = $this->db->get()->result();
+
+        foreach($models as $key => $val){
+            $models[$key]       = $val;
+            $status             = '<span class="badge bg-secondary">Pending</span>';
+            switch ($val->status) {
+                case 1:
+                        $status = '<span class="badge bg-secondary">Pending</span>';
+                    break;
+
+                case 2:
+                        $status = '<span class="badge bg-success">Success</span>';
+                    break;
+
+                case 3:
+                        $status = '<span class="badge bg-danger">Rejected</span>';
+                    break;
+
+                case 4:
+                        $status = '<span class="badge bg-warning">Expired</span>';
+                    break;
+                
+                default:
+                        $status = '<span class="badge bg-secondary">Pending</span>';
+                    break;
+            }
+            $models[$key]->kode     = $val->kode;
+            $models[$key]->tanggal  = date("d F Y, H:i", $val->created_at);
+            $models[$key]->name     = $val->name;
+            $models[$key]->metode   = $val->metode;
+            $product = $this->getProductTransaksi($val->id)['product'];
+
+			$jenis_vcc = "";
+			if(isset($val->jenis_transaksi_vcc)){
+				if($val->jenis_transaksi_vcc == 0){
+					$jenis_vcc = " - <i>(Top Up VCC)</i>";
+				}else{
+					$jenis_vcc = " - <i>(Withdraw VCC)</i>";
+				}
+			}
+
+			if(!is_null($product)){
+				$models[$key]->produk   = "Melakukan <i>{$product['type']}</i> - <b>{$product['product']}</b> x{$product['jumlah']} {$jenis_vcc}";
+			}else{
+				$models[$key]->produk   = "-";
+			}
+            $models[$key]->total    = $val->sub_total;
+            $models[$key]->status   = $status;
+
+        }
+
+        return $models;
+    }
+
     public function getDetailTransaksi($id_transaksi = null){
         $this->db->select('a.*, b.quantity as jumlah, d.name as product, d.is_vcc, e.email, f.name, f.phone, g.metode, g.image as img_metode, h.blockchain, i.number as vcc_number, i.holder as vcc_holder, i.jenis_vcc')
         ->from('tb_transaksi a')
@@ -151,7 +222,7 @@ class M_transaksi extends CI_Model
         ->join('m_product d', 'c.m_product_id = d.id', 'inner')
         ->join('tb_auth e', 'a.user_id = e.user_id', 'inner')
         ->join('tb_user f', 'a.user_id = f.user_id', 'inner')
-        ->join('m_metode g', 'a.m_metode_id = g.id', 'inner')
+        ->join('m_metode g', 'a.m_metode_id = g.id', 'left')
         ->join('m_blockchain h', 'a.m_blockchain_id = h.id', 'left')
         ->join('tb_vcc i', 'a.m_vcc_id = i.id', 'left')
         ->where(['a.id' => $id_transaksi, 'a.is_deleted' => 0])

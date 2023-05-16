@@ -3,7 +3,7 @@
 	<div class="row align-items-center">
 		<div class="col-sm">
 			<h1 class="docs-page-header-title">Transaksi
-				<div class="btn-group float-end">
+				<div class="btn-group float-end d-none">
 					<button class="btn btn-sm btn-success dropdown-toggle" type="button"
 						id="dropdownMenuButtonClickAnimation" data-bs-toggle="dropdown" aria-expanded="false"
 						data-bs-dropdown-animation>
@@ -58,13 +58,26 @@
 						<label for="">Metode</label>
 						<div class="tom-select-custom">
 							<select class="js-select form-select form-select-sm" autocomplete="off" id="filter_metode"
-								name="metode" data-hs-tom-select-options='{"placeholder": "Produk...", "hideSearch": true}'>
+								name="metode" data-hs-tom-select-options='{"placeholder": "Metode...", "hideSearch": true}'>
                                 <option value="0">Semua metode</option>
 								<?php if(!empty($metode)):?>
 								<?php foreach ($metode as $key => $val):?>
 								<option value="<?= $val->id;?>"><?= $val->metode;?></option>
 								<?php endforeach;?>
 								<?php endif;?>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-sm mb-2 mb-sm-0">
+						<label for="">Status</label>
+						<div class="tom-select-custom">
+							<select class="js-select form-select form-select-sm" autocomplete="off" id="filter_status"
+								name="status" data-hs-tom-select-options='{"placeholder": "Status...", "hideSearch": true}'>
+                                <option value="0">Semua status</option>
+								<option value="1">Pending</option>
+								<option value="2">Success</option>
+								<option value="3">Reject</option>
 							</select>
 						</div>
 					</div>
@@ -345,6 +358,7 @@
 				d.filterKode = $('#filter_kode').val()
 				d.filterProduk = $('#filter_produk').val()
 				d.filterMetode = $('#filter_metode').val()
+				d.filterStatus = $('#filter_status').val()
 			},
 			'dataSrc': function (json) {
 				doneLoading();

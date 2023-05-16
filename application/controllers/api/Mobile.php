@@ -1303,7 +1303,7 @@ class Mobile extends RestController
             }
 
             $body = [
-                'bukti'         =>  "{$path}{$upload['data']}",
+                'bukti'       =>  "{$path}{$upload['data']}",
                 'modified_by' => $this->post('user_id'),
                 'modified_at' => time()
             ];

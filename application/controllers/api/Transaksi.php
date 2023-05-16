@@ -91,6 +91,14 @@ class Transaksi extends CI_Controller
         // }
     }
 
+    public function detailSlip($id_transksi = null){
+        $transaksi                      = $this->M_transaksi->getDetailTransaksi($id_transksi);
+
+        $data['transaksi']              = $transaksi;
+
+        $this->templateslip->view('admin/transaksi_detail', $data);
+    }
+
     public function rejectedPayment()
     {
         return $this->M_transaksi->rejectedPayment();

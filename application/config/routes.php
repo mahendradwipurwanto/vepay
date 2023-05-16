@@ -19,6 +19,9 @@ $route['admin/vcc-member'] = 'admin/vcc_member';
 $route['master/metode-pembayaran'] = 'master/metode';
 $route['master/metode-withdraw'] = 'master/withdraw';
 
+// TRANSAKSI
+$route['transaksi/detail/(:any)'] = 'api/transaksi/detailSlip/$1';
+
 // DEFAULT
 $route['default_controller'] = 'authentication';
 $route['404_override'] = 'utility/not_found';
