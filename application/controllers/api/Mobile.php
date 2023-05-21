@@ -86,7 +86,7 @@ class Mobile extends RestController
 
 				if (!empty($user)) {
 					if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
-						$user->photo = base_url().$user->photo;
+						$user->photo = base_url().(str_replace(base_url(), "", $user->photo));
 					}else{
 						$user->photo = base_url()."assets/images/profile.png";
 					}
@@ -122,7 +122,7 @@ class Mobile extends RestController
 
 				if (!empty($user)) {
 					if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
-						$user->photo = base_url().$user->photo;
+						$user->photo = base_url().(str_replace(base_url(), "", $user->photo));
 					}else{
 						$user->photo = base_url()."assets/images/profile.png";
 					}
@@ -269,7 +269,7 @@ class Mobile extends RestController
 
 							if (!empty($user)) {
 								if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
-									$user->photo = base_url().$user->photo;
+									$user->photo = base_url().(str_replace(base_url(), "", $user->photo));
 								}else{
 									$user->photo = base_url()."assets/images/profile.png";
 								}
@@ -294,7 +294,7 @@ class Mobile extends RestController
 
 						if (!empty($user)) {
 							if(!is_null($user->photo) && isset($user->photo) && $user->photo !== ""){
-								$user->photo = base_url().$user->photo;
+								$user->photo = base_url().(str_replace(base_url(), "", $user->photo));
 							}else{
 								$user->photo = base_url()."assets/images/profile.png";
 							}
@@ -473,7 +473,7 @@ class Mobile extends RestController
         if (!empty($member)) {
             foreach ($member as $key => $val) {
                 if (!is_null($val->photo) && isset($val->photo) && $val->photo !== "") {
-                    $val->photo = base_url().$val->photo;
+                    $val->photo = base_url().(str_replace(base_url(), "", $val->photo));
                 } else {
                     $val->photo = base_url()."assets/images/profile.png";
                 }
@@ -515,7 +515,7 @@ class Mobile extends RestController
 
         if (!empty($member)) {
             if(!is_null($member->photo) && isset($member->photo) && $member->photo !== ""){
-                $member->photo = base_url().$member->photo;
+                $member->photo = base_url().(str_replace(base_url(), "", $member->photo));
             }else{
                 $member->photo = base_url()."assets/images/profile.png";
             }
@@ -641,7 +641,7 @@ class Mobile extends RestController
 
 			if (!empty($member)) {
 				if(!is_null($member->photo) && isset($member->photo) && $member->photo !== ""){
-					$member->photo = base_url().$member->photo;
+					$member->photo = base_url().(str_replace(base_url(), "", $member->photo));
 				}else{
 					$member->photo = base_url()."assets/images/profile.png";
 				}
@@ -681,7 +681,7 @@ class Mobile extends RestController
         if (!empty($products)) {
             foreach ($products as $key => $val) {
                 if(!is_null($val->image)){
-                    $val->image = base_url().$val->image;
+                    $val->image = base_url().(str_replace(base_url(), "", $val->image));
                 }else{
                     $val->image = base_url()."assets/images/profile.png";
                 }
@@ -723,7 +723,7 @@ class Mobile extends RestController
 
         if (!empty($product)) {
             if(!is_null($product->image)){
-                $product->image = base_url().$product->image;
+                $product->image = base_url().(str_replace(base_url(), "", $product->image));
             }else{
                 $product->image = base_url()."assets/images/profile.png";
             }
@@ -754,7 +754,7 @@ class Mobile extends RestController
         if (!empty($promo)) {
             foreach ($promo as $key => $val) {
                 if(!is_null($val->image)){
-                    $val->image = base_url().$val->image;
+                    $val->image = base_url().(str_replace(base_url(), "", $val->image));
                 }else{
                     $val->image = base_url()."assets/images/profile.png";
                 }
@@ -831,7 +831,7 @@ class Mobile extends RestController
 			}
 
             if(!is_null($promo->image)){
-                $promo->image = base_url().$promo->image;
+                $promo->image = base_url().(str_replace(base_url(), "", $promo->image));
             }else{
                 $promo->image = base_url()."assets/images/profile.png";
             }
@@ -875,7 +875,7 @@ class Mobile extends RestController
         if (!empty($metode)) {
             foreach ($metode as $key => $val) {
                 if(!is_null($val->image)){
-                    $val->image = base_url().$val->image;
+                    $val->image = base_url().(str_replace(base_url(), "", $val->image));
                 }else{
                     $val->image = base_url()."assets/images/profile.png";
                 }
@@ -906,7 +906,7 @@ class Mobile extends RestController
         if (!empty($withdraw)) {
             foreach ($withdraw as $key => $val) {
                 if(!is_null($val->image)){
-                    $val->image = base_url().$val->image;
+                    $val->image = base_url().(str_replace(base_url(), "", $val->image));
                 }else{
                     $val->image = base_url()."assets/images/profile.png";
                 }
@@ -962,7 +962,7 @@ class Mobile extends RestController
         if (!empty($rate)) {
             foreach ($rate as $key => $val) {
                 if(!is_null($val->image)){
-                    $val->image = base_url().$val->image;
+                    $val->image = base_url().(str_replace(base_url(), "", $val->image));
                 }else{
                     $val->image = base_url()."assets/images/profile.png";
                 }
@@ -1011,7 +1011,7 @@ class Mobile extends RestController
         if (!empty($vcc)) {
             foreach ($vcc as $key => $val) {
                 if(!is_null($val->photo)){
-                    $val->photo = base_url().$val->photo;
+                    $val->photo = base_url().(str_replace(base_url(), "", $val->photo));
                 }else{
                     $val->photo = base_url()."assets/images/profile.png";
                 }
@@ -1052,7 +1052,7 @@ class Mobile extends RestController
 
         if (!empty($vcc)) {
             if(!is_null($vcc->photo)){
-                $vcc->photo = base_url().$vcc->photo;
+                $vcc->photo = base_url().(str_replace(base_url(), "", $vcc->photo));
             }else{
                 $vcc->photo = base_url()."assets/images/profile.png";
             }
@@ -1100,20 +1100,20 @@ class Mobile extends RestController
         if (!empty($transaction)) {
             foreach ($transaction as $key => $val) {
                 if(!is_null($val->bukti) && $val->bukti != ""){
-                    $val->bukti = base_url().$val->bukti;
+                    $val->bukti = base_url().(str_replace(base_url(), "", $val->bukti));
                 }else{
                     $val->bukti = null;
                 }
                 if(!is_null($val->bukti_verif) && $val->bukti_verif != ""){
-                    $val->bukti_verif = base_url().$val->bukti_verif;
+                    $val->bukti_verif = base_url().(str_replace(base_url(), "", $val->bukti_verif));
                 }else{
                     $val->bukti_verif = null;
                 }
                 if(!is_null($val->img_method)){
-                    $val->img_method = base_url().$val->img_method;
+                    $val->img_method = base_url().(str_replace(base_url(), "", $val->img_method));
                 }
                 if(!is_null($val->img_product)){
-                    $val->img_product = base_url().$val->img_product;
+                    $val->img_product = base_url().(str_replace(base_url(), "", $val->img_product));
                 }
             }
             // Set the response and exit
@@ -1152,20 +1152,20 @@ class Mobile extends RestController
 
         if (!empty($transaction)) {
             if(!is_null($transaction->bukti) && $transaction->bukti != ""){
-                $transaction->bukti = base_url().$transaction->bukti;
+                $transaction->bukti = base_url().(str_replace(base_url(), "", $transaction->bukti));
             }else{
                 $transaction->bukti = null;
             }
             if(!is_null($transaction->bukti_verif) && $transaction->bukti_verif != ""){
-                $transaction->bukti_verif = base_url().$transaction->bukti_verif;
+                $transaction->bukti_verif = base_url().(str_replace(base_url(), "", $transaction->bukti_verif));
             }else{
                 $transaction->bukti_verif = null;
             }
             if(!is_null($transaction->img_method)){
-                $transaction->img_method = base_url().$transaction->img_method;
+                $transaction->img_method = base_url().(str_replace(base_url(), "", $transaction->img_method));
             }
             if(!is_null($transaction->img_product)){
-                $transaction->img_product = base_url().$transaction->img_product;
+                $transaction->img_product = base_url().(str_replace(base_url(), "", $transaction->img_product));
             }
             // Set the response and exit
             $this->response([
@@ -1236,20 +1236,20 @@ class Mobile extends RestController
         if($transaksi['status'] === true){
             
             if(!is_null($transaksi['data']->bukti) && $transaksi['data']->bukti != ""){
-                $transaksi['data']->bukti = base_url().$transaksi['data']->bukti;
+                $transaksi['data']->bukti = base_url().(str_replace(base_url(), "", $transaksi['data']->bukti));
             }else{
                 $transaksi['data']->bukti = null;
             }
             if(!is_null($transaksi['data']->bukti_verif && $transaksi['data']->bukti_verif != "")){
-                $transaksi['data']->bukti_verif = base_url().$transaksi['data']->bukti_verif;
+                $transaksi['data']->bukti_verif = base_url().(str_replace(base_url(), "", $transaksi['data']->bukti_verif));
             }else{
                 $transaksi['data']->bukti_verif = null;
             }
             if(!is_null($transaksi['data']->img_method)){
-                $transaksi['data']->img_method = base_url().$transaksi['data']->img_method;
+                $transaksi['data']->img_method = base_url().(str_replace(base_url(), "", $transaksi['data']->img_method));
             }
             if(!is_null($transaksi['data']->img_product)){
-                $transaksi['data']->img_product = base_url().$transaksi['data']->img_product;
+                $transaksi['data']->img_product = base_url().(str_replace(base_url(), "", $transaksi['data']->img_product));
             }
 
             // Set the response and exit
@@ -1313,20 +1313,20 @@ class Mobile extends RestController
             if($transaksi['status'] === true){
             
                 if(!is_null($transaksi['data']->bukti)){
-                    $transaksi['data']->bukti = base_url().$transaksi['data']->bukti;
+                    $transaksi['data']->bukti = base_url().(str_replace(base_url(), "", $transaksi['data']->bukti));
                 }else{
                     $transaksi['data']->bukti = null;
                 }
                 if(!is_null($transaksi['data']->bukti_verif)){
-                    $transaksi['data']->bukti_verif = base_url().$transaksi['data']->bukti_verif;
+                    $transaksi['data']->bukti_verif = base_url().(str_replace(base_url(), "", $transaksi['data']->bukti_verif));
                 }else{
                     $transaksi['data']->bukti_verif = null;
                 }
                 if(!is_null($transaksi['data']->img_method)){
-                    $transaksi['data']->img_method = base_url().$transaksi['data']->img_method;
+                    $transaksi['data']->img_method = base_url().(str_replace(base_url(), "", $transaksi['data']->img_method));
                 }
                 if(!is_null($transaksi['data']->img_product)){
-                    $transaksi['data']->img_product = base_url().$transaksi['data']->img_product;
+                    $transaksi['data']->img_product = base_url().(str_replace(base_url(), "", $transaksi['data']->img_product));
                 }
                 // Set the response and exit
                 $this->response([

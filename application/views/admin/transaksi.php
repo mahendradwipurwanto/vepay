@@ -282,7 +282,7 @@
 						<div class="accordion-header" id="headingOne">
 							<a class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
 								aria-expanded="false" aria-controls="collapseOne">
-								Payment proff
+								Payment proof
 							</a>
 						</div>
 						<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
@@ -304,7 +304,7 @@
 					<label for="verifikasi-upload" class="form-label">Bukti verifikasi <small class="text-muted">(optional)</small>:</label>
 					<div class="input-group">
 						<input type="file" class="form-control form-control-sm imgprev-verif" name="image" accept="image/*, .svg"
-							id="verifikasi-upload">
+							id="verifikasi-upload" required>
 					</div>
 					<small class="text-muted">Upload bukti verifikasi untuk pengguna. Max file size 1Mb</small>
 				</div>
@@ -444,6 +444,27 @@
 		var id = $('.mdlVerif_id').val();
 		var user_id = $('.mdlVerif_userid').val();
 		var base64 = $('.mdlVerif_base64').val();
+
+		if(base64 == ''){
+
+			var Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+			
+			Toast.fire({
+				icon: 'warning',
+				title: "Harap upload bukti verifikasi!"
+			})
+			return false;
+		}
 
 		$('#verifBtn').prop("disabled", true);
 		// add spinner to button
