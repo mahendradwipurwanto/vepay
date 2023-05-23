@@ -301,7 +301,7 @@
 							alt="Verifikasi"
 							onerror="this.onerror=null;this.src='<?= base_url();?><?= 'assets/images/placeholder.jpg'?>';">
 					</figure>
-					<label for="verifikasi-upload" class="form-label">Bukti verifikasi <small class="text-muted">(optional)</small>:</label>
+					<label for="verifikasi-upload" class="form-label">Bukti verifikasi:</label>
 					<div class="input-group">
 						<input type="file" class="form-control form-control-sm imgprev-verif" name="image" accept="image/*, .svg"
 							id="verifikasi-upload" required>
