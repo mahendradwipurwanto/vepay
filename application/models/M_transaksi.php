@@ -13,6 +13,7 @@ class M_transaksi extends CI_Model
 
         $offset = $this->input->post('start');
         $limit  = $this->input->post('length'); // Rows display per page
+        $order  = $this->input->post('order')[0];
         
         $filter = [];
 
@@ -46,7 +47,33 @@ class M_transaksi extends CI_Model
         ;
 
         $this->db->where($filter);
-        $this->db->order_by('a.created_at DESC');
+
+        if(!is_null($order)){
+
+            switch ($order['column']) {
+                case 0:
+                    $columnName = 'a.created_at';
+                    break;
+                    
+                case 2:
+                    $columnName = 'a.kode';
+                    break;
+                    
+                case 3:
+                    $columnName = 'a.status';
+                    break;
+                    
+                case 4:
+                    $columnName = 'a.created_at';
+                    break;
+                
+                default:
+                    $columnName = 'a.created_at';
+                    break;
+            }
+            
+            $this->db->order_by("{$columnName} {$order['dir']}");
+        }
 
         // $this->db->limit($limit)->offset($offset);
 

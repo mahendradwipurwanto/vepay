@@ -665,6 +665,7 @@ class M_master extends CI_Model
     public function saveVcc()
     {
         $id = htmlspecialchars($this->input->post('id'), true);
+        $vcc_name = htmlspecialchars($this->input->post('vcc_name'), true);
         $member = htmlspecialchars($this->input->post('member'), true);
         $jenis_vcc = htmlspecialchars($this->input->post('jenis_vcc'), true);
         $number = htmlspecialchars($this->input->post('number'), true);
@@ -675,6 +676,7 @@ class M_master extends CI_Model
         
         if (isset($id) && $id != '') {
             $data = [
+                'vcc_name'      => $vcc_name,
                 'number'        => $number,
                 'jenis_vcc'     => $jenis_vcc,
                 'holder'        => $holder,
@@ -687,6 +689,7 @@ class M_master extends CI_Model
         } else {
             $data = [
                 'user_id'       => $member,
+                'vcc_name'      => $vcc_name,
                 'jenis_vcc'     => $jenis_vcc,
                 'number'        => $number,
                 'holder'        => $holder,

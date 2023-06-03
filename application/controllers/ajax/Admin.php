@@ -29,13 +29,14 @@ class Admin extends CI_Controller
     }
     
     public function getAjaxMember(){
-        $members  = $this->M_member->getAllMember();
         
         $draw     = $this->input->post('draw');
         $search   = $this->input->post('search')['value'];
-        $arr      = [];
         $no       = $this->input->post('start');
-
+        
+        $members  = $this->M_member->getAllMember();
+        
+        $arr      = [];
         foreach ($members['records'] as $key => $val) {
 
             $arr[$key] = [

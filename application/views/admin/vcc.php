@@ -23,6 +23,7 @@
 						<tr>
 							<th width="10%">No.</th>
 							<th width="25%"></th>
+							<th>Nama VCC</th>
 							<th>Member</th>
 							<th>VCC</th>
 							<th>Jenis</th>
@@ -40,6 +41,7 @@
 								<button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
+							<td><?= is_null($val->vcc_name) || $val->vcc_name == "" ? '-' : $val->vcc_name;?></td>
 							<td><?= $val->name;?></td>
 							<td><?= $val->jenis_vcc;?></td>
 							<td><?= $val->number;?></td>
@@ -85,6 +87,13 @@
 										<form action="<?= site_url('api/master/saveVcc');?>" method="post"
 											enctype="multipart/form-data" class="js-validate need-validate" novalidate>
 											<input type="hidden" name="id" value="<?= $val->id;?>" required>
+
+											<div class="mb-3">
+												<label for="inputSubject" class="form-label">Nama VCC</label>
+												<input class="form-control form-control-sm" type="text" name="vcc_name"
+													placeholder="Ketikkan Nama VCC" value="<?= $val->vcc_name;?>"
+													required>
+											</div>
 
 											<div class="mb-3">
 												<div class="js-form-message">
@@ -171,6 +180,12 @@
 			<div class="modal-body">
 				<form action="<?= site_url('api/master/saveVcc');?>" method="post" enctype="multipart/form-data"
 					class="js-validate need-validate" novalidate>
+
+					<div class="mb-3">
+						<label for="inputSubject" class="form-label">Nama VCC</label>
+						<input class="form-control form-control-sm" type="text" name="vcc_name"
+							placeholder="Ketikkan Nama VCC" required>
+					</div>
 
 					<div class="mb-3">
 						<div class="js-form-message">

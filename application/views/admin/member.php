@@ -67,7 +67,7 @@
 							<th scope="col">Nama</th>
 							<th scope="col">Email</th>
 							<th scope="col">Whatsapp</th>
-							<th scope="col">Status</th>
+							<!-- <th scope="col">Status</th> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -100,8 +100,8 @@
 					<div class="mb-3">
 						<div class="js-form-message">
 							<label for="inputEmail" class="form-label">Email</label>
-							<input type="text" name="email" id="inputEmail"
-								class="form-control form-control-sm" placeholder="Email" required>
+							<input type="text" name="email" id="inputEmail" class="form-control form-control-sm"
+								placeholder="Email" required>
 							<span class="invalid-feedback">Harap masukkan email yang valid.</span>
 						</div>
 					</div>
@@ -126,8 +126,8 @@
 									<!-- Form Radio -->
 									<label class="form-control form-control-sm" for="formJenisKelaminLaki">
 										<span class="form-check">
-											<input type="radio" class="form-check-input" name="gender"
-												value="Laki-laki" id="formJenisKelaminLaki" required>
+											<input type="radio" class="form-check-input" name="gender" value="Laki-laki"
+												id="formJenisKelaminLaki" required>
 											<span class="form-check-label">Laki-laki</span>
 										</span>
 									</label>
@@ -248,8 +248,7 @@
 </div>
 <!-- End Modal -->
 
-<div id="mdlMemberDelete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete"
-	aria-hidden="true">
+<div id="mdlMemberDelete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -261,15 +260,15 @@
 				<p>Apakah kamu yakin ingin menghapus member <b class="mdlDelete_nama">#Error</b>?</p>
 				<div class="modal-footer px-0 pb-0">
 					<button type="button" class="btn btn-white btn-sm" data-bs-dismiss="modal">Tidak</button>
-					<button type="button" class="btn btn-danger btn-sm" id="deleteBtn" onclick="deleteData()">Ya</button>
+					<button type="button" class="btn btn-danger btn-sm" id="deleteBtn"
+						onclick="deleteData()">Ya</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div id="mdlMemberVerif" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete"
-	aria-hidden="true">
+<div id="mdlMemberVerif" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -293,11 +292,14 @@
 		'processing': true,
 		'serverSide': true,
 		'destroy': true,
-		'ordering': false,
-		'searching': false,
-		'scrollX': true,
+		'searching': true,
+		'scrollX': false,
 		'responsive': true,
 		'serverMethod': 'post',
+		"columnDefs": [{
+			"orderable": false,
+			"targets": [0, 1]
+		}],
 		'ajax': {
 			'url': "<?= site_url('ajax/admin/getAjaxMember')?>",
 			'data': function (d) {
@@ -324,10 +326,11 @@
 			},
 			{
 				data: 'whatsapp'
-			},
-			{
-				data: 'status'
 			}
+			// ,
+			// {
+			// 	data: 'status'
+			// }
 		]
 	});
 	const showMdlMemberDetail = id => {
@@ -375,19 +378,19 @@
 		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@#$%^&';
 		let result = '';
 		let hasSpecialChar = false;
-		
+
 		while (result.length < length) {
 			const randomIndex = Math.floor(Math.random() * chars.length);
 			const randomChar = chars[randomIndex];
-			
+
 			if (!hasSpecialChar && /[!@#$%^&*(),.?":{}|<>]/.test(randomChar)) {
-			hasSpecialChar = true;
-			result += randomChar;
+				hasSpecialChar = true;
+				result += randomChar;
 			} else if (/[a-zA-Z0-9]/.test(randomChar)) {
-			result += randomChar;
+				result += randomChar;
 			}
 		}
-		
+
 		return result;
 	}
 

@@ -63,26 +63,19 @@
 <body class="d-flex align-items-center min-h-100 bg-school">
 	<!-- ========== HEADER ========== -->
 	<header id="header" class="navbar navbar-expand navbar-light navbar-absolute-top">
-		<div class="container-fluid">
-			<nav class="navbar-nav-wrap">
-				<!-- White Logo -->
-				<a class="navbar-brand d-none d-lg-flex" href="<?= base_url();?>" aria-label="Front">
-					<img class="navbar-brand-logo" src="<?= base_url();?><?= $web_logo_white;?>" alt="Logo">
-				</a>
-				<!-- End White Logo -->
+		<div class="container-fluid justify-content-center">
+			<!-- White Logo -->
+			<a class="navbar-brand d-none d-lg-flex" href="<?= base_url();?>" aria-label="Front">
+				<img class="navbar-brand-logo" src="<?= base_url();?><?= $web_logo_white;?>" alt="Logo">
+			</a>
+			<!-- End White Logo -->
 
-				<!-- Default Logo -->
-				<a class="navbar-brand d-flex d-lg-none" href="<?= base_url();?>" aria-label="Front">
-					<img class="navbar-brand-logo" src="<?= base_url();?><?= $web_logo;?>" alt="Logo">
-				</a>
-				<!-- End Default Logo -->
-
-				<div class="ms-auto">
-					<a class="link link-sm link-secondary" href="<?= base_url();?>">
-						<i class="bi-chevron-left small ms-1"></i> Go to main
-					</a>
-				</div>
-			</nav>
+			<!-- Default Logo -->
+			<a class="navbar-brand d-flex d-lg-none" href="<?= base_url();?>" aria-label="Front"
+				style="margin-right: 0 !important;">
+				<img class="navbar-brand-logo" src="<?= base_url();?><?= $web_logo;?>" alt="Logo">
+			</a>
+			<!-- End Default Logo -->
 		</div>
 	</header>
 	<!-- ========== END HEADER ========== -->

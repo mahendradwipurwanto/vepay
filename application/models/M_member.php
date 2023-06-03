@@ -26,6 +26,7 @@ class M_member extends CI_Model
 
         $offset = $this->input->post('start');
         $limit  = $this->input->post('length'); // Rows display per page
+        $order  = $this->input->post('order')[0];
         
         $filter = [];
 
@@ -48,7 +49,33 @@ class M_member extends CI_Model
         ;
 
         $this->db->where($filter);
-        $this->db->order_by('b.name ASC');
+
+        if(!is_null($order)){
+
+            switch ($order['column']) {
+                case 0:
+                    $columnName = 'b.name';
+                    break;
+                    
+                case 2:
+                    $columnName = 'b.name';
+                    break;
+                    
+                case 3:
+                    $columnName = 'a.email';
+                    break;
+                    
+                case 4:
+                    $columnName = 'b.phone';
+                    break;
+                
+                default:
+                    $columnName = 'a.name';
+                    break;
+            }
+            
+            $this->db->order_by("{$columnName} {$order['dir']}");
+        }
 
         // $this->db->limit($limit)->offset($offset);
 
@@ -85,7 +112,7 @@ class M_member extends CI_Model
     }
 
     function getDetailMember($user_id = null){
-        $this->db->select('a.user_id, a.email, a.online, a.device, a.log_time, a.created_at, b.name, b.gender, b.phone, b.address')
+        $this->db->select('a.user_id, a.email, a.online, a.device, a.log_time, a.created_at, a.status as auth_status, b.name, b.gender, b.phone, b.address')
         ->from('tb_auth a')
         ->join('tb_user b', 'a.user_id = b.user_id')
         ->where(['a.user_id' => $user_id])
@@ -97,7 +124,14 @@ class M_member extends CI_Model
         $model->whatsapp    = isset($model->phone) && !is_null($model->phone) ? "+62{$model->phone}" : "<span class='badge bg-warning'>belum diatur</span>";
         $model->gender      = isset($model->gender) && !is_null($model->gender) ? $model->gender : "<span class='badge bg-warning'>belum diatur</span>";
         $model->address     = isset($model->address) && !is_null($model->address) ? $model->address : "<span class='badge bg-warning'>belum diatur</span>";
-
+        if($model->auth_status == 1){
+            $model->status  = '<span class="badge bg-soft-success">Aktif</span>';
+        }elseif($model->auth_status == 2){
+            $model->status  = '<span class="badge bg-soft-warning">Suspended</span>';
+        }else{
+            $model->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
+        }
+        $model->joined_at = date("d F Y - H:i", $model->created_at);
         return $model;
     }
 

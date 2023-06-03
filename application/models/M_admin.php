@@ -47,6 +47,8 @@ class M_admin extends CI_Model
         $produk = $this->db->get_where('m_product', ['is_deleted' => 0])->num_rows();
         $member = $this->db->get_where('tb_auth', ['role' => 2])->num_rows();
         $transaksi = $this->db->get_where('tb_transaksi', ['is_deleted' => 0])->num_rows();
+		
+		$transaksi_qty = $this->db->select_sum('_transaksi_detail.quantity')->from('_transaksi_detail')->join('tb_transaksi', '_transaksi_detail.transaksi_id = tb_transaksi.id')->where(['tb_transaksi.is_deleted' => 0])->get()->row();
 
         $this->db->select_sum('sub_total')
         ->from('tb_transaksi')
@@ -59,6 +61,7 @@ class M_admin extends CI_Model
             'produk' => $produk,
             'member' => $member,
             'transaksi' => $transaksi,
+			'transaksi_qty' => $transaksi_qty->quantity,
             'pendapatan' => $pendapatan->sub_total
         ];
     }

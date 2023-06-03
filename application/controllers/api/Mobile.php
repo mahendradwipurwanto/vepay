@@ -1377,4 +1377,29 @@ class Mobile extends RestController
         }
 
     }
+
+    public function get_all_information_get()
+    {
+
+        $params = [
+            'key' => $this->get('key')
+        ];
+
+        $information = $this->M_api->getAllInformation($params);
+
+        if (!empty($information)) {
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $information
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Tidak ada informasi yang tersedia'
+            ], 422);
+        }
+
+    }
 }

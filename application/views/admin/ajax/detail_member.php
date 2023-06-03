@@ -54,6 +54,34 @@
 								<li class="list-group-item p-3">
 									<div class="row">
 										<div class="col-sm-4 mb-2 mb-sm-0">
+											<span class="h6">Status akun</span>
+										</div>
+										<!-- End Col -->
+
+										<div class="col-sm-8 mb-2 mb-sm-0">
+											<span><?= $member->status;?></span>
+										</div>
+										<!-- End Col -->
+									</div>
+									<!-- End Row -->
+								</li>
+								<li class="list-group-item p-3">
+									<div class="row">
+										<div class="col-sm-4 mb-2 mb-sm-0">
+											<span class="h6">Bergabung pada</span>
+										</div>
+										<!-- End Col -->
+
+										<div class="col-sm-8 mb-2 mb-sm-0">
+											<span><?= $member->joined_at;?></span>
+										</div>
+										<!-- End Col -->
+									</div>
+									<!-- End Row -->
+								</li>
+								<li class="list-group-item p-3">
+									<div class="row">
+										<div class="col-sm-4 mb-2 mb-sm-0">
 											<span class="h6">Nama lengkap</span>
 										</div>
 										<!-- End Col -->

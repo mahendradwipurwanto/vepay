@@ -563,4 +563,18 @@ class M_api extends CI_Model
         $this->db->update('tb_transaksi', ['is_deleted' => 1]);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
+
+    public function getAllInformation($params = []){
+        $this->db->select('key, value, desc')
+        ->from('tb_settings')
+        ->like('key', 'web_');
+
+        if(!empty($params) && $params['key'] != ''){
+            $this->db->where('key', $params['key']);
+        }
+
+        $models = $this->db->get()->result();
+
+        return $models;
+    }
 }

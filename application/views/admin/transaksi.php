@@ -344,11 +344,15 @@
 		'processing': true,
 		'serverSide': true,
 		'destroy': true,
-		'ordering': false,
+		'ordering': true,
 		'searching': false,
 		'scrollX': true,
 		'responsive': true,
 		'serverMethod': 'post',
+		"columnDefs": [{
+			"orderable": false,
+			"targets": [0, 1, 5]
+		}],
 		'ajax': {
 			'url': "<?= site_url('ajax/transaksi/getAjaxTransaksi')?>",
 			'data': function (d) {

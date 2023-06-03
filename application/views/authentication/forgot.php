@@ -1,5 +1,5 @@
     <!-- Form -->
-    <div class="container-fluid">
+    <div class="container-fluid login-container">
     	<div class="row">
     		<div class="col-lg-12 col-xl-12 d-flex justify-content-center align-items-center min-vh-lg-100">
     			<div class="flex-grow-1 mx-auto" style="max-width: 28rem;">

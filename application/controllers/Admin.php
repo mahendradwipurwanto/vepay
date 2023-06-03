@@ -40,6 +40,10 @@ class Admin extends CI_Controller
         $data['daily_transaksi'] = $this->M_admin->getDailyTransaksi();
         $data['top_product'] = $this->M_admin->getTopProduk();
         $data['top_member'] = $this->M_admin->getTopmember();
+        
+        $dateNow = date("d/m/Y");
+		$date30DaysAgo = date('d/m/y', strtotime('-30 days'));
+        $data['dateFilter'] = "{$date30DaysAgo} - {$dateNow}";
 
 		// ej($data);
 

@@ -34,7 +34,7 @@
 	<div class="col-md-3 col-sm-12 mb-4">
 		<div class="card" style="text-align: center;">
 			<div class="card-body">
-				<h1 class="h1"><?= number_format($count['transaksi'],0,",",".")?></h1>
+				<h1 class="h1"><?= number_format($count['transaksi'],0,",",".")?> <small>(<?= number_format($count['transaksi_qty'],0,",",".")?> produk)</small></h1>
 				<div class="h6">Transaksi</div>
 				<div style="position: absolute;right: 10px;bottom: 0px;">
 					<i class="bi bi-wallet2 text-warning" style="font-size: 2.5em;"></i>
@@ -58,7 +58,7 @@
 <div class="row">
 	<div class="col-md-12 com-sm-12 mb-4">
 		<div class="card card-body">
-			<h4 class="card-title">Transaksi harian</h4>
+			<h4 class="card-title">Transaksi harian 30 hari terakhir (<?= $dateFilter;?>)</h4>
 			<div id="chartGraphPenjualan"></div>
 		</div>
 	</div>

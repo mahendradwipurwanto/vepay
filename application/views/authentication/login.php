@@ -1,5 +1,5 @@
 <!-- Form -->
-<div class="container-fluid">
+<div class="container-fluid login-container">
 	<div class="row">
 		<div class="col-lg-5 col-xl-4 d-none d-lg-flex justify-content-center align-items-center min-vh-lg-100 position-relative bg-dark"
 			style="background-image: url(<?= base_url(); ?>assets/svg/components/wave-pattern-light.svg);">

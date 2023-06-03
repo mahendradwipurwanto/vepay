@@ -11,9 +11,11 @@
 }
 
 .navbar-brand-logo {
-	width: 100%;
-	min-width: 9rem;
-	max-width: 9rem
+	max-width: 50px;
+	/* max-height: 57px; */
+	width: auto;
+	height: auto;
+	display: block;
 }
 
 .hs-position-right {
@@ -743,9 +745,34 @@ login-header>img {
 	}
 }
 
-.ml-3{
+.ml-3 {
 	margin-left: 1rem !important
 }
+
 .modal-backdrop-custom {
 	background-color: rgba(0, 0, 0, 0.25);
+}
+
+@media all and (min-width:0px) and (max-width: 568px) {
+	.login-container {
+		margin-top: 150px !important;
+	}
+}
+
+@media (min-width: 576px) {
+	.justify-content-sm-center {
+		justify-content: center !important;
+	}
+}
+
+@media (min-width: 0px) and (max-width: 576px) {
+	.ptc-9 {
+		padding-top: 0px;
+	}
+}
+
+@media (min-width: 576px) {
+	.ptc-9 {
+		padding-top: 60px;
+	}
 }
