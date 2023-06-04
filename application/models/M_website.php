@@ -10,15 +10,27 @@ class M_website extends CI_Model
     }
 
     // basic
-    public function ubahGeneral()
+    public function ubahGeneral($logo = null, $splash_image = null)
     {
         $web_title = $this->input->post('web_title');
         $this->db->where('key', 'web_title');
         $this->db->update('tb_settings', ['value' => $web_title]);
 
+        if(!is_null($logo)){
+            $this->db->where('key', 'web_logo');
+            $this->db->update('tb_settings', ['value' => $logo]);
+
+            $this->db->where('key', 'web_logo_white');
+            $this->db->update('tb_settings', ['value' => $logo]);
+        }
+
         $web_desc = $this->input->post('web_desc');
         $this->db->where('key', 'web_desc');
         $this->db->update('tb_settings', ['value' => $web_desc]);
+
+        $web_telepon = $this->input->post('web_telepon');
+        $this->db->where('key', 'web_telepon');
+        $this->db->update('tb_settings', ['value' => $web_telepon]);
 
         $web_alamat = $this->input->post('web_alamat');
         $this->db->where('key', 'web_alamat');
@@ -36,9 +48,29 @@ class M_website extends CI_Model
         $this->db->where('key', 'sosmed_twitter');
         $this->db->update('tb_settings', ['value' => $sosmed_twitter]);
 
-        $sosmed_ig = $this->input->post('sosmed_ig');
-        $this->db->where('key', 'sosmed_ig');
-        $this->db->update('tb_settings', ['value' => $sosmed_ig]);
+        $sosmed_yt = $this->input->post('sosmed_yt');
+        $this->db->where('key', 'sosmed_yt');
+        $this->db->update('tb_settings', ['value' => $sosmed_yt]);
+
+        $web_app_name = $this->input->post('web_app_name');
+        $this->db->where('key', 'web_app_name');
+        $this->db->update('tb_settings', ['value' => $web_app_name]);
+
+        $web_splash_title = $this->input->post('web_splash_title');
+        $this->db->where('key', 'web_splash_title');
+        $this->db->update('tb_settings', ['value' => $web_splash_title]);
+
+        $web_splash_image = $this->input->post('web_splash_image');
+        $this->db->where('key', 'web_splash_image');
+        $this->db->update('tb_settings', ['value' => $web_splash_image]);
+
+        $web_splash_desc = $this->input->post('web_splash_desc');
+        $this->db->where('key', 'web_splash_desc');
+        $this->db->update('tb_settings', ['value' => $web_splash_desc]);
+
+        $web_info_desc = $this->input->post('web_info_desc');
+        $this->db->where('key', 'web_info_desc');
+        $this->db->update('tb_settings', ['value' => $web_info_desc]);
 
         $leader_daftar = $this->input->post('leader_daftar');
         $this->db->where('key', 'leader_daftar');

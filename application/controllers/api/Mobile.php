@@ -8,6 +8,8 @@ require_once APPPATH.'third_party/gump-validation/gump.class.php';
 class Mobile extends RestController
 {
     protected $_master_password;
+    protected $restrictEmail = true;
+    protected $restrictName = true;
 
     public function __construct()
     {
@@ -207,6 +209,40 @@ class Mobile extends RestController
         $password = htmlspecialchars($this->post('password'), true);
         $nama = htmlspecialchars($this->post('nama'), true);
         $phone = htmlspecialchars($this->post('phone'), true);
+        
+        $restrict_word = [
+            'hack',
+            'hacker',
+            'haker',
+            'test',
+            'testing',
+            'phising'
+        ];
+        
+        if($this->restrictEmail){
+
+            foreach($restrict_word as $word) {
+                if (strpos($email, $word) !== false) {
+                    $this->response([
+                        'status' => false,
+                        'message' => "Email anda menggunakan kata-kata terlarang. `{$word}`"
+                    ], 422);
+                }
+            }
+        }
+        
+        if($this->restrictName){
+
+            foreach($restrict_word as $word) {
+                if (strpos($nama, $word) !== false) {
+                    $this->response([
+                        'status' => false,
+                        'message' => "Nama anda menggunakan kata-kata terlarang. `{$word}`"
+                    ], 422);
+                }
+            }
+        }
+
 
         // cek apakahemailvalid
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {

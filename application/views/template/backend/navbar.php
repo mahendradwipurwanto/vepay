@@ -1,5 +1,5 @@
   <!-- ========== HEADER ========== -->
-  <header id="header" class="navbar navbar-expand navbar-fixed navbar-end navbar-light navbar-sticky-lg-top bg-transparant">
+  <header id="header" class="navbar navbar-expand navbar-fixed navbar-end navbar-light navbar-sticky-lg-top bg-transparant py-0">
   	<div class="container-fluid">
   		<nav class="navbar-nav-wrap">
   			<div class="row flex-grow-1">
@@ -15,7 +15,7 @@
   				<!-- End Default Logo -->
 
   				<div class="col-md px-lg-0">
-  					<div class="d-flex justify-content-between align-items-center px-lg-5 px-xl-10">
+  					<div class="d-flex justify-content-between align-items-center px-lg-5 px-xl-10 py-3 bg-white shadow-sm">
   						<!-- Navbar -->
   						<ul class="navbar-nav p-0 d-sm-flex justify-space-center">
   							<li class="nav-item float-sm-start">

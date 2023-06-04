@@ -43,6 +43,12 @@ class TemplateBack
         $data['sosmed_facebook'] = $this->getSettingsValue('sosmed_facebook');
         $data['sosmed_yt'] = $this->getSettingsValue('sosmed_yt');
 
+        $data['web_app_name'] = $this->getSettingsValue('web_app_name');
+        $data['web_splash_title'] = $this->getSettingsValue('web_splash_title');
+        $data['web_splash_image'] = $this->getSettingsValue('web_splash_image');
+        $data['web_splash_desc'] = $this->getSettingsValue('web_splash_desc');
+        $data['web_info_desc'] = $this->getSettingsValue('web_info_desc');
+
         $data['online_users'] = $this->getOnlineUsers();
 
         $this->_ci->load->view('template/backend/header', $data);

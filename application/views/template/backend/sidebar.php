@@ -31,7 +31,7 @@
   				<!-- Default Logo -->
   				<div class="d-flex justify-content-center align-items-center mb-0">
   					<a class="navbar-brand" href="<?= site_url('dashboard'); ?>" aria-label="Space">
-  						<img class="navbar-brand-logo" src="<?= base_url(); ?>assets/images/logo.png" alt="Logo">
+  						<img class="navbar-brand-logo" src="<?= base_url(); ?><?= $web_logo;?>" alt="Logo">
   					</a>
   					<a class="navbar-brand-badge">
   						<span class="badge bg-soft-primary text-primary ms-2">v1.0.5</span>
@@ -138,4 +138,4 @@
   	</nav>
   	<!-- End Navbar -->
   	<!-- Content -->
-  	<div class="navbar-sidebar-aside-content content-space-1 content-space-md-2 px-lg-5 px-xl-10">
+  	<div class="navbar-sidebar-aside-content content-space-2 content-space-md-3 px-lg-5 px-xl-10">
