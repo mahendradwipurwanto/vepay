@@ -32,6 +32,10 @@ class M_website extends CI_Model
         $this->db->where('key', 'web_telepon');
         $this->db->update('tb_settings', ['value' => $web_telepon]);
 
+        $web_email = $this->input->post('web_email');
+        $this->db->where('key', 'web_email');
+        $this->db->update('tb_settings', ['value' => $web_email]);
+
         $web_alamat = $this->input->post('web_alamat');
         $this->db->where('key', 'web_alamat');
         $this->db->update('tb_settings', ['value' => $web_alamat]);

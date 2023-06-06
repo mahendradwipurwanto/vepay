@@ -65,6 +65,12 @@
 									name="web_telepon" value="<?= $web_telepon;?>" required>
 							</div>
 							<div class="mb-3">
+								<label for="inputWebsiteEmail" class="form-label">Email<small
+										class="text-danger">*</small></label>
+								<input type="email" id="inputWebsiteEmail" class="form-control form-control-sm"
+									name="web_email" value="<?= $web_email;?>" required>
+							</div>
+							<div class="mb-3">
 								<label for="inputWebsiteFacebook" class="form-label">Facebook<small
 										class="text-danger">*</small></label>
 								<input type="text" id="inputWebsiteFacebook" class="form-control form-control-sm"
