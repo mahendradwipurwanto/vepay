@@ -2,6 +2,9 @@
 
 ini_set("allow_url_fopen", 1);
 
+// Set environment variable
+$_SERVER['CI_ENV'] = 'production'; // Replace 'production' with your desired environment name
+
 // set default time
 date_default_timezone_set("Asia/Bangkok");
 

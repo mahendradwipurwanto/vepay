@@ -1423,6 +1423,20 @@ class Mobile extends RestController
 
         $information = $this->M_api->getAllInformation($params);
 
+        if(!empty($information)){
+            foreach($information as $key => $val){
+                if($val->key == "web_logo"){
+                    $val->value = base_url().$val->value;
+                }
+                if($val->key == "web_icon"){
+                    $val->value = base_url().$val->value;
+                }
+                if($val->key == "web_splash_image"){
+                    $val->value = base_url().$val->value;
+                }
+            }
+        }
+
         if (!empty($information)) {
             // Set the response and exit
             $this->response([
