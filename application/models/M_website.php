@@ -28,6 +28,10 @@ class M_website extends CI_Model
         $this->db->where('key', 'web_desc');
         $this->db->update('tb_settings', ['value' => $web_desc]);
 
+        $web_website = $this->input->post('web_website');
+        $this->db->where('key', 'web_website');
+        $this->db->update('tb_settings', ['value' => $web_website]);
+
         $web_telepon = $this->input->post('web_telepon');
         $this->db->where('key', 'web_telepon');
         $this->db->update('tb_settings', ['value' => $web_telepon]);
@@ -64,9 +68,10 @@ class M_website extends CI_Model
         $this->db->where('key', 'web_splash_title');
         $this->db->update('tb_settings', ['value' => $web_splash_title]);
 
-        $web_splash_image = $this->input->post('web_splash_image');
-        $this->db->where('key', 'web_splash_image');
-        $this->db->update('tb_settings', ['value' => $web_splash_image]);
+        if(!is_null($splash_image)){
+            $this->db->where('key', 'web_splash_image');
+            $this->db->update('tb_settings', ['value' => $splash_image]);
+        }
 
         $web_splash_desc = $this->input->post('web_splash_desc');
         $this->db->where('key', 'web_splash_desc');

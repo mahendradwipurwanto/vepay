@@ -59,15 +59,15 @@
 			</div>
 			<div class="card-body">
 				<!-- End Row -->
-				<table id="dataTable" class="table table-borderless table-thead-bordered nowrap w-100 align-middle">
+				<table id="dataTable" class="table table-borderless table-thead-bordered w-100 align-middle">
 					<thead class="thead-light">
 						<tr>
 							<th scope="col">No</th>
 							<th scope="col"></th>
 							<th scope="col">Nama</th>
-							<th scope="col">Email</th>
+							<!-- <th scope="col">Email</th> -->
 							<th scope="col">Whatsapp</th>
-							<!-- <th scope="col">Status</th> -->
+							<th scope="col">Bergabung</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -321,16 +321,16 @@
 			{
 				data: 'name'
 			},
-			{
-				data: 'email'
-			},
+			// {
+			// 	data: 'email'
+			// },
 			{
 				data: 'whatsapp'
 			}
-			// ,
-			// {
-			// 	data: 'status'
-			// }
+			,
+			{
+				data: 'joined_at'
+			}
 		]
 	});
 	const showMdlMemberDetail = id => {

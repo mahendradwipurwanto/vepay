@@ -13,9 +13,7 @@
 		<div class="card">
 			<!-- Table -->
 			<div class="card-body p-4">
-				<table
-					class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTables"
-					id="table">
+				<table id="dataTable" class="table table-borderless table-thead-bordered w-100 align-middle">
 					<thead class="thead-light">
 						<tr>
 							<th width="5%">No</th>
@@ -27,58 +25,6 @@
 					</thead>
 
 					<tbody>
-						<?php if(!empty($account)):?>
-						<?php $no=1;foreach($account as $key => $val):?>
-						<tr>
-							<td><?= $no++;?>.</td>
-							<td>
-								<div class="d-flex align-items-center">
-									<div class="flex-grow-1">
-										<a class="d-inline-block link-dark" href="#">
-											<h6 class="text-hover-primary mb-0"><?= $val->name;?>
-												<?php if($val->role == 0):?>
-												<span data-bs-toggle="tooltip" data-bs-html="true" title="Super Admin"
-													class="badge bg-soft-danger small ms-2">Super Admin</span>
-												<?php elseif($val->role == 1):?>
-												<span data-bs-toggle="tooltip" data-bs-html="true" title="Admin"
-													class="badge bg-soft-info small ms-2">Admin</span>
-												<?php elseif($val->role == 2):?>
-												<span data-bs-toggle="tooltip" data-bs-html="true" title="Leader"
-													class="badge bg-soft-warning small ms-2">Participans / Member</span>
-												<?php endif;?>
-											</h6>
-										</a>
-										<small class="d-block"><?= $val->email;?></small>
-									</div>
-								</div>
-							</td>
-							<td>
-								<?php if($val->is_deleted == 1):?>
-								<span data-bs-toggle="tooltip" data-bs-html="true" title="deleted"
-									class="badge bg-soft-danger small ms-2">deleted</span>
-								<?php elseif($val->status == 0):?>
-								<span data-bs-toggle="tooltip" data-bs-html="true" title="unverified"
-									class="badge bg-soft-warning small ms-2">unverified</span>
-								<?php elseif($val->status == 1):?>
-								<span data-bs-toggle="tooltip" data-bs-html="true" title="active"
-									class="badge bg-soft-success small ms-2">active</span>
-								<?php elseif($val->status == 2):?>
-								<span data-bs-toggle="tooltip" data-bs-html="true" title="suspend"
-									class="badge bg-secondary small ms-2">suspend</span>
-								<?php endif;?>
-								<?php if($val->online == 1):?>
-								<span data-bs-toggle="tooltip" data-bs-html="true" title="online"
-									class="badge bg-success small ms-2">online</span>
-								<?php else:?>
-								<span data-bs-toggle="tooltip" data-bs-html="true" title="offline"
-									class="badge bg-secondary small ms-2">offline</span>
-								<?php endif;?>
-							</td>
-							<td><?= date("d F Y - H:i:s", $val->log_time);?></td>
-							<td><?= $val->device;?></td>
-						</tr>
-						<?php endforeach;?>
-						<?php endif;?>
 					</tbody>
 				</table>
 			</div>
@@ -86,3 +32,57 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	var table = $('#dataTable').DataTable({
+		'processing': true,
+		'serverSide': true,
+		'destroy': true,
+		'searching': true,
+		'scrollX': false,
+		'responsive': true,
+		'serverMethod': 'post',
+		"columnDefs": [{
+			"orderable": false,
+			"targets": [0, 1]
+		}],
+		order: [[4, 'desc']],
+		'ajax': {
+			'url': "<?= site_url('ajax/admin/getAjaxUserLog')?>",
+			'data': function (d) {
+				d.filterEmail = $('#filter_email').val()
+				d.filterName = $('#filter_name').val()
+				d.filterNumber = $('#filter_number').val()
+			},
+			'dataSrc': function (json) {
+				doneLoading();
+				return json.data;
+			}
+		},
+		'columns': [{
+				data: 'no'
+			},
+			{
+				data: 'user'
+			},
+			{
+				data: 'status'
+			},
+			{
+				data: 'last_access'
+			},
+			{
+				data: 'device'
+			}
+		]
+	});
+
+	function doneLoading() {
+		$('#searchBtn').prop("disabled", false);
+		// add spinner to button
+		$('#searchBtn').html(
+			`<i class="bi-search"></i>&nbsp&nbspSearch`
+		);
+	}
+
+</script>

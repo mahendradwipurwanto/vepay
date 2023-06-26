@@ -86,8 +86,6 @@
 							<th scope="col">Kategori</th>
 							<th scope="col">Status</th>
 							<th scope="col">Harga</th>
-							<th scope="col">FEE</th>
-							<th scope="col">Keterangan</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -319,12 +317,6 @@
 			},
 			{
 				data: 'price'
-			},
-			{
-				data: 'fee'
-			},
-			{
-				data: 'description'
 			}
 		]
 	});

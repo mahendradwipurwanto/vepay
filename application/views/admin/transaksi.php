@@ -353,6 +353,7 @@
 			"orderable": false,
 			"targets": [0, 1, 5]
 		}],
+		order: [[4, 'desc']],
 		'ajax': {
 			'url': "<?= site_url('ajax/transaksi/getAjaxTransaksi')?>",
 			'data': function (d) {

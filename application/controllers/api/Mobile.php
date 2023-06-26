@@ -1384,6 +1384,83 @@ class Mobile extends RestController
             ], 422);
         }
     }
+
+    public function update_transaction_put()
+    {
+
+        $validasi = [
+            'id' => 'required',
+            'user_id' => 'required',
+        ];
+        \GUMP::set_field_name('id', 'ID Transaksi');
+        \GUMP::set_field_name('user_id', 'User ID');
+
+        if (validate($this->put(), $validasi)['status'] === false) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => validate($this->put(), $validasi)['data']
+            ], 422);
+        }
+        
+        $body_transaction = [
+            'id' => $this->put('id'),
+            'user_id' => $this->put('user_id'),
+            'account' => $this->put('akun_tujuan'),
+            'no_tujuan' => $this->put('no_tujuan'),
+            'no_rek' => $this->put('no_rek'),
+            'm_blockchain_id' => $this->put('blockchain'),
+            'm_vcc_id' => $this->put('id_vcc'),
+            'jenis_transaksi_vcc' => $this->put('jenis_transaksi_vcc'),
+            'm_metode_id' => $this->put('m_metode_id'),
+            'm_promo_id' => $this->put('m_promo_id'),
+            'sub_total' => $this->put('total_bayar'),
+            'modified_by' => $this->put('user_id'),
+            'modified_at' => time()
+        ];
+
+        $body_detail = [
+            'm_price_id' => $this->put('m_rate_id'),
+            'quantity' => $this->put('jumlah'),
+            'total' => $this->put('sub_total'),
+            'modified_by' => $this->put('user_id'),
+            'modified_at' => time()
+        ];
+
+        $transaksi = $this->M_api->update_transaction($body_transaction, $body_detail);
+        
+        if($transaksi['status'] === true){
+            
+            if(!is_null($transaksi['data']->bukti) && $transaksi['data']->bukti != ""){
+                $transaksi['data']->bukti = base_url().(str_replace(base_url(), "", $transaksi['data']->bukti));
+            }else{
+                $transaksi['data']->bukti = null;
+            }
+            if(!is_null($transaksi['data']->bukti_verif && $transaksi['data']->bukti_verif != "")){
+                $transaksi['data']->bukti_verif = base_url().(str_replace(base_url(), "", $transaksi['data']->bukti_verif));
+            }else{
+                $transaksi['data']->bukti_verif = null;
+            }
+            if(!is_null($transaksi['data']->img_method)){
+                $transaksi['data']->img_method = base_url().(str_replace(base_url(), "", $transaksi['data']->img_method));
+            }
+            if(!is_null($transaksi['data']->img_product)){
+                $transaksi['data']->img_product = base_url().(str_replace(base_url(), "", $transaksi['data']->img_product));
+            }
+
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $transaksi['data']
+            ], 200);
+        }else{
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Terjadi kesalahan saat mengubah transaksi'
+            ], 422);
+        }
+    }
     
     public function delete_transaction_delete($id)
     {

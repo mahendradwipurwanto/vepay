@@ -12,14 +12,100 @@ class M_admin extends CI_Model
         return $this->db->get_where('tb_settings', ['key' => $key])->row()->value;
     }
 
-    function get_allAccount(){
+	public function get_allAccount(){
+
+        $offset = $this->input->post('start');
+        $limit  = $this->input->post('length'); // Rows display per page
+        $order = !empty($this->input->post('order')) ? $this->input->post('order')[0] : $this->input->post('order');
+        
+        $filter = [];
+
+        $filterEmail = $this->input->post('filterEmail');  
+        $filterName = $this->input->post('filterName');  
+        $filterNumber = $this->input->post('filterNumber');   
+
+        if($filterEmail != null || $filterEmail != '') $filter[] = "a.email like '%{$filterEmail}%'";
+        if($filterName != null || $filterName != '') $filter[] = "b.name like '%{$filterName}%'";
+        if($filterNumber != null || $filterNumber != '') $filter[] = "b.phone like '%{$filterNumber}%'";
+
+        if($filter != null){
+            $filter = implode(' AND ', $filter);
+        }  
+
+
         $this->db->select('a.email, a.role, a.status, a.online, a.is_deleted, a.log_time, a.device, b.*')
         ->from('tb_auth a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
-        ->order_by('a.log_time DESC')
         ;
 
-        return $this->db->get()->result();
+        $this->db->where($filter);
+
+        if(!is_null($order)){
+
+            switch ($order['column']) {
+                case 0:
+                    $columnName = 'b.name';
+                    break;
+                    
+                case 2:
+                    $columnName = 'b.name';
+                    break;
+                    
+                case 3:
+                    $columnName = 'a.status';
+                    break;
+                    
+                case 4:
+                    $columnName = 'a.log_time';
+                    break;
+                
+                default:
+                    $columnName = 'a.log_time';
+                    break;
+            }
+            $this->db->order_by("{$columnName} {$order['dir']}");
+        }
+
+        // $this->db->limit($limit)->offset($offset);
+
+        $models = $this->db->get()->result();
+
+        foreach($models as $key => $val){
+
+            $strip_email                    = explode("@", $val->email);
+            $name = $val->name;
+
+            if(is_null($val->name) || $val->name == ''){
+                $name = $strip_email[0].' <span class="badge bg-soft-warning">belum mengatur nama</span>';
+            }
+    
+            if($val->role == 0){
+                $models[$key]->role  = '<span data-bs-toggle="tooltip" data-bs-html="true" title="Super Admin" class="badge bg-soft-danger small ms-2">Super Admin</span>';
+            }elseif($val->role == 1){
+                $models[$key]->role = '<span data-bs-toggle="tooltip" data-bs-html="true" title="Admin" class="badge bg-soft-info small ms-2">Admin</span>';
+            }elseif($val->role == 2){
+                $models[$key]->role = '<span data-bs-toggle="tooltip" data-bs-html="true" title="Member" class="badge bg-soft-warning small ms-2">Member</span>';
+            }
+
+            $models[$key]->name             = $name." ".$models[$key]->role;
+            $models[$key]->phone            = isset($val->phone) && !is_null($val->phone) ? "+62{$val->phone}" : "<span class='badge bg-warning'>belum diatur</span>";
+    
+            if($val->status == 1){
+                $models[$key]->status  = '<span class="badge bg-soft-success">Aktif</span>';
+            }elseif($val->status == 2){
+                $models[$key]->status  = '<span class="badge bg-soft-warning">Suspended</span>';
+            }else{
+                $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
+            }
+            $models[$key]->log_time = date("d F Y H:i:s", $val->log_time);
+            
+        }
+
+        $totalRecords = count($models);
+
+        $models = array_slice($models, $offset, $limit);
+
+        return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
     }
 
     function get_superAccount(){
@@ -44,8 +130,8 @@ class M_admin extends CI_Model
 
     function getCountOverview(){
 
-        $produk = $this->db->get_where('m_product', ['is_deleted' => 0])->num_rows();
-        $member = $this->db->get_where('tb_auth', ['role' => 2])->num_rows();
+        $produk = $this->db->get_where('m_product', ['is_deleted' => 0, 'id !=' => 8])->num_rows();
+        $member = $this->db->get_where('tb_auth', ['role' => 2, 'is_deleted' => 0])->num_rows();
         $transaksi = $this->db->get_where('tb_transaksi', ['is_deleted' => 0])->num_rows();
 		
 		$transaksi_qty = $this->db->select_sum('_transaksi_detail.quantity')->from('_transaksi_detail')->join('tb_transaksi', '_transaksi_detail.transaksi_id = tb_transaksi.id')->where(['tb_transaksi.is_deleted' => 0])->get()->row();

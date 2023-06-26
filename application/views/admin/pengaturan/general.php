@@ -24,7 +24,7 @@
 								</h4>
 							</div>
 							<div class="mb-3">
-								<label for="inputWebsiteTitle" class="form-label">title <small
+								<label for="inputWebsiteTitle" class="form-label">Title <small
 										class="text-danger">*</small></label>
 								<input type="text" id="inputWebsiteTitle" class="form-control form-control-sm"
 									name="web_title" value="<?= $web_title;?>" required>
@@ -57,6 +57,12 @@
 								<textarea type="text" id="inputWebsiteAddress" class="form-control form-control-sm"
 									rows="3" name="web_alamat" placeholder="Address"
 									required><?= $web_alamat;?></textarea>
+							</div>
+							<div class="mb-3">
+								<label for="inputWebsiteWebsite" class="form-label">Website<small
+										class="text-danger">*</small></label>
+								<input type="text" id="inputWebsiteWebsite" class="form-control form-control-sm"
+									name="web_website" value="<?= $web_website;?>" required>
 							</div>
 							<div class="mb-3">
 								<label for="inputWebsiteTelepon" class="form-label">Whatsapp<small

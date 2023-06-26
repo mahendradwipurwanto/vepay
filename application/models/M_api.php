@@ -456,11 +456,11 @@ class M_api extends CI_Model
     {        
         $this->db->select('a.*, b.quantity as jumlah, d.name as product, d.is_vcc, e.email, f.name, f.phone, g.metode, g.image as img_metode, h.blockchain, i.number as vcc_number, i.holder as vcc_holder, i.jenis_vcc')
         ->from('tb_transaksi a')
-        ->join('_transaksi_detail b', 'a.id = b.transaksi_id', 'inner')
-        ->join('m_price c', 'b.m_price_id = c.id', 'inner')
-        ->join('m_product d', 'c.m_product_id = d.id', 'inner')
-        ->join('tb_auth e', 'a.user_id = e.user_id', 'inner')
-        ->join('tb_user f', 'a.user_id = f.user_id', 'inner')
+        ->join('_transaksi_detail b', 'a.id = b.transaksi_id', 'left')
+        ->join('m_price c', 'b.m_price_id = c.id', 'left')
+        ->join('m_product d', 'c.m_product_id = d.id', 'left')
+        ->join('tb_auth e', 'a.user_id = e.user_id', 'left')
+        ->join('tb_user f', 'a.user_id = f.user_id', 'left')
         ->join('m_metode g', 'a.m_metode_id = g.id', 'left')
         ->join('m_blockchain h', 'a.m_blockchain_id = h.id', 'left')
         ->join('tb_vcc i', 'a.m_vcc_id = i.id', 'left')
@@ -551,6 +551,40 @@ class M_api extends CI_Model
         $model->bukti = base_url().$model->bukti;
         $model->img_method = base_url().$model->img_method;
         $model->wa_admin = "6285785111746";
+
+        return [
+            'status' => true,
+            'data' => $model
+        ];
+    }
+
+    public function update_transaction($transaksi = [], $detail = []){
+
+        $this->db->where('id', $transaksi['id']);
+        $this->db->update('tb_transaksi', $transaksi);
+        $transaksi_id = $transaksi['id'];
+        $status = ($this->db->affected_rows() != 1) ? false : true;
+
+        if($status === false){
+            return [
+                'status' => false
+            ];
+        }
+
+        $this->db->select('a.id, a.kode as kode_transaksi, a.account as akun_tujuan, a.no_tujuan, a.no_rek, a.jenis_transaksi_vcc, a.user_id, a.sub_total as total, e.total as sub_total, a.status, a.bukti, a.bukti_verif, b.name, b.phone, c.email, d.metode, d.image as img_method, d.no_rekening, d.atas_nama, f.type, f.fee, g.name as product, g.image as img_product, a.m_blockchain_id, h.blockchain, a.created_at, a.modified_at')
+        ->from('tb_transaksi a')
+        ->join('tb_user b', 'a.user_id = b.user_id', 'left')
+        ->join('tb_auth c', 'a.user_id = c.user_id', 'left')
+        ->join('m_metode d', 'a.m_metode_id = d.id', 'left')
+        ->join('_transaksi_detail e', 'a.id = e.transaksi_id', 'left')
+        ->join('m_price f', 'e.m_price_id = f.id', 'left')
+        ->join('m_product g', 'f.m_product_id = g.id', 'left')
+        ->join('m_blockchain h', 'a.m_blockchain_id = h.id', 'left')
+        ;
+
+        $this->db->where(['a.id' => $transaksi_id]);
+
+        $model = $this->db->get()->row();
 
         return [
             'status' => true,

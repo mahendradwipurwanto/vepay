@@ -71,7 +71,6 @@ class M_transaksi extends CI_Model
                     $columnName = 'a.created_at';
                     break;
             }
-            
             $this->db->order_by("{$columnName} {$order['dir']}");
         }
 

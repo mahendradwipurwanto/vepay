@@ -45,7 +45,36 @@ class Admin extends CI_Controller
                 "name"          => $val->name,
                 "email"         => $val->email,
                 "whatsapp"      => $val->phone,
-                "status"        => $val->status,
+                "joined_at"     => $val->joined_at,
+            ];
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "recordsTotal" => $members['totalRecords'],
+            "recordsFiltered" => ($search != "" ? $members['totalDisplayRecords'] : $members['totalRecords']),
+            "data" => $arr
+        );
+
+        echo json_encode($response);
+    }
+    
+    public function getAjaxUserLog(){
+        
+        $draw     = $this->input->post('draw');
+        $search   = $this->input->post('search')['value'];
+        $no       = $this->input->post('start');
+        
+        $members = $this->M_admin->get_allAccount();
+        $arr      = [];
+        foreach ($members['records'] as $key => $val) {
+
+            $arr[$key] = [
+                "no"            => ++$no,
+                "user"        => $val->name,
+                "status"          => $val->status,
+                "last_access"         => $val->log_time,
+                "device"      => $val->device,
             ];
         }
 

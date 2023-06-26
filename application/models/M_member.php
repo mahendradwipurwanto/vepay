@@ -42,7 +42,7 @@ class M_member extends CI_Model
             $filter = implode(' AND ', $filter);
         }  
 
-        $this->db->select('a.status as auth_status, a.email, b.*')
+        $this->db->select('a.status as auth_status, a.email, a.created_at, b.*')
         ->from('tb_auth a')
         ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
         ->where(['a.role' => 2, 'a.is_deleted' => 0])
@@ -62,18 +62,17 @@ class M_member extends CI_Model
                     break;
                     
                 case 3:
-                    $columnName = 'a.email';
+                    $columnName = 'b.phone';
                     break;
                     
                 case 4:
-                    $columnName = 'b.phone';
+                    $columnName = 'a.created_at';
                     break;
                 
                 default:
-                    $columnName = 'a.name';
+                    $columnName = 'a.created_at';
                     break;
             }
-            
             $this->db->order_by("{$columnName} {$order['dir']}");
         }
 
@@ -83,14 +82,21 @@ class M_member extends CI_Model
 
         foreach($models as $key => $val){
             
-            $btnDetail      = '<button onclick="showMdlMemberDetail(\''.$val->user_id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
-            $btnPass        = '<button onclick="showMdlChangePassword(\''.$val->user_id.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-key"></i></button>';
-            $btnEmail       = '<button onclick="showMdlChangeEmail(\''.$val->user_id.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2"><i class="bi-envelope"></i></button>';
-            $btnVerif       = '<button onclick="showMdlVerifEmail(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
-            $btnDelete      = '<button onclick="showMdlDelete(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
+            $btnDetail      = '<button onclick="showMdlMemberDetail(\''.$val->user_id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2 mb-1"><i class="bi-eye"></i></button>';
+            $btnPass        = '<button onclick="showMdlChangePassword(\''.$val->user_id.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2 mb-1"><i class="bi-key"></i></button>';
+            $btnEmail       = '<button onclick="showMdlChangeEmail(\''.$val->user_id.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2 mb-1"><i class="bi-envelope"></i></button>';
+            $btnVerif       = '<button onclick="showMdlVerifEmail(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2 mb-1"><i class="bi-check"></i></button>';
+            $btnDelete      = '<button onclick="showMdlDelete(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2 mb-1"><i class="bi-trash"></i></button>';
 
             $strip_email                    = explode("@", $val->email);
-            $models[$key]->name             = is_null($val->name) || $val->name == "" ? $strip_email[0] : $val->name;
+
+            $name = $val->name;
+
+            if(is_null($val->name) || $val->name == ''){
+                $name = $strip_email[0].' <span class="badge bg-soft-warning">belum mengatur nama</span>';
+            }
+
+            $models[$key]->name             = $name;
             $models[$key]->phone            = isset($val->phone) && !is_null($val->phone) ? "+62{$val->phone}" : "<span class='badge bg-warning'>belum diatur</span>";
     
             if($val->auth_status == 1){
@@ -100,6 +106,7 @@ class M_member extends CI_Model
             }else{
                 $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
             }
+            $models[$key]->joined_at = date("d F Y", $val->created_at);
             
             $models[$key]->action = $btnDetail.$btnPass.($val->auth_status > 0 ? $btnEmail : $btnVerif).$btnDelete;
         }

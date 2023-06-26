@@ -15,7 +15,7 @@
 		</div>
 		<!-- End Col -->
 
-		<div class="col-lg-7 col-xl-8 d-flex justify-content-center align-items-center min-vh-lg-100">
+		<div class="col-lg-7 col-xl-8 d-flex justify-content-center align-items-center min-vh-lg-100 mt-sm-10">
 			<div class="flex-grow-1 mx-auto" style="max-width: 28rem;">
 				<!-- Heading -->
 				<div class="text-center mb-5 mb-md-7">

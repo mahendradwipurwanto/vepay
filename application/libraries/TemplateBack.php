@@ -36,6 +36,7 @@ class TemplateBack
         $data['web_logo_white'] = $this->getSettingsValue('web_logo_white');
         $data['web_alamat'] = $this->getSettingsValue('web_alamat');
         $data['web_telepon'] = $this->getSettingsValue('web_telepon');
+        $data['web_website'] = $this->getSettingsValue('web_website');
         $data['web_email'] = $this->getSettingsValue('web_email');
 
         $data['sosmed_ig'] = $this->getSettingsValue('sosmed_ig');
