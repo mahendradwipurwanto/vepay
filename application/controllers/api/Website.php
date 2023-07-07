@@ -80,7 +80,7 @@ class Website extends CI_Controller
             $this->session->set_flashdata('notif_success', 'Successfully changes credentials information');
             redirect(site_url('admin/pengaturan?p=credentials'));
         } else {
-            $this->session->set_flashdata('notif_warning', 'There is something wrong, when trying to changes credentials information');
+            $this->session->set_flashdata('notif_warning', 'Password does not match');
             redirect($this->agent->referrer());
         }
     }

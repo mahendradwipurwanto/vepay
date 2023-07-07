@@ -44,7 +44,7 @@
 		'serverMethod': 'post',
 		"columnDefs": [{
 			"orderable": false,
-			"targets": [0, 1]
+			"targets": [0]
 		}],
 		order: [[4, 'desc']],
 		'ajax': {

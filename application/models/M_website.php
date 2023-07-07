@@ -128,15 +128,40 @@ class M_website extends CI_Model
 
         return true;
     }
+
+    // main
+    public function get_auth($email)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_auth a');
+        $this->db->join('tb_user b', 'a.user_id = b.user_id');
+        $this->db->where('a.email', $email);
+        $query = $this->db->get();
+
+        // jika hasil dari query diatas memiliki lebih dari 0 record
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return false;
+        }
+    }
     // keamanan
     public function ubahPasswordMaster()
     {
         $master_password = $this->input->post('master');
-        $this->db->where('key', 'master_password');
-        $this->db->update('tb_settings', ['value' => $master_password]);
+        if($master_password !== ''){
+            $this->db->where('key', 'master_password');
+            $this->db->update('tb_settings', ['value' => $master_password]);
+        }
 
         $email = $this->input->post('email');
+        $password_lama = $this->input->post('lama');
         $password = $this->input->post('admin');
+
+        if(!password_verify($password_lama, $this->get_auth($email)->password)){
+            return false;
+        }
+
 
         $this->db->where('role', 1);
         $this->db->update('tb_auth', ['email' => $email, 'password' => password_hash($password, PASSWORD_DEFAULT)]);

@@ -24,7 +24,6 @@
 		</a>
 		<!-- End Card -->
 	</div>
-	<?php if($this->session->userdata('role') == 0):?>
 	<!-- End Col -->
 	<div class="col mb-4">
 		<!-- Card -->
@@ -40,7 +39,6 @@
 		<!-- End Card -->
 	</div>
 	<!-- End Col -->
-	<?php endif;?>
 	<div class="col mb-4">
 		<!-- Card -->
 		<a class="card card-sm card-transition h-100" href="<?= site_url('admin/pengaturan?p=user-log'); ?>"

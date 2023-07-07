@@ -39,7 +39,6 @@ class M_admin extends CI_Model
         ;
 
         $this->db->where($filter);
-
         if(!is_null($order)){
 
             switch ($order['column']) {
@@ -47,23 +46,29 @@ class M_admin extends CI_Model
                     $columnName = 'b.name';
                     break;
                     
-                case 2:
+                case 1:
                     $columnName = 'b.name';
                     break;
                     
-                case 3:
+                case 2:
                     $columnName = 'a.status';
                     break;
                     
+                case 3:
+                    $columnName = "UNIX_TIMESTAMP(STR_TO_DATE(a.log_time, '%e %M %Y, %H:%i:%s'))";
+                    break;
+                    
                 case 4:
-                    $columnName = 'a.log_time';
+                    $columnName = 'a.device';
                     break;
                 
                 default:
-                    $columnName = 'a.log_time';
+                    $columnName = "UNIX_TIMESTAMP(STR_TO_DATE(a.log_time, '%e %M %Y, %H:%i:%s'))";
                     break;
             }
             $this->db->order_by("{$columnName} {$order['dir']}");
+        }else{
+            $this->db->order_by("a.log_time DESC");
         }
 
         // $this->db->limit($limit)->offset($offset);
@@ -97,7 +102,7 @@ class M_admin extends CI_Model
             }else{
                 $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
             }
-            $models[$key]->log_time = date("d F Y H:i:s", $val->log_time);
+            $models[$key]->log_time = $val->log_time > 0 ? $val->log_time : '-';
             
         }
 

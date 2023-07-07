@@ -10,7 +10,7 @@ class M_auth extends CI_Model
 
     function setLogTime($user_id){
         $this->db->where('user_id', $user_id);
-        $this->db->update('tb_auth', ['log_time' => time(), 'device' => $this->agent->agent_string()]);
+        $this->db->update('tb_auth', ['log_time' => date("d F Y, H:i:s"), 'device' => $this->agent->agent_string()]);
     }
 
     public function getSetting($key){

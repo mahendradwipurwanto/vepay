@@ -205,7 +205,36 @@ if(!function_exists('base64ToImage')){
 
 
 if(!function_exists('discordmsg')){
-    function discordmsg($msg, $webhook) {
+    function discordmsg($msg) {
+
+        $webhook = "https://discord.com/api/webhooks/1126750424347709521/Vth1gyj3NhM5DkToFT-KhmHPMniiQo67wmUwhEfLzUm2Olz0CRNMgcHfFUZqiARPfXqX";
+        $timestamp = date("c", strtotime("now"));
+        $msg = json_encode([
+            "username" => "Vepay ".date("Y"),
+
+            "tts" => false,
+
+            "embeds" => [
+                [
+                    // Title
+                    "title" => "Discord listener",
+
+                    // Embed Type, do not change.
+                    "type" => "rich",
+
+                    // Description
+                    "description" => $msg != "" ? "``` {$msg} ```" : 'No Data to send',
+
+                    // Timestamp, only ISO8601
+                    "timestamp" => $timestamp,
+
+                    // Left border color, in HEX
+                    "color" => hexdec("3366ff"),
+                ]
+            ]
+
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
         if($webhook != "") {
             $ch = curl_init( $webhook );
             curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));

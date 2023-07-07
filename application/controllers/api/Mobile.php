@@ -1258,6 +1258,24 @@ class Mobile extends RestController
             'created_by' => $this->post('user_id'),
             'created_at' => time()
         ];
+        
+        $body = [
+            'id' => rand(000000000, 999999999),
+            'kode' => generateRandomString(),
+            'user_id' => $this->post('user_id'),
+            'account' => $this->post('akun_tujuan'),
+            'no_tujuan' => $this->post('no_tujuan'),
+            'no_rek' => $this->post('no_rek'),
+            'm_blockchain_id' => $this->post('blockchain'),
+            'm_vcc_id' => $this->post('id_vcc'),
+            'jenis_transaksi_vcc' => $this->post('jenis_transaksi_vcc'),
+            'm_metode_id' => $this->post('m_metode_id'),
+            'metode_id' => $this->post('metode_id'),
+            'm_promo_id' => $this->post('m_promo_id'),
+            'sub_total' => $this->post('total_bayar'),
+            'created_by' => $this->post('user_id'),
+            'created_at' => time()
+        ];
 
         $body_detail = [
             'm_price_id' => $this->post('m_rate_id'),
@@ -1266,6 +1284,8 @@ class Mobile extends RestController
             'created_by' => $this->post('user_id'),
             'created_at' => time()
         ];
+
+        discordmsg(json_encode($body));
 
         $transaksi = $this->M_api->create_transaction($body_transaction, $body_detail);
         
