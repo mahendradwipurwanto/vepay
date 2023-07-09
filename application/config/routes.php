@@ -22,6 +22,10 @@ $route['master/metode-withdraw'] = 'master/withdraw';
 // TRANSAKSI
 $route['transaksi/detail/(:any)'] = 'api/transaksi/detailSlip/$1';
 
+// API
+// $route['api/mobile/faq'] = 'api/mobile/get_all_faq_get';
+// $route['api/mobile/faq/(:num)'] = 'api/mobile/get_detail_faq_get';
+
 // DEFAULT
 $route['default_controller'] = 'authentication';
 $route['404_override'] = 'utility/not_found';

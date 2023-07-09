@@ -366,4 +366,26 @@ class Master extends CI_Controller
             redirect($this->agent->referrer());
         }
     }
+
+    public function saveFaq()
+    {
+        if ($this->M_master->saveFaq() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menyimpan faq');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menyimpan faq');
+            redirect($this->agent->referrer());
+        }
+    }
+
+    public function deleteFaq()
+    {
+        if ($this->M_master->deleteFaq() == true) {
+            $this->session->set_flashdata('notif_success', 'Berhasil menghapus faq');
+            redirect($this->agent->referrer());
+        } else {
+            $this->session->set_flashdata('notif_warning', 'Terjadi kesalahan saat mencoba menghapus faq');
+            redirect($this->agent->referrer());
+        }
+    }
 }

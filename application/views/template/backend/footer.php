@@ -88,6 +88,9 @@
 				element: document.querySelector('#tour-kategori'),
 				intro: "Kelolak kategori produk anda"
 			}, {
+				element: document.querySelector('#tour-faq'),
+				intro: "Kelolak faq wevsite anda"
+			}, {
 				element: document.querySelector('#tour-produk'),
 				intro: "Kelola seluruh produk yang anda jual pada halaman ini"
 			}, {

@@ -27,7 +27,7 @@
 							<th>Promo</th>
 							<th>Nilai/Nominal</th>
 							<th>Maksimal promo</th>
-							<th>Jenis</th>
+							<!-- <th>Jenis</th> -->
 							<th>Tersisa</th>
 							<th>Status</th>
 							<th>Expired</th>
@@ -46,11 +46,17 @@
 									data-bs-target="#delete-<?= $val->id;?>"><i class="bi-trash"></i></button>
 							</td>
 							<td><?= $val->kode;?></td>
-							<td><?= $val->nama;?></td>
-							<td><?= $val->jenis == 1 ? 'Rp.' : '';?>
+							<td>
+								<?= $val->nama;?>
+								<?php if($val->jenis_pengguna == 2):?>
+								<span class="badge bg-soft-warning">private</span>
+								<?php endif;?>
+							</td>
+							<!-- <td><?= $val->jenis == 1 ? 'Rp.' : '';?>
 								<?= $val->jenis == 1 ? number_format($val->value, 0, ",", ".") : $val->value;?>
-								<?= $val->jenis == 1 ? '' : '%';?></td>
-							<td>Rp. <?= !is_null($val->maksimal_promo) ? number_format($val->maksimal_promo, 0, ",", ".") : '-';?>
+								<?= $val->jenis == 1 ? '' : '%';?></td> -->
+							<td>Rp.
+								<?= !is_null($val->maksimal_promo) ? number_format($val->maksimal_promo, 0, ",", ".") : '-';?>
 							</td>
 							<td><?= $val->jenis == 1 ? 'Flat' : 'Presentage';?></td>
 							<td><?= is_null($val->quota) ? 'Unlimited' : $val->quota;?></td>
@@ -167,6 +173,8 @@
 										Semua Pengguna</option>
 									<option value="1">
 										Pengguna Baru</option>
+									<option value="2">
+										Private</option>
 								</select>
 							</div>
 						</div>

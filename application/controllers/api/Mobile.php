@@ -1549,4 +1549,48 @@ class Mobile extends RestController
         }
 
     }
+
+    public function faq_get()
+    {
+
+        $params = [
+            'limit' => $this->get('limit')
+        ];
+
+        $data = $this->M_api->getAllFaq($params);
+
+        if (!empty($data)) {
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $data
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Tidak ada faq yang tersedia'
+            ], 422);
+        }
+
+    }
+    
+    public function detail_faq_get($id)
+    {
+        $data = $this->M_api->getDetailFaq($id);
+
+        if (!empty($data)) {
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $data
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => "FAQ dengan id {$id} tidak tersedia"
+            ], 422);
+        }
+    }
 }

@@ -47,6 +47,8 @@
 						Semua Pengguna</option>
 					<option value="1" <?php if($promo->jenis_pengguna == 1):?>selected<?php endif;?>>
 						Pengguna Baru</option>
+					<option value="2" <?php if($promo->jenis_pengguna == 2):?>selected<?php endif;?>>
+						Private</option>
 				</select>
 			</div>
 		</div>

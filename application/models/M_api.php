@@ -235,7 +235,7 @@ class M_api extends CI_Model
 
         $this->db->select('a.*')
         ->from('m_promo a')
-        ->where(['a.is_deleted' => 0])
+        ->where(['a.is_deleted' => 0, 'a.jenis_pengguina !=' => 2])
         ;
 
         $this->db->order_by('a.nama ASC');
@@ -610,5 +610,15 @@ class M_api extends CI_Model
         $models = $this->db->get()->result();
 
         return $models;
+    }
+
+    public function getAllFaq()
+    {
+        return $this->db->get_where('m_faq', ['is_deleted' => 0])->result();
+    }
+
+    public function getDetailFaq($id)
+    {
+        return $this->db->get_where('m_faq', ['id' => $id, 'is_deleted' => 0])->row();
     }
 }

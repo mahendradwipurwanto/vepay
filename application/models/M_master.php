@@ -773,4 +773,52 @@ class M_master extends CI_Model
         $this->db->update('m_blockchain', ['is_deleted' => 1]);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
+
+    public function getAllFaq()
+    {
+        return $this->db->get_where('m_faq', ['is_deleted' => 0])->result();
+    }
+
+    public function saveFaq()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+        $judul = htmlspecialchars($this->input->post('judul'), true);
+        $deskripsi = $this->input->post('deskripsi');
+        $order = htmlspecialchars($this->input->post('order'), true);
+        
+        if (isset($id) && $id != '') {
+            $faq = [
+                'judul' => $judul,
+                'deskripsi' => $deskripsi,
+                'order' => $order,
+                'modified_at' => time(),
+                'modified_by' => $this->session->userdata('user_id')
+            ];
+        } else {
+            $faq = [
+                'judul' => $judul,
+                'deskripsi' => $deskripsi,
+                'order' => $order,
+                'created_at' => time(),
+                'created_by' => $this->session->userdata('user_id')
+            ];
+        }
+        if (isset($id) && $id != '') {
+            $this->db->where('id', $id);
+            $this->db->update('m_faq', $faq);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        } else {
+            $this->db->insert('m_faq', $faq);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+    }
+
+    public function deleteFaq()
+    {
+        $id = htmlspecialchars($this->input->post('id'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('m_faq', ['is_deleted' => 1]);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
 }

@@ -91,6 +91,11 @@
   								href="<?= site_url('master/kategori'); ?>"><i class="bi bi-tags nav-icon"></i>
   								Kategori</a>
   						</li>
+  						<li class="nav-item" id="tour-faq">
+  							<a class="nav-link <?= ($this->uri->segment(2) == "faq" ? "active" : "") ?>"
+  								href="<?= site_url('master/faq'); ?>"><i class="bi bi-question-square nav-icon"></i>
+  								Faq</a>
+  						</li>
   						<li class="nav-item" id="tour-produk">
   							<a class="nav-link <?= ($this->uri->segment(2) == "produk" ? "active" : "") ?>"
   								href="<?= site_url('master/produk'); ?>"><i class="bi bi-box-seam nav-icon"></i>

@@ -66,4 +66,11 @@ class Master extends CI_Controller
 
         $this->templateback->view('admin/master/blockchain', $data);
     }
+
+    public function faq()
+    {
+        $data['faq'] = $this->M_master->getAllFaq();
+
+        $this->templateback->view('admin/master/faq', $data);
+    }
 }
