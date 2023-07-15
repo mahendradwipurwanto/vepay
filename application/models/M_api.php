@@ -235,7 +235,9 @@ class M_api extends CI_Model
 
         $this->db->select('a.*')
         ->from('m_promo a')
-        ->where(['a.is_deleted' => 0, 'a.jenis_pengguina !=' => 2])
+        ->where(['a.is_deleted' => 0, 'a.jenis_pengguna !=' => 2])
+        ->where('m_promo.publish >=', time())
+        ->where('m_promo.expired <=', time())
         ;
 
         $this->db->order_by('a.nama ASC');
@@ -253,7 +255,10 @@ class M_api extends CI_Model
     {
 
         $this->db->select('a.*')
-        ->from('m_promo a')->where(['a.is_deleted' => 0]);
+        ->from('m_promo a')->where(['a.is_deleted' => 0])
+        ->where('m_promo.publish >=', time())
+        ->where('m_promo.expired <=', time())
+        ;
 
 		if(!is_null($kode)){
 			$this->db->where('a.kode', $kode);
@@ -620,5 +625,9 @@ class M_api extends CI_Model
     public function getDetailFaq($id)
     {
         return $this->db->get_where('m_faq', ['id' => $id, 'is_deleted' => 0])->row();
+    }
+
+    public function getTransaksiPengguna($user_id = null){
+        return $this->db->get_where('tb_transaksi', ['user_id' => $user_id])->num_rows();
     }
 }

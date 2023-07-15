@@ -45,13 +45,13 @@ class M_master extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    public function getAllProductSelect(){
+    public function getAllProductSelect()
+    {
         $this->db->select('a.*, b.categories')
-        ->from('m_product a')
-        ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
-        ->where(['a.is_deleted' => 0])
-		->order_by("a.order ASC")
-        ;
+            ->from('m_product a')
+            ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
+            ->where(['a.is_deleted' => 0])
+            ->order_by("a.order ASC");
 
         $models = $this->db->get()->result();
 
@@ -80,10 +80,9 @@ class M_master extends CI_Model
         }
 
         $this->db->select('a.*, b.categories')
-        ->from('m_product a')
-        ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
-        ->where(['a.is_deleted' => 0, 'a.name !=' => "More"])
-        ;
+            ->from('m_product a')
+            ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
+            ->where(['a.is_deleted' => 0, 'a.name !=' => "More"]);
 
         $this->db->where($filter);
         $this->db->order_by('a.order ASC, a.name ASC');
@@ -93,55 +92,54 @@ class M_master extends CI_Model
         $models = $this->db->get()->result();
 
         foreach ($models as $key => $val) {
-			$btnDetail                  = '<button onclick="showMdlProductDetail(\''.$val->id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-pencil-square"></i></button>';
-			$btnActive                  = '<button onclick="showMdlProductActive(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-check-square"></i></button>';
-			$btnNonActive               = '<button onclick="showMdlProductNonActive(\''.$val->id.'\')" class="btn btn-soft-secondary btn-icon btn-sm me-2"><i class="bi-dash-square"></i></button>';
-			$btnDelete                  = '<button onclick="showMdlProductDelete(\''.$val->id.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
-			$btnPrice                   = '<button onclick="showMdlProductPrice(\''.$val->id.'\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-cash-coin"></i></button>';
+            $btnDetail                  = '<button onclick="showMdlProductDetail(\'' . $val->id . '\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-pencil-square"></i></button>';
+            $btnActive                  = '<button onclick="showMdlProductActive(\'' . $val->id . '\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-check-square"></i></button>';
+            $btnNonActive               = '<button onclick="showMdlProductNonActive(\'' . $val->id . '\')" class="btn btn-soft-secondary btn-icon btn-sm me-2"><i class="bi-dash-square"></i></button>';
+            $btnDelete                  = '<button onclick="showMdlProductDelete(\'' . $val->id . '\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
+            $btnPrice                   = '<button onclick="showMdlProductPrice(\'' . $val->id . '\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-cash-coin"></i></button>';
 
-			$models[$key]->image        = base_url()."{$val->image}";
-			$models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
-			$models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
-			$models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
-			$models[$key]->status       = ($val->is_active == 1 ? "<span class='badge bg-soft-success'>aktif</span>" : "<span class='badge bg-soft-secondary'>nonaktif</span>");
-			$models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100).(strlen($val->description) > 100 ? '...' : '') : '-';
+            $models[$key]->image        = base_url() . "{$val->image}";
+            $models[$key]->image        = "<a class='media-viewer' href='{$models[$key]->image}' data-fslightbox='gallery'><img src='{$models[$key]->image}' class='img-thumbnail' style='width: 80px' alt='{$models[$key]->image}'></a>";
+            $models[$key]->categories   = !is_null($val->categories) || $val->m_categories_id > 0 ? $models[$key]->categories : '-';
+            $models[$key]->categories   = "<span class='badge bg-soft-info'><i class='bi bi-tag'></i> {$models[$key]->categories}</span>";
+            $models[$key]->status       = ($val->is_active == 1 ? "<span class='badge bg-soft-success'>aktif</span>" : "<span class='badge bg-soft-secondary'>nonaktif</span>");
+            $models[$key]->description  = isset($val->description) && $val->description != "" ? substr($val->description, 0, 100) . (strlen($val->description) > 100 ? '...' : '') : '-';
 
-			$models[$key]->price        = "-";
-			$models[$key]->fee        = "-";
-			$price = $this->db->get_where('m_price', ['m_product_id' => $val->id, 'status' => 1, 'is_deleted' => 0])->result();
-			
-			$price_txt  = "";
-			$fee_txt    = "";
-			if(!empty($price)){
-				foreach ($price as $k => $v) {
-					$price_formatted    = number_format($v->price,0,",",".");
-					$price_txt          .= "<li>Rp. {$price_formatted} - <i class='text-muted'>{$v->type}</i></li>";
-					$fee_txt            = "{$v->fee}%";
-				}
-				$models[$key]->fee      = $fee_txt;
-				$models[$key]->price    = $price_txt; 
-			}
-			$models[$key]->name 		= ((stripos($val->name, 'VCC') === false) ? $val->name : "{$val->name} - <small class='text-secondary'><i>default</i></small>");
-			$models[$key]->action       = $btnDetail.((stripos($val->name, 'VCC') === false) ? $btnDelete : '').$btnPrice. ($val->is_active == 1 ? $btnNonActive : $btnActive);
+            $models[$key]->price        = "-";
+            $models[$key]->fee        = "-";
+            $price = $this->db->get_where('m_price', ['m_product_id' => $val->id, 'status' => 1, 'is_deleted' => 0])->result();
+
+            $price_txt  = "";
+            $fee_txt    = "";
+            if (!empty($price)) {
+                foreach ($price as $k => $v) {
+                    $price_formatted    = number_format($v->price, 0, ",", ".");
+                    $price_txt          .= "<li>Rp. {$price_formatted} - <i class='text-muted'>{$v->type}</i></li>";
+                    $fee_txt            = "{$v->fee}%";
+                }
+                $models[$key]->fee      = $fee_txt;
+                $models[$key]->price    = $price_txt;
+            }
+            $models[$key]->name         = ((stripos($val->name, 'VCC') === false) ? $val->name : "{$val->name} - <small class='text-secondary'><i>default</i></small>");
+            $models[$key]->action       = $btnDetail . ((stripos($val->name, 'VCC') === false) ? $btnDelete : '') . $btnPrice . ($val->is_active == 1 ? $btnNonActive : $btnActive);
         }
 
         $totalRecords = count($models);
 
         $models = array_slice($models, $offset, $limit);
-        
+
         return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
     }
 
     public function getDetailProduct($product_id = null)
     {
         $this->db->select('a.*, b.categories')
-        ->from('m_product a')
-        ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
-        ->where(['a.is_deleted' => 0, 'a.id' => $product_id])
-        ;
+            ->from('m_product a')
+            ->join('m_categories b', 'a.m_categories_id = b.id', 'left')
+            ->where(['a.is_deleted' => 0, 'a.id' => $product_id]);
 
         $model = $this->db->get()->row();
-        $model->image    = base_url()."{$model->image}";
+        $model->image    = base_url() . "{$model->image}";
 
         return $model;
     }
@@ -149,11 +147,10 @@ class M_master extends CI_Model
     public function getRateProduct($product_id = null)
     {
         $this->db->select('a.*, b.name')
-        ->from('m_price a')
-        ->join('m_product b', 'a.m_product_id = b.id', 'inner')
-        ->where(['a.is_deleted' => 0, 'a.m_product_id' => $product_id])
-        ->order_by('a.status DESC, a.price DESC, a.created_at DESC')
-        ;
+            ->from('m_price a')
+            ->join('m_product b', 'a.m_product_id = b.id', 'inner')
+            ->where(['a.is_deleted' => 0, 'a.m_product_id' => $product_id])
+            ->order_by('a.status DESC, a.price DESC, a.created_at DESC');
 
         $models = $this->db->get()->result();
 
@@ -163,11 +160,10 @@ class M_master extends CI_Model
     public function getRateAllProduct()
     {
         $this->db->select('a.*, b.name')
-        ->from('m_price a')
-        ->join('m_product b', 'a.m_product_id = b.id', 'inner')
-        ->where(['a.is_deleted' => 0, 'a.status' => 1])
-        ->order_by('a.created_at DESC, a.status DESC')
-        ;
+            ->from('m_price a')
+            ->join('m_product b', 'a.m_product_id = b.id', 'inner')
+            ->where(['a.is_deleted' => 0, 'a.status' => 1])
+            ->order_by('a.created_at DESC, a.status DESC');
 
         $models = $this->db->get()->result();
 
@@ -177,9 +173,8 @@ class M_master extends CI_Model
     public function getDetailRateProduct($rate_id = null)
     {
         $this->db->select('a.*')
-        ->from('m_price a')
-        ->where(['a.is_deleted' => 0, 'a.id' => $rate_id])
-        ;
+            ->from('m_price a')
+            ->where(['a.is_deleted' => 0, 'a.id' => $rate_id]);
 
         $models = $this->db->get()->row();
 
@@ -188,29 +183,29 @@ class M_master extends CI_Model
 
     public function addProduct($image = null)
     {
-		$all = $this->getAllProductSelect();
+        $all = $this->getAllProductSelect();
 
-		$order = count($all);
+        $order = count($all);
 
         $data = [
             'name'              => $this->input->post('name'),
             'image'             => $image,
             'm_categories_id'   => $this->input->post('categories'),
             'description'       => $this->input->post('description'),
-            'order'       		=> $order,
+            'order'               => $order,
             'created_at'        => time(),
             'created_by'        => $this->session->userdata('user_id'),
         ];
 
         $this->db->insert('m_product', $data);
         $cek = ($this->db->affected_rows() != 1);
-		
-		if($cek){
-			$this->db->where('id', 8);
-			$this->db->update('m_products', ['order' => ($order+1)]);
-		}
 
-		return $cek;
+        if ($cek) {
+            $this->db->where('id', 8);
+            $this->db->update('m_products', ['order' => ($order + 1)]);
+        }
+
+        return $cek;
     }
 
     public function editProduct($image = null)
@@ -220,7 +215,7 @@ class M_master extends CI_Model
                 'name'              => $this->input->post('name'),
                 'm_categories_id'   => $this->input->post('categories'),
                 'description'       => $this->input->post('description'),
-                'order'       		=> $this->input->post('order'),
+                'order'               => $this->input->post('order'),
                 'modified_at'       => time(),
                 'modified_by'       => $this->session->userdata('user_id'),
             ];
@@ -230,7 +225,7 @@ class M_master extends CI_Model
                 'image'             => $image,
                 'm_categories_id'   => $this->input->post('categories'),
                 'description'       => $this->input->post('description'),
-                'order'       		=> $this->input->post('order'),
+                'order'               => $this->input->post('order'),
                 'modified_at'       => time(),
                 'modified_by'       => $this->session->userdata('user_id'),
             ];
@@ -280,22 +275,22 @@ class M_master extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    public function getAllPromo(){
+    public function getAllPromo()
+    {
         $this->db->select('*')
-        ->from('m_promo')
-        ->where(['is_deleted' => 0])
-        ;
+            ->from('m_promo')
+            ->where(['is_deleted' => 0]);
 
         $models = $this->db->get()->result();
 
         return $models;
     }
 
-    public function getDetailPromo($id = null){
+    public function getDetailPromo($id = null)
+    {
         $this->db->select('*')
-        ->from('m_promo')
-        ->where(['id' => $id, 'is_deleted' => 0])
-        ;
+            ->from('m_promo')
+            ->where(['id' => $id, 'is_deleted' => 0]);
 
         $models = $this->db->get()->row();
 
@@ -311,10 +306,12 @@ class M_master extends CI_Model
                 'nama'              => $this->input->post('nama'),
                 'value'             => $this->input->post('value'),
                 'expired'           => strtotime($this->input->post('expired')),
+                'publish'           => strtotime($this->input->post('publish')),
                 'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'status'            => $this->input->post('status'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
-                'desc'           	=> $this->input->post('desc'),
+                'minimum_transaksi' => $this->input->post('minimum_transaksi'),
+                'desc'              => $this->input->post('desc'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
             ];
@@ -326,10 +323,12 @@ class M_master extends CI_Model
                 'image'             => $image,
                 'value'             => $this->input->post('value'),
                 'expired'           => strtotime($this->input->post('expired')),
+                'publish'           => strtotime($this->input->post('publish')),
                 'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'status'            => $this->input->post('status'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
-                'desc'           	=> $this->input->post('desc'),
+                'minimum_transaksi' => $this->input->post('minimum_transaksi'),
+                'desc'              => $this->input->post('desc'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
             ];
@@ -349,9 +348,11 @@ class M_master extends CI_Model
                 'value'             => $this->input->post('value'),
                 'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
+                'publish'           => strtotime($this->input->post('publish')),
                 'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
-                'desc'           	=> $this->input->post('desc'),
+                'minimum_transaksi' => $this->input->post('minimum_transaksi'),
+                'desc'               => $this->input->post('desc'),
                 'status'            => $this->input->post('status'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
@@ -365,9 +366,11 @@ class M_master extends CI_Model
                 'value'             => $this->input->post('value'),
                 'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
+                'publish'           => strtotime($this->input->post('publish')),
                 'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
-                'desc'           	=> $this->input->post('desc'),
+                'minimum_transaksi' => $this->input->post('minimum_transaksi'),
+                'desc'               => $this->input->post('desc'),
                 'status'            => $this->input->post('status'),
                 'created_at'        => time(),
                 'created_by'        => $this->session->userdata('user_id'),
@@ -409,7 +412,7 @@ class M_master extends CI_Model
         $description = htmlspecialchars($this->input->post('description'), true);
         $atas_nama = htmlspecialchars($this->input->post('atas_nama'), true);
         $no_rekening = htmlspecialchars($this->input->post('no_rekening'), true);
-        
+
         if (isset($id) && $id != '') {
             if (is_null($image)) {
                 $data = [
@@ -453,7 +456,7 @@ class M_master extends CI_Model
                 ];
             }
         }
-        
+
         if (isset($id) && $id != '') {
             $this->db->where('id', $id);
             $this->db->update('m_metode', $data);
@@ -490,7 +493,7 @@ class M_master extends CI_Model
         $description = htmlspecialchars($this->input->post('description'), true);
         $atas_nama = htmlspecialchars($this->input->post('atas_nama'), true);
         $no_rekening = htmlspecialchars($this->input->post('no_rekening'), true);
-        
+
         if (isset($id) && $id != '') {
             if (is_null($image)) {
                 $data = [
@@ -534,7 +537,7 @@ class M_master extends CI_Model
                 ];
             }
         }
-        
+
         if (isset($id) && $id != '') {
             $this->db->where('id', $id);
             $this->db->update('m_withdraw', $data);
@@ -592,22 +595,25 @@ class M_master extends CI_Model
     public function deletePriceProduct()
     {
 
-        if($this->input->post('status') == 1){
+        if ($this->input->post('status') == 1) {
             $this->db->where(['m_product_id' => $this->input->post('m_product_id'), 'type' => $this->input->post('type')]);
             $this->db->update('m_price', ['status' => 0]);
         }
 
         // get latest data
-        $latest = $this->getLatestPrice($this->input->post('m_product_id'),
-        $this->input->post('type'),$this->input->post('m_price_id'));
+        $latest = $this->getLatestPrice(
+            $this->input->post('m_product_id'),
+            $this->input->post('type'),
+            $this->input->post('m_price_id')
+        );
 
-        if(!is_null($latest)){
+        if (!is_null($latest)) {
             $change = [
                 'status'            => 1,
                 'modified_at'        => time(),
                 'modified_by'        => $this->session->userdata('user_id')
             ];
-    
+
             $this->db->where('id', $latest->id);
             $this->db->update('m_price', $change);
         }
@@ -622,27 +628,27 @@ class M_master extends CI_Model
         $this->db->update('m_price', $data);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
-    
-    function getLatestPrice($m_product_id = null, $type = null, $price_id = null){
+
+    function getLatestPrice($m_product_id = null, $type = null, $price_id = null)
+    {
         $this->db->select('a.*, b.name')
-        ->from('m_price a')
-        ->join('m_product b', 'a.m_product_id = b.id', 'inner')
-        ->where(['a.is_deleted' => 0, 'a.m_product_id' => $m_product_id, 'a.type' => $type, 'a.id !=' => $price_id])
-        ->order_by('a.created_at DESC')
-        ->limit(1)
-        ;
+            ->from('m_price a')
+            ->join('m_product b', 'a.m_product_id = b.id', 'inner')
+            ->where(['a.is_deleted' => 0, 'a.m_product_id' => $m_product_id, 'a.type' => $type, 'a.id !=' => $price_id])
+            ->order_by('a.created_at DESC')
+            ->limit(1);
 
         $models = $this->db->get()->row();
 
         return $models;
     }
 
-    public function getAllVcc(){
+    public function getAllVcc()
+    {
         $this->db->select('a.*, b.name')
-        ->from('tb_vcc a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->where(['a.is_deleted' => 0])
-        ;
+            ->from('tb_vcc a')
+            ->join('tb_user b', 'a.user_id = b.user_id')
+            ->where(['a.is_deleted' => 0]);
 
         $models = $this->db->get()->result();
 
@@ -652,14 +658,12 @@ class M_master extends CI_Model
     public function getDetailVcc($id = null)
     {
         $this->db->select('a.*, b.name')
-        ->from('tb_vcc a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->where(['a.id' => $id])
-        ;
+            ->from('tb_vcc a')
+            ->join('tb_user b', 'a.user_id = b.user_id')
+            ->where(['a.id' => $id]);
 
         $models = $this->db->get()->row();
         return $models;
-
     }
 
     public function saveVcc()
@@ -673,7 +677,7 @@ class M_master extends CI_Model
         $valid_date = htmlspecialchars($this->input->post('valid_date'), true);
         $security_code = htmlspecialchars($this->input->post('security_code'), true);
         $saldo = htmlspecialchars($this->input->post('saldo'), true);
-        
+
         if (isset($id) && $id != '') {
             $data = [
                 'vcc_name'      => $vcc_name,
@@ -700,7 +704,7 @@ class M_master extends CI_Model
                 'created_by'    => $this->session->userdata('user_id')
             ];
         }
-        
+
         if (isset($id) && $id != '') {
             $this->db->where('id', $id);
             $this->db->update('tb_vcc', $data);
@@ -736,7 +740,7 @@ class M_master extends CI_Model
         $blockchain = htmlspecialchars($this->input->post('blockchain'), true);
         $description = htmlspecialchars($this->input->post('description'), true);
         $fee = htmlspecialchars($this->input->post('fee'), true);
-        
+
         if (isset($id) && $id != '') {
             $data = [
                 'blockchain'        => $blockchain,
@@ -754,7 +758,7 @@ class M_master extends CI_Model
                 'created_by'    => $this->session->userdata('user_id')
             ];
         }
-        
+
         if (isset($id) && $id != '') {
             $this->db->where('id', $id);
             $this->db->update('m_blockchain', $data);
@@ -785,7 +789,7 @@ class M_master extends CI_Model
         $judul = htmlspecialchars($this->input->post('judul'), true);
         $deskripsi = $this->input->post('deskripsi');
         $order = htmlspecialchars($this->input->post('order'), true);
-        
+
         if (isset($id) && $id != '') {
             $faq = [
                 'judul' => $judul,
@@ -820,5 +824,34 @@ class M_master extends CI_Model
         $this->db->where('id', $id);
         $this->db->update('m_faq', ['is_deleted' => 1]);
         return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function getPenggunaanPromo($id)
+    {
+        $this->db->select('*')
+            ->from('m_promo')
+            ->where(['id' => $id, 'is_deleted' => 0]);
+
+        $model = $this->db->get()->row();
+
+        $this->db->select('tb_transaksi.id, tb_transaksi.created_at as tanggal_transaksi, tb_user.name as nama_pengguna, tb_auth.email')
+            ->from('tb_transaksi')
+            ->join('tb_user', 'tb_transaksi.user_id = tb_user.user_id')
+            ->join('tb_auth', 'tb_transaksi.user_id = tb_auth.user_id')
+            ->where(['tb_transaksi.m_promo_id' => $id, 'tb_transaksi.is_deleted' => 0]);
+
+        $models = $this->db->get()->result();
+
+        $arr = [];
+        if (!empty($models)) {
+            foreach ($models as $key => $val) {
+                $arr[$key] = $val;
+                $arr[$key]->tanggal_transaksi = date("d F Y, H:i", $val->tanggal_transaksi);
+            }
+        }
+
+        $model->penggunaan = $arr;
+
+        return $model;
     }
 }

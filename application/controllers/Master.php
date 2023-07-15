@@ -46,6 +46,12 @@ class Master extends CI_Controller
         $this->templateback->view('admin/master/promo', $data);
     }
 
+    public function penggunaan_promo($id = null)
+    {
+        $data['promo'] = $this->M_master->getPenggunaanPromo($id);
+        $this->templateback->view('admin/master/promo_penggunaan', $data);
+    }
+
     public function metode()
     {
         $data['metode'] = $this->M_master->getAllMetode();

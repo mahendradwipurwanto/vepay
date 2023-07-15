@@ -29,4 +29,4 @@ $route['transaksi/detail/(:any)'] = 'api/transaksi/detailSlip/$1';
 // DEFAULT
 $route['default_controller'] = 'authentication';
 $route['404_override'] = 'utility/not_found';
-$route['translate_uri_dashes'] = false;
+$route['translate_uri_dashes'] = true;
