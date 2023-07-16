@@ -854,4 +854,20 @@ class M_master extends CI_Model
 
         return $model;
     }
+
+    public function generateKodeReferral()
+    {
+
+        $users = $this->db->get_where('tb_auth', ['is_deleted' => 0])->result();
+
+        foreach ($users as $key => $val) {
+
+            $kode = generateRandomString(5);
+
+            $this->db->where('user_id', $val->user_id);
+            $this->db->update('tb_auth', ['kode_referral' => $kode]);
+        }
+
+        ej($users);
+    }
 }

@@ -1597,4 +1597,87 @@ class Mobile extends RestController
             ], 422);
         }
     }
+
+    public function kode_referral_put($user_id)
+    {
+        $validasi = [
+            'kode_referral' => 'required',
+        ];
+        \GUMP::set_field_name('kode_referral', 'Kode Referral');
+
+        if (validate($this->put(), $validasi) === false) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => validate($this->put(), $validasi)
+            ], 422);
+        }
+
+        $member = $this->M_api->getDetailMember($user_id);
+        if (!empty($member)) {
+
+            $body = [
+                'kode_referral'          => $this->put('kode_referral'),
+            ];
+            $result = $this->M_api->updateKodeReferral($body, $user_id);
+
+            if ($result == true) {
+                // Set the response and exit
+                $this->response([
+                    'status' => true,
+                    'data' => $this->M_api->getDetailMember($user_id)
+                ], 200);
+            } else {
+                // Set the response and exit
+                $this->response([
+                    'status' => true,
+                    'data' => $this->M_api->getDetailMember($user_id)
+                ], 200);
+            }
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Member dengan id tersebut tidak terdaftar'
+            ], 422);
+        }
+    }
+
+    public function referral_get($user_id)
+    {
+        $member = $this->M_api->getDetailReferral($user_id);
+        if (!empty($member)) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $member
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Member dengan id tersebut tidak terdaftar'
+            ], 404);
+        }
+    }
+
+    public function referral_friends_get($user_id)
+    {
+        $friends = $this->M_api->getReferralFriends($user_id);
+        if (!empty($friends)) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $friends
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Anda belum memiliki teman referral'
+            ], 404);
+        }
+    }
 }

@@ -14,4 +14,9 @@ class Utility extends CI_Controller
     {
         $this->templateauth->view('utility/not_found');
     }
+
+    public function generateKodeReferral(){
+        $this->load->model('M_master');
+        $this->M_master->generateKodeReferral();
+    }
 }
