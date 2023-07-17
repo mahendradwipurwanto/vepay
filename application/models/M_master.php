@@ -870,4 +870,33 @@ class M_master extends CI_Model
 
         ej($users);
     }
+
+    public function generateNameMember()
+    {
+
+        $this->db->select('tb_auth.user_id, tb_auth.email, tb_user.name')
+        ->from('tb_auth')
+        ->join('tb_user', 'tb_user.user_id = tb_auth.user_id', 'inner')
+        ->where(['tb_auth.is_deleted' => 0]);
+
+        $users = $this->db->get()->result();
+
+        foreach ($users as $key => $val) {
+            $strip_email                    = explode("@", $val->email);
+
+            if (is_null($val->name) || $val->name == '') {
+                $this->db->where('user_id', $val->user_id);
+                $this->db->update('tb_user', ['name' => $strip_email[0]]);
+            }
+        }
+
+        $this->db->select('tb_auth.user_id, tb_auth.email, tb_user.name')
+        ->from('tb_auth')
+        ->join('tb_user', 'tb_user.user_id = tb_auth.user_id', 'inner')
+        ->where(['tb_auth.is_deleted' => 0]);
+
+        $users = $this->db->get()->result();
+
+        ej($users);
+    }
 }

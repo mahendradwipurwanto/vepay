@@ -40,12 +40,12 @@ class Admin extends CI_Controller
         $data['daily_transaksi'] = $this->M_admin->getDailyTransaksi();
         $data['top_product'] = $this->M_admin->getTopProduk();
         $data['top_member'] = $this->M_admin->getTopmember();
-        
+
         $dateNow = date("d/m/Y");
-		$date30DaysAgo = date('d/m/y', strtotime('-30 days'));
+        $date30DaysAgo = date('d/m/y', strtotime('-30 days'));
         $data['dateFilter'] = "{$date30DaysAgo} - {$dateNow}";
 
-		// ej($data);
+        // ej($data);
 
         $this->templateback->view('admin/statistik', $data);
     }
@@ -124,6 +124,19 @@ class Admin extends CI_Controller
                     $this->templatemobile->view('admin/pengaturan/mailer', $data);
                 } else {
                     $this->templateback->view('admin/pengaturan/mailer', $data);
+                }
+                break;
+
+            case 'referral':
+                $data['referral_interest'] = json_decode($this->M_admin->get_settingsValue('referral_interest'), true);
+                $data['penggunaan_referral'] = $this->M_admin->get_settingsValue('penggunaan_referral');
+                $data['referral_image'] = $this->M_admin->get_settingsValue('referral_image');
+                $data['referral_title'] = $this->M_admin->get_settingsValue('referral_title');
+                $data['referral_description'] = $this->M_admin->get_settingsValue('referral_description');
+                if ($this->agent->is_mobile()) {
+                    $this->templatemobile->view('admin/pengaturan/referral', $data);
+                } else {
+                    $this->templateback->view('admin/pengaturan/referral', $data);
                 }
                 break;
 

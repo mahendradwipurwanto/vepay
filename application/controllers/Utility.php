@@ -19,4 +19,9 @@ class Utility extends CI_Controller
         $this->load->model('M_master');
         $this->M_master->generateKodeReferral();
     }
+
+    public function generateNameMember(){
+        $this->load->model('M_master');
+        $this->M_master->generateNameMember();
+    }
 }

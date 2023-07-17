@@ -27,15 +27,16 @@ class Admin extends CI_Controller
             redirect(base_url());
         }
     }
-    
-    public function getAjaxMember(){
-        
+
+    public function getAjaxMember()
+    {
+
         $draw     = $this->input->post('draw');
         $search   = $this->input->post('search')['value'];
         $no       = $this->input->post('start');
-        
+
         $members  = $this->M_member->getAllMember();
-        
+
         $arr      = [];
         foreach ($members['records'] as $key => $val) {
 
@@ -44,6 +45,7 @@ class Admin extends CI_Controller
                 "action"        => $val->action,
                 "name"          => $val->name,
                 "email"         => $val->email,
+                "saldo_referral"         => $val->saldo_referral,
                 "whatsapp"      => $val->phone,
                 "joined_at"     => $val->joined_at,
             ];
@@ -58,13 +60,47 @@ class Admin extends CI_Controller
 
         echo json_encode($response);
     }
-    
-    public function getAjaxUserLog(){
-        
+
+    public function getAjaxMemberReferral()
+    {
+
         $draw     = $this->input->post('draw');
         $search   = $this->input->post('search')['value'];
         $no       = $this->input->post('start');
-        
+
+        $members  = $this->M_member->getAllMemberReferral();
+
+        $arr      = [];
+        foreach ($members['records'] as $key => $val) {
+
+            $arr[$key] = [
+                "no"            => ++$no,
+                "name"          => $val->name,
+                "email"         => $val->email,
+                "referral"         => $val->referral,
+                "saldo_referral" => $val->saldo_referral,
+                "whatsapp"      => $val->phone,
+                "joined_at"     => $val->joined_at,
+            ];
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "recordsTotal" => $members['totalRecords'],
+            "recordsFiltered" => ($search != "" ? $members['totalDisplayRecords'] : $members['totalRecords']),
+            "data" => $arr
+        );
+
+        echo json_encode($response);
+    }
+
+    public function getAjaxUserLog()
+    {
+
+        $draw     = $this->input->post('draw');
+        $search   = $this->input->post('search')['value'];
+        $no       = $this->input->post('start');
+
         $members = $this->M_admin->get_allAccount();
         $arr      = [];
         foreach ($members['records'] as $key => $val) {
@@ -88,19 +124,19 @@ class Admin extends CI_Controller
         echo json_encode($response);
     }
 
-    public function getDetailMember(){
+    public function getDetailMember()
+    {
 
         $member = $this->M_member->getDetailMember($this->input->post('user_id'));
         $transaksi = $this->M_transaksi->getAllTransaksiUser(['user_id' => $this->input->post('user_id')]);
-		if (!empty($member)) {
-        
+        if (!empty($member)) {
+
             $data['member']      = $member;
             $data['transaksi']   = $transaksi;
 
             $this->load->view('admin/ajax/detail_member', $data);
-
-		} else {
-			echo "<center class='py-5'><h4>Terjadi kesalahan saat mencoba menampilkan data member!</h4></center>";
-		}
+        } else {
+            echo "<center class='py-5'><h4>Terjadi kesalahan saat mencoba menampilkan data member!</h4></center>";
+        }
     }
 }

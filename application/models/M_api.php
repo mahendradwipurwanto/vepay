@@ -238,8 +238,8 @@ class M_api extends CI_Model
         $this->db->select('a.*')
             ->from('m_promo a')
             ->where(['a.is_deleted' => 0, 'a.jenis_pengguna !=' => 2])
-            ->where('m_promo.publish >=', time())
-            ->where('m_promo.expired <=', time());
+            ->where('a.publish <=', time())
+            ->where('a.expired >=', time());
 
         $this->db->order_by('a.nama ASC');
 
@@ -511,11 +511,85 @@ class M_api extends CI_Model
 
         $model = $this->db->get()->row();
 
+        // CASHBACK
+        // get interest
+        $interest = json_decode($this->get_settingsValue('referral_interest')->value, true);
+
+        // check users referral on who
+        $referral_status = $this->checkUserReferralStatus($transaksi['user_id']);
+        $cashback_referral = null;
+        if (!is_null($referral_status)) {
+            $cashback = 0;
+            // check transaction condition on interest
+            if ($transaksi['sub_total'] > $interest['intereset_minimal']) {
+
+                $cashback = floor($transaksi['sub_total'] / $interest['intereset_transaksi']) * $interest['intereset_cashback'];
+
+                // set got cashback
+                $cashback_referral = [
+                    'user_id' => $transaksi['user_id'],
+                    'referral' => $referral_status->referral,
+                    'type' => 1, #1 cashback, 2 withdraw
+                    'transaksi_id' => $transaksi_id,
+                    'nominal' => $cashback,
+                    'interest' => json_encode($interest),
+                    'status' => 1, # cashback auto get
+                ];
+
+                $this->db->insert('tb_transaksi_referral', $cashback_referral);
+            }
+        }
+
+        $msg = json_encode([
+            'transaksi' => $model,
+            'referral' => $cashback_referral
+        ]);
+
+        discordmsg($msg);
+
         return [
             'status' => true,
             'data' => $model
         ];
     }
+
+    public function create_transaction_referral($transaksi = [])
+    {
+
+        $this->db->insert('tb_transaksi_referral', $transaksi);
+        $transaksi_id = $this->db->insert_id();
+        $status = ($this->db->affected_rows() != 1) ? false : true;
+
+        if ($status === false) {
+            return [
+                'status' => false
+            ];
+        }
+
+        $this->db->select('a.id, a.kode, a.user_id, b.name, a.rekening_tujuan, a.atas_nama, a.nominal, c.metode, a.status, a.created_at')
+            ->from('tb_transaksi_referral a')
+            ->join('tb_user b', 'a.user_id = b.user_id', 'left')
+            ->join('m_metode c', 'a.m_metode_id = c.id', 'left');
+
+        $this->db->where(['a.id' => $transaksi_id]);
+
+        $model = $this->db->get()->row();
+
+        if (!is_null($model)) {
+            $model->id = (int) $model->id;
+            $model->status = (int) $model->status;
+            $model->created_at = date("d F Y, H:i:s", $model->created_at);
+            $model->nominal = (float) $model->nominal;
+        }
+
+        discordmsg(json_encode($model));
+
+        return [
+            'status' => true,
+            'data' => $model
+        ];
+    }
+
 
     public function bayar_transaction($id = null, $transaksi = [])
     {
@@ -638,7 +712,7 @@ class M_api extends CI_Model
         $this->db->select_sum('tb_transaksi_referral.nominal')
             ->from('tb_transaksi_referral')
             ->join('tb_transaksi', 'tb_transaksi_referral.transaksi_id = tb_transaksi.id', 'inner')
-            ->where(['tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
+            ->where(['tb_transaksi.status' => 2, 'tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
 
         $model = $this->db->get()->row();
 
@@ -683,5 +757,82 @@ class M_api extends CI_Model
         }
 
         return $arr;
+    }
+
+    public function checkUserReferralStatus($user_id = null)
+    {
+        $model = $this->db->get_where('tb_referral', ['user_id' => $user_id])->row();
+
+        return $model;
+    }
+
+    public function getReferralInformation()
+    {
+        $data = [];
+
+        $interest = json_decode($this->get_settingsValue('referral_interest')->value, true);
+
+        foreach ($interest as $key => $val) {
+            $nominal = number_format($val);
+            $interest[$key] = "Rp. {$nominal}";
+        }
+
+        $data['interest'] = $interest;
+        $data['penggunaan'] = $this->get_settingsValue('penggunaan_referral')->value;
+        $data['image'] = base_url() . $this->get_settingsValue('referral_image')->value;
+        $data['title'] = $this->get_settingsValue('referral_title')->value;
+        $data['description'] = $this->get_settingsValue('referral_description')->value;
+
+        return $data;
+    }
+
+    public function setReferral($data)
+    {
+        $this->db->insert('tb_referral', $data);
+        return ($this->db->affected_rows() != 1) ? false : true;
+    }
+
+    public function getTransaksiReferral($user_id)
+    {
+        $this->db->select('
+                tb_transaksi_referral.id,
+                tb_transaksi_referral.kode,
+                tb_transaksi_referral.type,
+                tb_transaksi_referral.rekening_tujuan,
+                tb_transaksi_referral.atas_nama,
+                m_metode.metode,
+                tb_transaksi_referral.nominal,
+                tb_transaksi_referral.status,
+                tb_transaksi_referral.created_at,
+                tb_user.name
+            ')
+            ->from('tb_transaksi_referral')
+            ->join('m_metode', 'tb_transaksi_referral.m_metode_id = m_metode.id', 'left')
+            ->join('tb_user', 'tb_transaksi_referral.user_id = tb_user.user_id')
+            ->where(['tb_transaksi_referral.referral' => $user_id, 'tb_transaksi_referral.type' => 1, 'tb_transaksi_referral.is_deleted' => 0]);
+
+        $models = $this->db->get()->result();
+
+        $arr = [];
+        if (!empty($models)) {
+            foreach ($models as $key => $val) {
+                $arr[$key] = $val;
+                $arr[$key]->message = "Cashback <b>transaksi oleh {$val->name}</b>";
+            }
+        }
+
+        return $arr;
+    }
+
+    public function getUserByReferral($kode_referral = null)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_auth a');
+        $this->db->join('tb_user b', 'a.user_id = b.user_id')
+            ->where(['a.kode_referral' => $kode_referral]);
+
+        $models = $this->db->get()->row();
+
+        return $models;
     }
 }

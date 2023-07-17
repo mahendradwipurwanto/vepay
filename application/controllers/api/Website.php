@@ -63,6 +63,30 @@ class Website extends CI_Controller
         }
     }
 
+    public function ubahReferral()
+    {
+        $logo = null;
+        $splash = null;
+        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+            $path = "assets/images/";
+            $upload = $this->uploader->uploadImage($_FILES['image'], $path, 'referral-splash');
+            if ($upload == true) {
+                $logo = $upload['filename'];
+            } else {
+                $this->session->set_flashdata('notif_warning', $upload['message']);
+                redirect($this->agent->referrer());
+            }
+        }
+        
+        if ($this->M_website->ubahReferral($logo, $splash) == true) {
+            $this->session->set_flashdata('notif_success', 'Successfully changes referral information');
+            redirect(site_url('admin/pengaturan?p=referral'));
+        } else {
+            $this->session->set_flashdata('notif_warning', 'There is something wrong, when trying to changes referral information');
+            redirect($this->agent->referrer());
+        }
+    }
+
     public function ubahMailer()
     {
         if ($this->M_website->ubahMailer() == true) {

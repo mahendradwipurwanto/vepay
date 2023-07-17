@@ -87,6 +87,38 @@ class M_website extends CI_Model
 
         return true;
     }
+
+    // basic
+    public function ubahReferral($splash_image = null)
+    {
+
+        $referral_title = $this->input->post('referral_title');
+        $this->db->where('key', 'referral_title');
+        $this->db->update('tb_settings', ['value' => $referral_title]);
+
+        if(!is_null($splash_image)){
+            $this->db->where('key', 'referral_image');
+            $this->db->update('tb_settings', ['value' => $splash_image]);
+        }
+
+        $referral_description = $this->input->post('referral_description');
+        $this->db->where('key', 'referral_description');
+        $this->db->update('tb_settings', ['value' => $referral_description]);
+
+
+        $penggunaan_referral = $this->input->post('penggunaan_referral');
+        $this->db->where('key', 'penggunaan_referral');
+        $this->db->update('tb_settings', ['value' => $penggunaan_referral]);
+
+        $interest = [
+            'interest_transaksi' => (float) $this->input->post('interest_transaksi'),
+            'interest_cashback' => (float) $this->input->post('interest_cashback'),
+            'interest_minimal' => (float) $this->input->post('interest_minimal')
+        ];
+        $this->db->where('key', 'referral_interest');
+        $this->db->update('tb_settings', ['value' => json_encode($interest)]);
+        return true;
+    }
     // mailer
     public function ubahMailer()
     {

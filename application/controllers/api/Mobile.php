@@ -1227,7 +1227,6 @@ class Mobile extends RestController
 
     public function create_transaction_post()
     {
-
         $validasi = [
             'user_id' => 'required',
             'm_rate_id' => 'required',
@@ -1291,8 +1290,6 @@ class Mobile extends RestController
             'created_by' => $this->post('user_id'),
             'created_at' => time()
         ];
-
-        discordmsg(json_encode($body));
 
         $transaksi = $this->M_api->create_transaction($body_transaction, $body_detail);
 
@@ -1677,6 +1674,149 @@ class Mobile extends RestController
             $this->response([
                 'status' => false,
                 'message' => 'Anda belum memiliki teman referral'
+            ], 404);
+        }
+    }
+
+    public function referral_information_get()
+    {
+        $data = $this->M_api->getReferralInformation();
+        if (!empty($data)) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $data
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Anda belum memiliki teman referral'
+            ], 404);
+        }
+    }
+
+    public function referral_post()
+    {
+        $validasi = [
+            'user_id' => 'required',
+            'rekening_tujuan' => 'required',
+            'atas_nama' => 'required',
+            'nominal' => 'required',
+            'metode' => 'required'
+        ];
+        \GUMP::set_field_name('user_id', 'User ID');
+        \GUMP::set_field_name('rekening_tujuan', 'Rekening Tujuan');
+        \GUMP::set_field_name('atas_nama', 'Atas Nama');
+        \GUMP::set_field_name('nominal', 'Nominal');
+        \GUMP::set_field_name('metode', 'Metode');
+
+        if (validate($this->post(), $validasi)['status'] === false) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => validate($this->post(), $validasi)['data']
+            ], 422);
+        }
+
+        $referral_status = $this->M_api->checkUserReferralStatus($this->post('user_id'));
+
+        $body_transaction = [
+            'id' => rand(000000000, 999999999),
+            'kode' => generateRandomString(),
+            'user_id' => $this->post('user_id'),
+            'referral' => $referral_status->referral ?? null,
+            'type' => 2, #1 cashback, 2 withdraw
+            'rekening_tujuan' => $this->post('rekening_tujuan'),
+            'atas_nama' => $this->post('atas_nama'),
+            'm_metode_id' => $this->post('metode_id'),
+            'nominal' => $this->post('nominal'),
+            'status' => 0,
+            'created_by' => $this->post('user_id'),
+            'created_at' => time()
+        ];
+
+        $transaksi = $this->M_api->create_transaction_referral($body_transaction);
+        if (!empty($transaksi)) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $transaksi['data']
+            ], 201);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Terjadi kesalahan saat membuat transaksi'
+            ], 404);
+        }
+    }
+
+    public function set_referral_post($user_id)
+    {
+        $validasi = [
+            'kode_referral' => 'required',
+        ];
+        \GUMP::set_field_name('kode_referral', 'Kode Referral');
+
+        if (validate($this->post(), $validasi) === false) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => validate($this->post(), $validasi)
+            ], 422);
+        }
+
+        $referral = $this->M_api->getUserByReferral($this->post('kode_referral'));
+        if (!empty($referral)) {
+            $body = [
+                'user_id'                => $user_id,
+                'referral'              => $referral->user_id,
+                'created_at'             => time()
+            ];
+            $result = $this->M_api->setReferral($body);
+
+            if ($result == true) {
+                // Set the response and exit
+                // Set the response and exit
+                $this->response([
+                    'status' => true,
+                    'data' => "Berhasil set referral menggunakan kode dari user " . $referral->name
+                ], 201);
+            } else {
+                // Set the response and exit
+                $this->response([
+                    'status' => false,
+                    'data' => "Terjadi kesalahan saat mengatur referral mu"
+                ], 422);
+            }
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Kode referral tidak terdaftar'
+            ], 404);
+        }
+    }
+
+    public function referral_transaction_get($user_id)
+    {
+
+        $transaction = $this->M_api->getTransaksiReferral($user_id);
+        if (!empty($transaction)) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => true,
+                'data' => $transaction
+            ], 200);
+        } else {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Tidak ada data transaksi'
             ], 404);
         }
     }

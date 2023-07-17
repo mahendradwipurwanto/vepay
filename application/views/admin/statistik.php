@@ -90,7 +90,7 @@
 							<?php endif;?>
 						</th>
 						<td><?= $val->name;?></td>
-						<td><?= $val->total_sales;?> Pembelian</td>
+						<td><?= $val->total_sales;?> Pembelian (Rp.<?= number_format($val->total_profit);?>)</td>
 					</tr>
 					<?php $no++; endforeach;?>
 					<?php else:?>

@@ -10,65 +10,65 @@ class M_member extends CI_Model
         $this->load->model('M_auth');
     }
 
-    public function getAllMemberSelect(){
+    public function getAllMemberSelect()
+    {
         $this->db->select('*')
-        ->from('tb_auth a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->where(['a.is_deleted' => 0, 'a.role' => 2])
-        ;
+            ->from('tb_auth a')
+            ->join('tb_user b', 'a.user_id = b.user_id')
+            ->where(['a.is_deleted' => 0, 'a.role' => 2]);
 
         $models = $this->db->get()->result();
 
         return $models;
     }
 
-    public function getAllMember(){
+    public function getAllMember()
+    {
 
         $offset = $this->input->post('start');
         $limit  = $this->input->post('length'); // Rows display per page
         $order  = $this->input->post('order')[0];
-        
+
         $filter = [];
 
-        $filterEmail = $this->input->post('filterEmail');  
-        $filterName = $this->input->post('filterName');  
-        $filterNumber = $this->input->post('filterNumber');   
+        $filterEmail = $this->input->post('filterEmail');
+        $filterName = $this->input->post('filterName');
+        $filterNumber = $this->input->post('filterNumber');
 
-        if($filterEmail != null || $filterEmail != '') $filter[] = "a.email like '%{$filterEmail}%'";
-        if($filterName != null || $filterName != '') $filter[] = "b.name like '%{$filterName}%'";
-        if($filterNumber != null || $filterNumber != '') $filter[] = "b.phone like '%{$filterNumber}%'";
+        if ($filterEmail != null || $filterEmail != '') $filter[] = "a.email like '%{$filterEmail}%'";
+        if ($filterName != null || $filterName != '') $filter[] = "b.name like '%{$filterName}%'";
+        if ($filterNumber != null || $filterNumber != '') $filter[] = "b.phone like '%{$filterNumber}%'";
 
-        if($filter != null){
+        if ($filter != null) {
             $filter = implode(' AND ', $filter);
-        }  
+        }
 
         $this->db->select('a.status as auth_status, a.email, a.created_at, b.*')
-        ->from('tb_auth a')
-        ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
-        ->where(['a.role' => 2, 'a.is_deleted' => 0])
-        ;
+            ->from('tb_auth a')
+            ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
+            ->where(['a.role' => 2, 'a.is_deleted' => 0]);
 
         $this->db->where($filter);
 
-        if(!is_null($order)){
+        if (!is_null($order)) {
 
             switch ($order['column']) {
                 case 0:
                     $columnName = 'b.name';
                     break;
-                    
+
                 case 2:
                     $columnName = 'b.name';
                     break;
-                    
+
                 case 3:
                     $columnName = 'b.phone';
                     break;
-                    
+
                 case 4:
                     $columnName = 'a.created_at';
                     break;
-                
+
                 default:
                     $columnName = 'a.created_at';
                     break;
@@ -80,35 +80,38 @@ class M_member extends CI_Model
 
         $models = $this->db->get()->result();
 
-        foreach($models as $key => $val){
-            
-            $btnDetail      = '<button onclick="showMdlMemberDetail(\''.$val->user_id.'\')" class="btn btn-soft-info btn-icon btn-sm me-2 mb-1"><i class="bi-eye"></i></button>';
-            $btnPass        = '<button onclick="showMdlChangePassword(\''.$val->user_id.'\')" class="btn btn-soft-primary btn-icon btn-sm me-2 mb-1"><i class="bi-key"></i></button>';
-            $btnEmail       = '<button onclick="showMdlChangeEmail(\''.$val->user_id.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2 mb-1"><i class="bi-envelope"></i></button>';
-            $btnVerif       = '<button onclick="showMdlVerifEmail(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-warning btn-icon btn-sm me-2 mb-1"><i class="bi-check"></i></button>';
-            $btnDelete      = '<button onclick="showMdlDelete(\''.$val->user_id.'\', \''.$val->name.'\')" class="btn btn-soft-danger btn-icon btn-sm me-2 mb-1"><i class="bi-trash"></i></button>';
+        foreach ($models as $key => $val) {
+
+            $btnDetail      = '<button onclick="showMdlMemberDetail(\'' . $val->user_id . '\')" class="btn btn-soft-info btn-icon btn-sm me-2 mb-1"><i class="bi-eye"></i></button>';
+            $btnPass        = '<button onclick="showMdlChangePassword(\'' . $val->user_id . '\')" class="btn btn-soft-primary btn-icon btn-sm me-2 mb-1"><i class="bi-key"></i></button>';
+            $btnEmail       = '<button onclick="showMdlChangeEmail(\'' . $val->user_id . '\')" class="btn btn-soft-warning btn-icon btn-sm me-2 mb-1"><i class="bi-envelope"></i></button>';
+            $btnVerif       = '<button onclick="showMdlVerifEmail(\'' . $val->user_id . '\', \'' . $val->name . '\')" class="btn btn-soft-warning btn-icon btn-sm me-2 mb-1"><i class="bi-check"></i></button>';
+            $btnDelete      = '<button onclick="showMdlDelete(\'' . $val->user_id . '\', \'' . $val->name . '\')" class="btn btn-soft-danger btn-icon btn-sm me-2 mb-1"><i class="bi-trash"></i></button>';
 
             $strip_email                    = explode("@", $val->email);
 
             $name = $val->name;
 
-            if(is_null($val->name) || $val->name == ''){
-                $name = $strip_email[0].' <span class="badge bg-soft-warning">belum mengatur nama</span>';
+            $saldo_referral = number_format($this->getSaldoReferral($val->user_id));
+            $models[$key]->saldo_referral = "Rp. {$saldo_referral}";
+
+            if (is_null($val->name) || $val->name == '') {
+                $name = $strip_email[0] . ' <span class="badge bg-soft-warning">belum mengatur nama</span>';
             }
 
             $models[$key]->name             = $name;
             $models[$key]->phone            = isset($val->phone) && !is_null($val->phone) ? "+62{$val->phone}" : "<span class='badge bg-warning'>belum diatur</span>";
-    
-            if($val->auth_status == 1){
+
+            if ($val->auth_status == 1) {
                 $models[$key]->status  = '<span class="badge bg-soft-success">Aktif</span>';
-            }elseif($val->auth_status == 2){
+            } elseif ($val->auth_status == 2) {
                 $models[$key]->status  = '<span class="badge bg-soft-warning">Suspended</span>';
-            }else{
+            } else {
                 $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
             }
             $models[$key]->joined_at = date("d F Y", $val->created_at);
-            
-            $models[$key]->action = $btnDetail.$btnPass.($val->auth_status > 0 ? $btnEmail : $btnVerif).$btnDelete;
+
+            $models[$key]->action = $btnDetail . $btnPass . ($val->auth_status > 0 ? $btnEmail : $btnVerif) . $btnDelete;
         }
 
         $totalRecords = count($models);
@@ -118,12 +121,131 @@ class M_member extends CI_Model
         return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
     }
 
-    function getDetailMember($user_id = null){
+    public function getAllMemberReferral()
+    {
+        $offset = $this->input->post('start');
+        $limit  = $this->input->post('length'); // Rows display per page
+        $order  = $this->input->post('order')[0] ?? null;
+
+        $filter = [];
+
+        $filterEmail = $this->input->post('filterEmail');
+        $filterName = $this->input->post('filterName');
+        $filterNumber = $this->input->post('filterNumber');
+
+        if ($filterEmail != null || $filterEmail != '') $filter[] = "a.email like '%{$filterEmail}%'";
+        if ($filterName != null || $filterName != '') $filter[] = "b.name like '%{$filterName}%'";
+        if ($filterNumber != null || $filterNumber != '') $filter[] = "b.phone like '%{$filterNumber}%'";
+
+        if ($filter != null) {
+            $filter = implode(' AND ', $filter);
+        }
+
+        $this->db->select('a.status as auth_status, a.email, a.created_at, b.*, c.referral')
+            ->from('tb_auth a')
+            ->join('tb_user b', 'a.user_id = b.user_id', 'inner')
+            ->join('tb_referral c', 'a.user_id = c.user_id', 'inner')
+            ->where(['a.role' => 2, 'a.is_deleted' => 0]);
+
+        $this->db->where($filter);
+
+        if (!is_null($order)) {
+
+            switch ($order['column']) {
+                case 0:
+                    $columnName = 'b.name';
+                    break;
+
+                case 1:
+                    $columnName = 'b.name';
+                    break;
+
+                case 2:
+                    $columnName = 'b.phone';
+                    break;
+
+                case 4:
+                    $columnName = 'a.created_at';
+                    break;
+
+                case 5:
+                    $columnName = 'a.created_at';
+                    break;
+
+                default:
+                    $columnName = 'a.created_at';
+                    break;
+            }
+            $this->db->order_by("{$columnName} {$order['dir']}");
+        }
+
+        // $this->db->limit($limit)->offset($offset);
+
+        $models = $this->db->get()->result();
+
+        foreach ($models as $key => $val) {
+
+            $strip_email                    = explode("@", $val->email);
+
+            $name = $val->name;
+
+            $referral_nama = $this->getDetailMember($val->referral);
+            $models[$key]->referral = $referral_nama->name;
+
+            $saldo_referral = number_format($this->getSaldoReferral($val->user_id));
+            $models[$key]->saldo_referral = "Rp. {$saldo_referral}";
+
+            if (is_null($val->name) || $val->name == '') {
+                $name = $strip_email[0] . ' <span class="badge bg-soft-warning">belum mengatur nama</span>';
+            }
+
+            $models[$key]->name             = $name;
+            $models[$key]->phone            = isset($val->phone) && !is_null($val->phone) ? "+62{$val->phone}" : "<span class='badge bg-warning'>belum diatur</span>";
+
+            if ($val->auth_status == 1) {
+                $models[$key]->status  = '<span class="badge bg-soft-success">Aktif</span>';
+            } elseif ($val->auth_status == 2) {
+                $models[$key]->status  = '<span class="badge bg-soft-warning">Suspended</span>';
+            } else {
+                $models[$key]->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
+            }
+            $models[$key]->joined_at = date("d F Y", $val->created_at);
+
+            // $models[$key]->action = $btnDetail . $btnPass . ($val->auth_status > 0 ? $btnEmail : $btnVerif) . $btnDelete;
+        }
+
+        $totalRecords = count($models);
+
+        $models = array_slice($models, $offset, $limit);
+
+        return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
+    }
+
+    public function checkUserReferralStatus($user_id = null)
+    {
+        $model = $this->db->get_where('tb_referral', ['user_id' => $user_id])->row();
+
+        return $model;
+    }
+
+    public function getSaldoReferral($user_id)
+    {
+        $this->db->select_sum('tb_transaksi_referral.nominal')
+            ->from('tb_transaksi_referral')
+            ->join('tb_transaksi', 'tb_transaksi_referral.transaksi_id = tb_transaksi.id', 'inner')
+            ->where(['tb_transaksi.status' => 2, 'tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
+
+        $model = $this->db->get()->row();
+
+        return is_null($model->nominal) ? 0 : $model->nominal;
+    }
+
+    function getDetailMember($user_id = null)
+    {
         $this->db->select('a.user_id, a.email, a.online, a.device, a.log_time, a.created_at, a.status as auth_status, b.name, b.gender, b.phone, b.address')
-        ->from('tb_auth a')
-        ->join('tb_user b', 'a.user_id = b.user_id')
-        ->where(['a.user_id' => $user_id])
-        ;
+            ->from('tb_auth a')
+            ->join('tb_user b', 'a.user_id = b.user_id')
+            ->where(['a.user_id' => $user_id]);
 
         $model = $this->db->get()->row();
         $strip_email        = explode("@", $model->email);
@@ -131,18 +253,19 @@ class M_member extends CI_Model
         $model->whatsapp    = isset($model->phone) && !is_null($model->phone) ? "+62{$model->phone}" : "<span class='badge bg-warning'>belum diatur</span>";
         $model->gender      = isset($model->gender) && !is_null($model->gender) ? $model->gender : "<span class='badge bg-warning'>belum diatur</span>";
         $model->address     = isset($model->address) && !is_null($model->address) ? $model->address : "<span class='badge bg-warning'>belum diatur</span>";
-        if($model->auth_status == 1){
+        if ($model->auth_status == 1) {
             $model->status  = '<span class="badge bg-soft-success">Aktif</span>';
-        }elseif($model->auth_status == 2){
+        } elseif ($model->auth_status == 2) {
             $model->status  = '<span class="badge bg-soft-warning">Suspended</span>';
-        }else{
+        } else {
             $model->status  = '<span class="badge bg-soft-secondary">Belum verifikasi email</span>';
         }
         $model->joined_at = date("d F Y - H:i", $model->created_at);
         return $model;
     }
 
-    function addMember(){
+    function addMember()
+    {
 
         // TB AUTH
 
@@ -217,7 +340,8 @@ class M_member extends CI_Model
         }
     }
 
-    function changeMemberPassword(){
+    function changeMemberPassword()
+    {
         $user_id = $this->input->post('id');
         $password = $this->input->post('pass');
 
@@ -226,7 +350,8 @@ class M_member extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    function changeMemberEmail(){
+    function changeMemberEmail()
+    {
         $user_id = $this->input->post('id');
         $email = $this->input->post('email');
 
@@ -235,7 +360,8 @@ class M_member extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    function verifMember(){
+    function verifMember()
+    {
         $user_id = $this->input->post('id');
 
         $this->db->where(['user_id' => $user_id, 'type' => 1]);
@@ -246,7 +372,8 @@ class M_member extends CI_Model
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 
-    function deleteMember(){
+    function deleteMember()
+    {
         $user_id = $this->input->post('id');
 
         $this->db->where(['user_id' => $user_id]);

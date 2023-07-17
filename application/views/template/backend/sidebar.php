@@ -59,11 +59,6 @@
   								Transaksi</a>
   						</li>
 
-  						<li class="nav-item" id="tour-transaksi-referral">
-  							<a class="nav-link <?= ($this->uri->segment(2) == "transaksi-referral" ? "active" : "") ?>" href="<?= site_url('admin/transaksi-referral'); ?>"><i class="bi bi-wallet nav-icon"></i>
-  								Transaksi Referral</a>
-  						</li>
-
   						<li class="nav-item my-2 my-lg-5"></li>
 
   						<li class="nav-item">
@@ -77,10 +72,25 @@
   							<a class="nav-link <?= ($this->uri->segment(2) == "vcc-member" ? "active" : "") ?>" href="<?= site_url('admin/vcc-member'); ?>"><i class="bi bi-credit-card nav-icon"></i>
   								VCC</a>
   						</li>
-  						<!-- <li class="nav-item" id="tour-referral">
-  							<a class="nav-link <?= ($this->uri->segment(2) == "referral" ? "active" : "") ?>" href="<?= site_url('admin/referral'); ?>"><i class="bi bi-command nav-icon"></i>
-  								Referral</a>
-  						</li> -->
+
+  						<li class="nav-item my-2 my-lg-5"></li>
+
+  						<li class="nav-item">
+  							<span class="nav-subtitle">Referral</span>
+  						</li>
+  						<li class="nav-item" id="tour-referral">
+  							<a class="nav-link <?= ($this->uri->segment(1) == "referral" && $this->uri->segment(2) == "member" ? "active" : "") ?>" href="<?= site_url('referral/member'); ?>"><i class="bi bi-command nav-icon"></i>
+  								Data Member</a>
+  						</li>
+  						<li class="nav-item" id="tour-transaksi-referral">
+  							<a class="nav-link <?= ($this->uri->segment(1) == "referral" && $this->uri->segment(2) == "transaksi" ? "active" : "") ?>" href="<?= site_url('referral/transaksi'); ?>"><i class="bi bi-wallet nav-icon"></i>
+  								Transaksi</a>
+  						</li>
+
+  						<li class="nav-item" id="tour-transaksi-referral">
+  							<a class="nav-link <?= ($this->uri->segment(1) == "referral" && $this->uri->segment(2) == "pengaturan" ? "active" : "") ?>" href="<?= site_url('referral/pengaturan'); ?>"><i class="bi bi-gear-wide-connected nav-icon"></i>
+  								Pengaturan</a>
+  						</li>
 
   						<li class="nav-item my-2 my-lg-5"></li>
 
@@ -93,7 +103,7 @@
   						</li>
   						<li class="nav-item" id="tour-faq">
   							<a class="nav-link <?= ($this->uri->segment(2) == "faq" ? "active" : "") ?>" href="<?= site_url('master/faq'); ?>"><i class="bi bi-question-square nav-icon"></i>
-  								Faq</a>
+  								FAQ</a>
   						</li>
   						<li class="nav-item" id="tour-produk">
   							<a class="nav-link <?= ($this->uri->segment(2) == "produk" ? "active" : "") ?>" href="<?= site_url('master/produk'); ?>"><i class="bi bi-box-seam nav-icon"></i>

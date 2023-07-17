@@ -2,15 +2,13 @@
 	<div class="col-12">
 		<!-- List Striped -->
 		<!-- Step Form -->
-		<form class="js-step-form"
-			data-hs-step-form-options='{"progressSelector": "#basicVerStepFormProgress","stepsSelector": "#basicVerStepFormContent"}'>
+		<form class="js-step-form" data-hs-step-form-options='{"progressSelector": "#basicVerStepFormProgress","stepsSelector": "#basicVerStepFormContent"}'>
 			<div class="row">
 				<div class="col-lg-3">
 					<!-- Step -->
 					<ul id="basicVerStepFormProgress" class="js-step-progress step step-icon-sm mb-7">
 						<li class="step-item">
-							<a class="step-content-wrapper" href="javascript:;"
-								data-hs-step-form-next-options='{"targetSelector": "#dataPribadi"}'>
+							<a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options='{"targetSelector": "#dataPribadi"}'>
 								<span class="step-icon step-icon-soft-dark">1</span>
 								<div class="step-content pb-5">
 									<span class="step-title mt-2">Data pribadi</span>
@@ -19,11 +17,28 @@
 						</li>
 
 						<li class="step-item">
-							<a class="step-content-wrapper" href="javascript:;"
-								data-hs-step-form-next-options='{"targetSelector": "#riwayatTransaksi"}'>
-								<span class="step-icon step-icon-soft-dark stepy-last">2</span>
+							<a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options='{"targetSelector": "#riwayatTransaksi"}'>
+								<span class="step-icon step-icon-soft-dark">2</span>
 								<div class="step-content pb-5">
 									<span class="step-title mt-2">Riwayat transaksi</span>
+								</div>
+							</a>
+						</li>
+
+						<li class="step-item">
+							<a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options='{"targetSelector": "#daftarReferral"}'>
+								<span class="step-icon step-icon-soft-dark">3</span>
+								<div class="step-content pb-5">
+									<span class="step-title mt-2">Daftar referral</span>
+								</div>
+							</a>
+						</li>
+
+						<li class="step-item">
+							<a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options='{"targetSelector": "#riwayatTransaksiReferral"}'>
+								<span class="step-icon step-icon-soft-dark stepy-last">4</span>
+								<div class="step-content pb-5">
+									<span class="step-title mt-2">Riwayat transaksi Referral</span>
 								</div>
 							</a>
 						</li>
@@ -59,7 +74,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->status;?></span>
+											<span><?= $member->status; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -73,7 +88,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->email;?></span>
+											<span><?= $member->email; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -87,7 +102,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->joined_at;?></span>
+											<span><?= $member->joined_at; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -101,7 +116,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->name;?></span>
+											<span><?= $member->name; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -115,7 +130,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->whatsapp;?></span>
+											<span><?= $member->whatsapp; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -129,7 +144,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->gender;?></span>
+											<span><?= $member->gender; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -143,7 +158,7 @@
 										<!-- End Col -->
 
 										<div class="col-sm-8 mb-2 mb-sm-0">
-											<span><?= $member->address;?></span>
+											<span><?= $member->address; ?></span>
 										</div>
 										<!-- End Col -->
 									</div>
@@ -161,29 +176,29 @@
 										member</span>
 								</li>
 								<div style="max-height: 300px; overflow-y: auto;">
-									<?php if(!empty($transaksi)):?>
-									<?php foreach($transaksi as $key => $val):?>
-										<li class="list-group-item p-3">
-											<div class="row">
-												<div class="col-sm-8 mb-2 mb-sm-0">
-													<span><?= $val->produk;?></span>
-												</div>
-												<!-- End Col -->
-	
-												<div class="col-sm-3 mb-2 mb-sm-0">
-													<span class="texat-secondary small"><?= $val->tanggal;?></span>
-												</div>
-												<!-- End Col -->
+									<?php if (!empty($transaksi)) : ?>
+										<?php foreach ($transaksi as $key => $val) : ?>
+											<li class="list-group-item p-3">
+												<div class="row">
+													<div class="col-sm-8 mb-2 mb-sm-0">
+														<span><?= $val->produk; ?></span>
+													</div>
+													<!-- End Col -->
 
-												<div class="col-sm-1 mb-2 mb-sm-0">
-													<a href="<?= site_url('transaksi/detail/'.$val->id);?>" target="_blank" class="btn btn-white btn-xs"><i class="bi bi-box-arrow-up-right"></i></a>
+													<div class="col-sm-3 mb-2 mb-sm-0">
+														<span class="texat-secondary small"><?= $val->tanggal; ?></span>
+													</div>
+													<!-- End Col -->
+
+													<div class="col-sm-1 mb-2 mb-sm-0">
+														<a href="<?= site_url('transaksi/detail/' . $val->id); ?>" target="_blank" class="btn btn-white btn-xs"><i class="bi bi-box-arrow-up-right"></i></a>
+													</div>
+													<!-- End Col -->
 												</div>
-												<!-- End Col -->
-											</div>
-											<!-- End Row -->
-										</li>
-									<?php endforeach; ?>
-									<?php else:?>
+												<!-- End Row -->
+											</li>
+										<?php endforeach; ?>
+									<?php else : ?>
 										<li class="list-group-item p-3">
 											<div class="row">
 												<div class="col text-center">
@@ -193,7 +208,96 @@
 											</div>
 											<!-- End Row -->
 										</li>
-									<?php endif;?>
+									<?php endif; ?>
+								</div>
+							</ul>
+						</div>
+
+						<div id="daftarReferral" class="" style="display: none; min-height: 15rem;">
+							<!-- List Striped -->
+							<ul class="list-group list-group-lg">
+								<li class="list-group-item p-2 active">
+									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Daftar referral member</span>
+								</li>
+								<div style="max-height: 300px; overflow-y: auto;">
+									<?php if (!empty($referral_friends)) : ?>
+										<?php foreach ($referral_friends as $key => $val) : ?>
+											<li class="list-group-item p-3">
+												<div class="row">
+													<div class="col-sm-8 mb-2 mb-sm-0">
+														<span><?= $val->produk; ?></span>
+													</div>
+													<!-- End Col -->
+
+													<div class="col-sm-3 mb-2 mb-sm-0">
+														<span class="texat-secondary small"><?= $val->tanggal; ?></span>
+													</div>
+													<!-- End Col -->
+
+													<div class="col-sm-1 mb-2 mb-sm-0">
+														<a href="<?= site_url('transaksi/detail/' . $val->id); ?>" target="_blank" class="btn btn-white btn-xs"><i class="bi bi-box-arrow-up-right"></i></a>
+													</div>
+													<!-- End Col -->
+												</div>
+												<!-- End Row -->
+											</li>
+										<?php endforeach; ?>
+									<?php else : ?>
+										<li class="list-group-item p-3">
+											<div class="row">
+												<div class="col text-center">
+													<span class="h6">Belum ada transaksi</span>
+												</div>
+												<!-- End Col -->
+											</div>
+											<!-- End Row -->
+										</li>
+									<?php endif; ?>
+								</div>
+							</ul>
+						</div>
+
+						<div id="riwayatTransaksiReferral" class="" style="display: none; min-height: 15rem;">
+							<!-- List Striped -->
+							<ul class="list-group list-group-lg">
+								<li class="list-group-item p-2 active">
+									<span style="margin-top: -20px; margin-left: 5px" class="fw-bold">Riwayat transaksi
+										member</span>
+								</li>
+								<div style="max-height: 300px; overflow-y: auto;">
+									<?php if (!empty($transaksi_referral)) : ?>
+										<?php foreach ($transaksi_referral as $key => $val) : ?>
+											<li class="list-group-item p-3">
+												<div class="row">
+													<div class="col-sm-8 mb-2 mb-sm-0">
+														<span><?= $val->produk; ?></span>
+													</div>
+													<!-- End Col -->
+
+													<div class="col-sm-3 mb-2 mb-sm-0">
+														<span class="texat-secondary small"><?= $val->tanggal; ?></span>
+													</div>
+													<!-- End Col -->
+
+													<div class="col-sm-1 mb-2 mb-sm-0">
+														<a href="<?= site_url('transaksi/detail/' . $val->id); ?>" target="_blank" class="btn btn-white btn-xs"><i class="bi bi-box-arrow-up-right"></i></a>
+													</div>
+													<!-- End Col -->
+												</div>
+												<!-- End Row -->
+											</li>
+										<?php endforeach; ?>
+									<?php else : ?>
+										<li class="list-group-item p-3">
+											<div class="row">
+												<div class="col text-center">
+													<span class="h6">Belum ada transaksi</span>
+												</div>
+												<!-- End Col -->
+											</div>
+											<!-- End Row -->
+										</li>
+									<?php endif; ?>
 								</div>
 							</ul>
 						</div>
@@ -232,5 +336,4 @@
 			$el.parentElement.appendChild($successMessageTempalte)
 		}
 	})
-
 </script>
