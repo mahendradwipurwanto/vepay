@@ -257,8 +257,8 @@ class M_api extends CI_Model
 
         $this->db->select('a.*')
             ->from('m_promo a')->where(['a.is_deleted' => 0])
-            ->where('m_promo.publish >=', time())
-            ->where('m_promo.expired <=', time());
+            ->where('a.publish <=', time())
+            ->where('a.expired >=', time());
 
         if (!is_null($kode)) {
             $this->db->where('a.kode', $kode);
@@ -702,9 +702,22 @@ class M_api extends CI_Model
 
     public function updateKodeReferral($data, $user_id)
     {
+
+        $cek = $this->db->get_where('tb_auth', ['kode_referral' => $data['kode_referral']])->num_rows();
+
+        if($cek > 0){
+            return [
+                'status' => false,
+                'message' => "Kode referral sudah digunakan"
+            ];
+        }
+
         $this->db->where('user_id', $user_id);
         $this->db->update('tb_auth', $data);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return [
+            'status' => ($this->db->affected_rows() != 1) ? false : true,
+            'message' => 'Kode referral berhasil diubah'
+        ];
     }
 
     public function getSaldoReferral($user_id)
@@ -722,6 +735,14 @@ class M_api extends CI_Model
     public function getDetailReferral($user_id)
     {
         $member = $this->getDetailMember($user_id);
+        // check users referral on who
+        $referral_status = $this->checkUserReferralStatus($user_id);
+
+        $msg = null;
+
+        if(!is_null($referral_status)){
+            $msg = "Kamu bergabung dengan kode referral dari {$referral_status->name}";
+        }
 
         $data['user_id'] = $member->user_id;
         $data['name'] = $member->name;
@@ -730,6 +751,7 @@ class M_api extends CI_Model
         $data['kode_referral'] = $member->kode_referral;
         $data['saldo_referral'] = $this->getSaldoReferral($user_id);
         $data['cara_penggunaan'] = $this->get_settingsValue('penggunaan_referral')->value;
+        $data['status'] = $msg;
         return $data;
     }
 
@@ -761,7 +783,12 @@ class M_api extends CI_Model
 
     public function checkUserReferralStatus($user_id = null)
     {
-        $model = $this->db->get_where('tb_referral', ['user_id' => $user_id])->row();
+        $this->db->select('tb_referral.*, tb_user.name')
+        ->from('tb_referral')
+        ->join('tb_user', 'tb_referral.referral = tb_user.user_id', 'inner')
+        ->where(['tb_referral.user_id' => $user_id]);
+
+        $model = $this->db->get()->row();
 
         return $model;
     }
@@ -782,14 +809,31 @@ class M_api extends CI_Model
         $data['image'] = base_url() . $this->get_settingsValue('referral_image')->value;
         $data['title'] = $this->get_settingsValue('referral_title')->value;
         $data['description'] = $this->get_settingsValue('referral_description')->value;
+        $data['title_referral_intro'] = $this->get_settingsValue('title_referral_intro')->value;
+        $data['desc_referral_intro'] = $this->get_settingsValue('desc_referral_intro')->value;
+        $data['referral_withdraw_minimum'] = (float) $this->get_settingsValue('referral_withdraw_minimum')->value;
 
         return $data;
     }
 
     public function setReferral($data)
     {
+        
+        $cek = $this->db->get_where('tb_referral', ['user_id' => $data['user_id'], 'referral' => $data['referral']])->num_rows();
+
+        if($cek > 0){
+            return [
+                'status' => false,
+                'message' => "Anda telah melakukan referral dengan kode ini"
+            ];
+        }
+
         $this->db->insert('tb_referral', $data);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return [
+            'status' => ($this->db->affected_rows() != 1) ? false : true,
+            'message' => 'Kode referral berhasil disimpan'
+        ];
+
     }
 
     public function getTransaksiReferral($user_id)

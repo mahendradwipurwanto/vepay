@@ -48,6 +48,8 @@ class Referral extends CI_Controller
         $data['referral_image'] = $this->M_admin->get_settingsValue('referral_image');
         $data['referral_title'] = $this->M_admin->get_settingsValue('referral_title');
         $data['referral_description'] = $this->M_admin->get_settingsValue('referral_description');
+        $data['referral_withdraw_minimum'] = $this->M_admin->get_settingsValue('referral_withdraw_minimum');
+        $data['desc_referral_intro'] = $this->M_admin->get_settingsValue('desc_referral_intro');
         if ($this->agent->is_mobile()) {
             $this->templatemobile->view('admin/pengaturan/referral', $data);
         } else {

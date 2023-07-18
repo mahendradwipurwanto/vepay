@@ -117,6 +117,14 @@ class M_website extends CI_Model
         ];
         $this->db->where('key', 'referral_interest');
         $this->db->update('tb_settings', ['value' => json_encode($interest)]);
+
+        $referral_withdraw_minimum = $this->input->post('referral_withdraw_minimum');
+        $this->db->where('key', 'referral_withdraw_minimum');
+        $this->db->update('tb_settings', ['value' => $referral_withdraw_minimum]);
+
+        $desc_referral_intro = $this->input->post('desc_referral_intro');
+        $this->db->where('key', 'desc_referral_intro');
+        $this->db->update('tb_settings', ['value' => $desc_referral_intro]);
         return true;
     }
     // mailer

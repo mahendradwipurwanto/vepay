@@ -146,4 +146,86 @@ class Transaksi extends CI_Controller
         //     redirect($this->agent->referrer());
         // }
     }
+
+    public function verificationPaymentReferral()
+    {
+        // Get the base64 string
+        $base64_string = $this->input->post('base64');
+        $id = $this->input->post('id');
+        $file_name = null;
+        
+        if(!is_null($base64_string)){
+            $image_parts = explode(';base64,', $base64_string);
+            $image_type_aux = explode('image/', $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $namaFile = "bukti-verif-{$id}.{$image_type}";
+
+            $path = FCPATH . "berkas/transaction_referral/{$id}";
+
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $file = "{$path}/{$namaFile}";
+            file_put_contents($file, $image_base64);
+        }
+
+        return $this->M_transaksi->verificationPaymentReferral("berkas/transaction_referral/{$id}/{$namaFile}");
+        // if ($this->M_transaksi->verificationPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly verification payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to verification payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function deletePaymentReferral()
+    {
+        return $this->M_transaksi->deletePaymentReferral();
+        // if ($this->M_transaksi->cancelPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly cancel payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to cancel payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function rejectedPaymentReferral()
+    {
+        return $this->M_transaksi->rejectedPaymentReferral();
+        // if ($this->M_transaksi->rejectedPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly rejected payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to rejected payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function pendingPaymentReferral()
+    {
+        return $this->M_transaksi->pendingPaymentReferral();
+        // if ($this->M_transaksi->pendingPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly pending payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to pending payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
+
+    public function cancelPaymentReferral()
+    {
+        return $this->M_transaksi->cancelPaymentReferral();
+        // if ($this->M_transaksi->cancelPayment() == true) {
+        //     $this->session->set_flashdata('notif_success', 'Succesfuly cancel payment ');
+        //     redirect(site_url('admin/payments'));
+        // } else {
+        //     $this->session->set_flashdata('notif_warning', 'There is a problem when trying to cancel payment, try again later');
+        //     redirect($this->agent->referrer());
+        // }
+    }
 }

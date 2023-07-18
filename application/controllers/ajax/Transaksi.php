@@ -60,6 +60,37 @@ class Transaksi extends CI_Controller
         echo json_encode($response);
     }
 
+    public function getAjaxTransaksiReferral()
+    {
+        $transaksi  = $this->M_transaksi->getAllTransaksiReferral();
+        $draw     = $this->input->post('draw');
+        $search   = $this->input->post('search')['value'];
+        $arr      = [];
+        $no       = $this->input->post('start');
+
+        foreach ($transaksi['records'] as $key => $val) {
+            $arr[$key] = [
+                "no"            => ++$no,
+                "action"        => $val->action,
+                "kode"          => $val->kode,
+                "type"          => $val->type,
+                "name"          => $val->name,
+                "tanggal"       => $val->tanggal,
+                "status"        => $val->status,
+                "nominal"         => $val->nominal,
+            ];
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "recordsTotal" => $transaksi['totalRecords'],
+            "recordsFiltered" => ($search != "" ? $transaksi['totalDisplayRecords'] : $transaksi['totalRecords']),
+            "data" => $arr
+        );
+
+        echo json_encode($response);
+    }
+
     public function getDetailProduct()
     {
         $product = $this->M_master->getDetailProduct($this->input->post('product_id'));
@@ -101,12 +132,20 @@ class Transaksi extends CI_Controller
         $this->load->view('admin/ajax/edit_metode', $data);
     }
 
-    public function getDetailTrans(){
+    public function getDetailTrans()
+    {
         $transaksi                      = $this->M_transaksi->getDetailTransaksi($this->input->post('transaksi_id'));
+        $data['transaksi']              = $transaksi;
+        
+        $this->load->view('admin/ajax/detail_transaksi', $data);
+    }
+    
+    public function getDetailTransReferral()
+    {
+        $transaksi                      = $this->M_transaksi->getDetailTransaksiReferral($this->input->post('transaksi_id'));
 
         $data['transaksi']              = $transaksi;
 
-        $this->load->view('admin/ajax/detail_transaksi', $data);
-
+        $this->load->view('admin/ajax/detail_transaksi_referral', $data);
     }
 }

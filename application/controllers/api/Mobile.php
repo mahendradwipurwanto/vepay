@@ -1617,8 +1617,7 @@ class Mobile extends RestController
                 'kode_referral'          => $this->put('kode_referral'),
             ];
             $result = $this->M_api->updateKodeReferral($body, $user_id);
-
-            if ($result == true) {
+            if ($result['status'] == true) {
                 // Set the response and exit
                 $this->response([
                     'status' => true,
@@ -1627,9 +1626,9 @@ class Mobile extends RestController
             } else {
                 // Set the response and exit
                 $this->response([
-                    'status' => true,
-                    'data' => $this->M_api->getDetailMember($user_id)
-                ], 200);
+                    'status' => false,
+                    'data' => $result['message']
+                ], 422);
             }
         } else {
             // Set the response and exit
@@ -1778,7 +1777,7 @@ class Mobile extends RestController
             ];
             $result = $this->M_api->setReferral($body);
 
-            if ($result == true) {
+            if ($result['status'] == true) {
                 // Set the response and exit
                 // Set the response and exit
                 $this->response([
@@ -1789,7 +1788,7 @@ class Mobile extends RestController
                 // Set the response and exit
                 $this->response([
                     'status' => false,
-                    'data' => "Terjadi kesalahan saat mengatur referral mu"
+                    'data' => $result['message']
                 ], 422);
             }
         } else {

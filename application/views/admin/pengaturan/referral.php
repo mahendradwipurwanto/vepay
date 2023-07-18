@@ -48,9 +48,19 @@
                                 </div>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label" for="inputWebDesc">Minimum penarikan saldo Referral <small class="text-danger">*</small></label>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputMailerMode">Rp</span>
+                                    <input type="number" id="inputWebsiteTitle" class="form-control form-control-sm" name="referral_withdraw_minimum" value="<?= isset($referral_withdraw_minimum) ? $referral_withdraw_minimum : 0; ?>" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label" for="inputWebDesc">Referral Description <small class="text-danger">*</small></label>
                                 <textarea type="text" id="inputWebDesc" class="form-control editor" rows="4" name="referral_description" placeholder="Referral Description" required><?= $referral_description; ?></textarea>
-                                <small class="text-secondary">This is use on metatag as well</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="inputWebDesc">Referral Description Intro <small class="text-danger">*</small></label>
+                                <textarea type="text" id="inputWebDescReferral" class="form-control editor" rows="4" name="desc_referral_intro" placeholder="Referral Description" required><?= $desc_referral_intro; ?></textarea>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">

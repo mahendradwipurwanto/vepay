@@ -268,7 +268,37 @@
 							<!-- End Col -->
 
 							<div class="col-sm-8 mb-2 mb-sm-0">
-								<span><?= $transaksi->phone;?></span>
+								<span><?= $transaksi->phone == "" ? '<span class="badge bg-warning">Belum mengatur nomor</span>' : $transaksi->phone;?></span>
+							</div>
+							<!-- End Col -->
+						</div>
+						<!-- End Row -->
+					</li>
+					<?php if(!is_null($transaksi->m_promo_id)):?>
+					<li class="list-group-item p-3">
+						<div class="row">
+							<div class="col-sm-4 mb-2 mb-sm-0">
+								<span class="h6">Diskon Pembelian</span>
+							</div>
+							<!-- End Col -->
+
+							<div class="col-sm-8 mb-2 mb-sm-0">
+								<span>Rp. <?= number_format($transaksi->diskon);?></span>
+							</div>
+							<!-- End Col -->
+						</div>
+						<!-- End Row -->
+					</li>
+					<?php endif;?>
+					<li class="list-group-item p-3">
+						<div class="row">
+							<div class="col-sm-4 mb-2 mb-sm-0">
+								<span class="h6">Total pembelian</span>
+							</div>
+							<!-- End Col -->
+
+							<div class="col-sm-8 mb-2 mb-sm-0">
+								<span>Rp <?= number_format($transaksi->sub_total);?> / $<?= number_format($transaksi->jumlah);?></span>
 							</div>
 							<!-- End Col -->
 						</div>

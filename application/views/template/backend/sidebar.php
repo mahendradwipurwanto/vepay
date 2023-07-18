@@ -55,7 +55,7 @@
   						</li>
 
   						<li class="nav-item" id="tour-transaksi">
-  							<a class="nav-link <?= ($this->uri->segment(2) == "transaksi" ? "active" : "") ?>" href="<?= site_url('admin/transaksi'); ?>"><i class="bi bi-wallet2 nav-icon"></i>
+  							<a class="nav-link <?= ($this->uri->segment(1) == "admin" && $this->uri->segment(2) == "transaksi" ? "active" : "") ?>" href="<?= site_url('admin/transaksi'); ?>"><i class="bi bi-wallet2 nav-icon"></i>
   								Transaksi</a>
   						</li>
 
@@ -132,7 +132,7 @@
   							<span class="nav-subtitle">Pengaturan</span>
   						</li>
   						<li class="nav-item" id="tour-website">
-  							<a class="nav-link <?= ($this->uri->segment(2) == "pengaturan" ? "active" : "") ?>" href="<?= site_url('admin/pengaturan'); ?>"><i class="bi bi-sliders nav-icon"></i>
+  							<a class="nav-link <?= ($this->uri->segment(1) == "admin" && $this->uri->segment(2) == "pengaturan" ? "active" : "") ?>" href="<?= site_url('admin/pengaturan'); ?>"><i class="bi bi-sliders nav-icon"></i>
   								Website</a>
   						</li>
   					</ul>
