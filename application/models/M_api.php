@@ -471,7 +471,7 @@ class M_api extends CI_Model
 
     public function create_transaction($transaksi = [], $detail = [])
     {
-
+        $params = $transaksi;
         $this->db->insert('tb_transaksi', $transaksi);
         $transaksi_id = $this->db->insert_id();
         $status = ($this->db->affected_rows() != 1) ? false : true;
@@ -516,27 +516,37 @@ class M_api extends CI_Model
         $interest = json_decode($this->get_settingsValue('referral_interest')->value, true);
 
         // check users referral on who
-        $referral_status = $this->checkUserReferralStatus($transaksi['user_id']);
+        $referral_status = $this->checkUserReferralStatus($params['user_id']);
         $cashback_referral = null;
         if (!is_null($referral_status)) {
             $cashback = 0;
             // check transaction condition on interest
-            if ($transaksi['sub_total'] > $interest['intereset_minimal']) {
-
-                $cashback = floor($transaksi['sub_total'] / $interest['intereset_transaksi']) * $interest['intereset_cashback'];
+            if ($params['sub_total'] > $interest['interest_minimal']) {
+                $cashback = floor($params['sub_total'] / $interest['interest_transaksi']) * $interest['interest_cashback'];
 
                 // set got cashback
                 $cashback_referral = [
-                    'user_id' => $transaksi['user_id'],
+                    'kode' => generateRandomString(),
+                    'user_id' => $params['user_id'],
                     'referral' => $referral_status->referral,
                     'type' => 1, #1 cashback, 2 withdraw
                     'transaksi_id' => $transaksi_id,
                     'nominal' => $cashback,
-                    'interest' => json_encode($interest),
-                    'status' => 1, # cashback auto get
+                    'interest' => json_encode($interest['interest_minimal']),
+                    'status' => 1, # cashback auto get,
+                    'created_at' => time(),
+                    'created_by' => $params['user_id']
                 ];
-
                 $this->db->insert('tb_transaksi_referral', $cashback_referral);
+            }
+        }
+
+        if(!is_null($params['m_promo_id'])){
+            $quota = $this->db->get_where('m_promo', ['id' => $params['m_promo_id']])->row();
+            if(!is_null($quota)){
+                $new_quota = $quota->quota-1;
+                $this->db->update('id', $params['m_promo_id']);
+                $this->db->update('m_promo', ['quota' => $new_quota]);
             }
         }
 
@@ -749,7 +759,7 @@ class M_api extends CI_Model
         $data['email'] = $member->email;
         $data['phone'] = $member->phone;
         $data['kode_referral'] = $member->kode_referral;
-        $data['saldo_referral'] = $this->getSaldoReferral($user_id);
+        $data['saldo_referral'] = (float) $this->getSaldoReferral($user_id);
         $data['cara_penggunaan'] = $this->get_settingsValue('penggunaan_referral')->value;
         $data['status'] = $msg;
         return $data;
@@ -785,11 +795,10 @@ class M_api extends CI_Model
     {
         $this->db->select('tb_referral.*, tb_user.name')
         ->from('tb_referral')
-        ->join('tb_user', 'tb_referral.referral = tb_user.user_id', 'inner')
+        ->join('tb_user', 'tb_referral.referral = tb_user.user_id', 'left')
         ->where(['tb_referral.user_id' => $user_id]);
 
         $model = $this->db->get()->row();
-
         return $model;
     }
 
@@ -811,6 +820,7 @@ class M_api extends CI_Model
         $data['description'] = $this->get_settingsValue('referral_description')->value;
         $data['title_referral_intro'] = $this->get_settingsValue('title_referral_intro')->value;
         $data['desc_referral_intro'] = $this->get_settingsValue('desc_referral_intro')->value;
+        $data['referral_desc_info'] = $this->get_settingsValue('referral_desc_info')->value;
         $data['referral_withdraw_minimum'] = (float) $this->get_settingsValue('referral_withdraw_minimum')->value;
 
         return $data;

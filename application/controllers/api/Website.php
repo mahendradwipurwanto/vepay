@@ -68,7 +68,7 @@ class Website extends CI_Controller
         $splash = null;
         if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
             $path = "assets/images/";
-            $upload = $this->uploader->uploadImage($_FILES['image'], $path, 'referral-splash');
+            $upload = $this->uploader->uploadImage($_FILES['image'], $path, time());
             if ($upload == true) {
                 $splash = $upload['filename'];
             } else {

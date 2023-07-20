@@ -62,6 +62,10 @@
                                 <label class="form-label" for="inputWebDesc">Referral Description Intro <small class="text-danger">*</small></label>
                                 <textarea type="text" id="inputWebDescReferral" class="form-control editor" rows="4" name="desc_referral_intro" placeholder="Referral Description" required><?= $desc_referral_intro; ?></textarea>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="inputWebDesc">Referral Description Info <small class="text-danger">*</small></label>
+                                <textarea type="text" id="inputWebDescReferralInfo" class="form-control editor" rows="4" name="referral_desc_info" placeholder="Referral Description" required><?= $referral_desc_info; ?></textarea>
+                            </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <div class="mb-3">

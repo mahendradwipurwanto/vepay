@@ -31,7 +31,7 @@
   						<img class="navbar-brand-logo" src="<?= base_url(); ?><?= $web_logo; ?>" alt="Logo">
   					</a>
   					<a class="navbar-brand-badge">
-  						<span class="badge bg-soft-primary text-primary ms-2">v1.3.0</span>
+  						<span class="badge bg-soft-primary text-primary ms-2">v1.3.2</span>
   					</a>
   				</div>
   				<!-- End Default Logo -->
@@ -65,7 +65,7 @@
   							<span class="nav-subtitle">Member</span>
   						</li>
   						<li class="nav-item" id="tour-member">
-  							<a class="nav-link <?= ($this->uri->segment(2) == "member" ? "active" : "") ?>" href="<?= site_url('admin/member'); ?>"><i class="bi bi-people nav-icon"></i>
+  							<a class="nav-link <?= ($this->uri->segment(1) == "admin" && $this->uri->segment(2) == "member" ? "active" : "") ?>" href="<?= site_url('admin/member'); ?>"><i class="bi bi-people nav-icon"></i>
   								Member</a>
   						</li>
   						<li class="nav-item" id="tour-vcc">

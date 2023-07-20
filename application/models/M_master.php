@@ -340,6 +340,19 @@ class M_master extends CI_Model
 
     public function editPromo($image = null)
     {
+
+        $quota = $this->input->post('quota') == "" ? 0 : $this->input->post('quota');
+        
+        if ($quota > 0){
+            $old_quota = $this->db->get_where('m_promo', ['id' => $this->input->post('id')])->row();
+            if(!is_null($old_quota)){
+                $new_quota = $quota + $old_quota->quota;
+            }else{
+                $new_quota = $quota + 0;
+            }
+        }else{
+            $new_quota = 0;
+        }
         if (is_null($image)) {
             $data = [
                 'jenis'             => $this->input->post('jenis'),
@@ -349,7 +362,7 @@ class M_master extends CI_Model
                 'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
                 'publish'           => strtotime($this->input->post('publish')),
-                'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
+                'quota'             => $new_quota,
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
                 'minimum_transaksi' => $this->input->post('minimum_transaksi'),
                 'desc'               => $this->input->post('desc'),
@@ -367,7 +380,7 @@ class M_master extends CI_Model
                 'maksimal_promo'    => $this->input->post('jenis') == 2 ? $this->input->post('maksimal_promo') : 0,
                 'expired'           => strtotime($this->input->post('expired')),
                 'publish'           => strtotime($this->input->post('publish')),
-                'quota'             => $this->input->post('quota') == "" ? null : $this->input->post('quota'),
+                'quota'             => $new_quota,
                 'jenis_pengguna'    => $this->input->post('jenis_pengguna'),
                 'minimum_transaksi' => $this->input->post('minimum_transaksi'),
                 'desc'               => $this->input->post('desc'),

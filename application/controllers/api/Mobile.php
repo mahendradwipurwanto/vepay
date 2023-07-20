@@ -256,6 +256,7 @@ class Mobile extends RestController
                         'is_google' => true,
                         'email' => $email,
                         'nama' => $nama,
+                        'phone' => $phone
                     ];
                 } else {
                     $params = [
@@ -796,6 +797,7 @@ class Mobile extends RestController
                     $val->maksimal_promo = (float) 0;
                 }
                 $val->value = (float) $val->value;
+                $val->minimum_transaksi = (float) $val->minimum_transaksi;
                 $val->quota = is_null($val->quota) ? 'unlimited' : $val->quota;
                 $val->jenis_pengguna_txt = $val->jenis_pengguna == 0 ? "Semua Pengguna" : "Penguna Baru";
             }
@@ -861,6 +863,14 @@ class Mobile extends RestController
                 ], 422);
             }
 
+            if ($promo->status == 0) {
+                // Set the response and exit
+                $this->response([
+                    'status' => false,
+                    'message' => "Mohon maaf promo sudah tidak berlaku"
+                ], 422);
+            }
+
             // cek minimum transaksi
             if ($promo->minimum_transaksi != 0 || $promo->minimum_transaksi != "") {
 
@@ -873,11 +883,10 @@ class Mobile extends RestController
                     // Set the response and exit
                     $this->response([
                         'status' => false,
-                        'message' => "Kurang {$kurang} transaksi untuk mengguunakan promo ini!"
+                        'message' => "Kurang {$kurang} transaksi untuk menggunakan promo ini!"
                     ], 422);
                 }
             }
-
 
             if (!is_null($promo->image)) {
                 $promo->image = base_url() . (str_replace(base_url(), "", $promo->image));

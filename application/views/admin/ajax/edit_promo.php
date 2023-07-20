@@ -119,8 +119,11 @@
 			<div class="mb-3">
 				<label for="inputSubject" class="form-label">Batas
 					penggunaan</label>
-				<input class="form-control form-control-sm" type="number" min="0" max="9999" onkeypress="return event.charCode >= 48" name="quota" value="<?= $promo->quota; ?>" placeholder="∞ Unlimited">
-				<small class="text-secondary">Kosongi untuk set ke tanpa bayas /
+				<div class="input-group input-group-sm flex-nowrap">
+					<span class="input-group-text" id="addon-quota"><?= $promo->quota; ?> + </span>
+					<input class="form-control form-control-sm" type="number" min="0" max="9999" onkeypress="return event.charCode >= 48" name="quota" placeholder="">
+				</div>
+				<small class="text-secondary">Kosongi untuk set ke tanpa batas /
 					unlimited.</small>
 			</div>
 		</div>

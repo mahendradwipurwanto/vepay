@@ -125,6 +125,10 @@ class M_website extends CI_Model
         $desc_referral_intro = $this->input->post('desc_referral_intro');
         $this->db->where('key', 'desc_referral_intro');
         $this->db->update('tb_settings', ['value' => $desc_referral_intro]);
+
+        $referral_desc_info = $this->input->post('referral_desc_info');
+        $this->db->where('key', 'referral_desc_info');
+        $this->db->update('tb_settings', ['value' => $referral_desc_info]);
         return true;
     }
     // mailer
