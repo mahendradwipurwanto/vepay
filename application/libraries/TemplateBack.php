@@ -29,6 +29,7 @@ class TemplateBack
 
     public function view($content, $data = null)
     {
+        $data['app_version'] = $this->getSettingsValue('app_version');
         $data['web_title'] = $this->getSettingsValue('web_title');
         $data['web_desc'] = $this->getSettingsValue('web_desc');
         $data['web_icon'] = $this->getSettingsValue('web_icon');

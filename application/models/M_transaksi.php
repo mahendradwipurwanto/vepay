@@ -145,7 +145,7 @@ class M_transaksi extends CI_Model
 
         $offset = $this->input->post('start');
         $limit  = $this->input->post('length'); // Rows display per page
-        $order  = $this->input->post('order')[0];
+        $order  = !is_null($this->input->post('order')) ? $this->input->post('order')[0] : ['column' => 0, 'dir' => 'desc'];
 
         $filter = [];
 
@@ -167,10 +167,10 @@ class M_transaksi extends CI_Model
 
         $this->db->select('a.*, b.email, c.*, d.metode, e.status as status_withdraw')
             ->from('tb_transaksi_referral a')
-            ->join('tb_auth b', 'a.user_id = b.user_id', 'inner')
-            ->join('tb_user c', 'a.user_id = c.user_id', 'inner')
             ->join('m_metode d', 'a.m_metode_id = d.id', 'left')
             ->join('tb_transaksi e', 'a.transaksi_id = e.id', 'left')
+            ->join('tb_auth b', 'a.type = 1 AND a.referral = b.user_id OR a.type = 2 AND a.user_id = b.user_id', 'left')
+            ->join('tb_user c', 'a.type = 1 AND a.referral = c.user_id OR a.type = 2 AND a.user_id = c.user_id', 'left')
             ->where(['a.is_deleted' => 0]);
 
         $this->db->where($filter);
@@ -208,7 +208,7 @@ class M_transaksi extends CI_Model
         // $this->db->limit($limit)->offset($offset);
 
         $models = $this->db->get()->result();
-
+        // ej($models);
         foreach ($models as $key => $val) {
 
             $btnDetail          = '<button onclick="showMdlTransDetail(\'' . $val->id . '\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
@@ -245,19 +245,19 @@ class M_transaksi extends CI_Model
                     case 0:
                         $status = '<span class="badge bg-secondary">Pending</span>';
                         break;
-    
+
                     case 1:
                         $status = '<span class="badge bg-success">Success</span>';
                         break;
-    
+
                     case 2:
                         $status = '<span class="badge bg-danger">Rejected</span>';
                         break;
-    
+
                     case 3:
                         $status = '<span class="badge bg-warning">Expired</span>';
                         break;
-    
+
                     default:
                         $status = '<span class="badge bg-secondary">Pending</span>';
                         break;

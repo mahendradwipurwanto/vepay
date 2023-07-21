@@ -521,8 +521,9 @@ class M_api extends CI_Model
         if (!is_null($referral_status)) {
             $cashback = 0;
             // check transaction condition on interest
-            if ($params['sub_total'] > $interest['interest_minimal']) {
-                $cashback = floor($params['sub_total'] / $interest['interest_transaksi']) * $interest['interest_cashback'];
+            if (($params['sub_total'] > $interest['interest_minimal'])|| $interest['interest_minimal'] == 0) {
+                // rumus quantity pembelian * cashback
+                $cashback = floor($detail['quantity'] / $interest['interest_quantity']) * $interest['interest_cashback'];
 
                 // set got cashback
                 $cashback_referral = [
@@ -639,12 +640,11 @@ class M_api extends CI_Model
         ];
     }
 
-    public function update_transaction($transaksi = [], $detail = [])
+    public function update_transaction($transaksi_id = null, $transaksi = [], $detail = [])
     {
 
-        $this->db->where('id', $transaksi['id']);
+        $this->db->where('id', $transaksi_id);
         $this->db->update('tb_transaksi', $transaksi);
-        $transaksi_id = $transaksi['id'];
         $status = ($this->db->affected_rows() != 1) ? false : true;
 
         if ($status === false) {
@@ -737,9 +737,19 @@ class M_api extends CI_Model
             ->join('tb_transaksi', 'tb_transaksi_referral.transaksi_id = tb_transaksi.id', 'inner')
             ->where(['tb_transaksi.status' => 2, 'tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
 
-        $model = $this->db->get()->row();
+        $cashback = $this->db->get()->row();
 
-        return is_null($model->nominal) ? 0 : $model->nominal;
+        $this->db->select_sum('tb_transaksi_referral.nominal')
+            ->from('tb_transaksi_referral')
+            ->join('tb_transaksi', 'tb_transaksi_referral.transaksi_id = tb_transaksi.id', 'inner')
+            ->where(['tb_transaksi.status' => 1, 'tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
+
+        $withdraw = $this->db->get()->row();
+
+        $cashback = is_null($cashback->nominal) ? 0 : $cashback->nominal;
+        $withdraw = is_null($withdraw->nominal) ? 0 : $withdraw->nominal;
+
+        return ($cashback - $withdraw >= 0 ? $cashback - $withdraw : 0);
     }
 
     public function getDetailReferral($user_id)

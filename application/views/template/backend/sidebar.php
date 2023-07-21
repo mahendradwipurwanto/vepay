@@ -31,7 +31,7 @@
   						<img class="navbar-brand-logo" src="<?= base_url(); ?><?= $web_logo; ?>" alt="Logo">
   					</a>
   					<a class="navbar-brand-badge">
-  						<span class="badge bg-soft-primary text-primary ms-2">v1.3.2</span>
+  						<span class="badge bg-soft-primary text-primary ms-2"><?= $app_version; ?></span>
   					</a>
   				</div>
   				<!-- End Default Logo -->

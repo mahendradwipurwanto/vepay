@@ -842,7 +842,7 @@ class Mobile extends RestController
                 // Set the response and exit
                 $this->response([
                     'status' => false,
-                    'message' => "Promo dengan {$kode} tersebut tidak tersedia"
+                    'message' => "Tidak dapat menggunakan promo"
                 ], 422);
             }
 
@@ -851,7 +851,8 @@ class Mobile extends RestController
                 // Set the response and exit
                 $this->response([
                     'status' => false,
-                    'message' => "Mohon maaf quota untuk promo ini telah mencapai batas"
+                    'message' => "Tidak dapat menggunakan promo"
+                    // 'message' => "Mohon maaf quota untuk promo ini telah mencapai batas"
                 ], 422);
             }
 
@@ -859,7 +860,8 @@ class Mobile extends RestController
                 // Set the response and exit
                 $this->response([
                     'status' => false,
-                    'message' => "Mohon maaf promo telah kadaluarsa"
+                    'message' => "Tidak dapat menggunakan promo"
+                    // 'message' => "Mohon maaf promo telah kadaluarsa"
                 ], 422);
             }
 
@@ -867,7 +869,8 @@ class Mobile extends RestController
                 // Set the response and exit
                 $this->response([
                     'status' => false,
-                    'message' => "Mohon maaf promo sudah tidak berlaku"
+                    'message' => "Tidak dapat menggunakan promo"
+                    // 'message' => "Mohon maaf promo sudah tidak berlaku"
                 ], 422);
             }
 
@@ -883,7 +886,8 @@ class Mobile extends RestController
                     // Set the response and exit
                     $this->response([
                         'status' => false,
-                        'message' => "Kurang {$kurang} transaksi untuk menggunakan promo ini!"
+                        'message' => "Tidak dapat menggunakan promo"
+                        // 'message' => "Kurang {$kurang} transaksi untuk menggunakan promo ini!"
                     ], 422);
                 }
             }
@@ -1436,31 +1440,98 @@ class Mobile extends RestController
             ], 422);
         }
 
-        $body_transaction = [
-            'id' => $this->put('id'),
-            'user_id' => $this->put('user_id'),
-            'account' => $this->put('akun_tujuan'),
-            'no_tujuan' => $this->put('no_tujuan'),
-            'no_rek' => $this->put('no_rek'),
-            'm_blockchain_id' => $this->put('blockchain'),
-            'm_vcc_id' => $this->put('id_vcc'),
-            'jenis_transaksi_vcc' => $this->put('jenis_transaksi_vcc'),
-            'm_metode_id' => $this->put('m_metode_id'),
-            'm_promo_id' => $this->put('m_promo_id'),
-            'sub_total' => $this->put('total_bayar'),
-            'modified_by' => $this->put('user_id'),
-            'modified_at' => time()
-        ];
+        $transaction = $this->M_api->getDetailTransaksi($this->put('id'));
 
-        $body_detail = [
-            'm_price_id' => $this->put('m_rate_id'),
-            'quantity' => $this->put('jumlah'),
-            'total' => $this->put('sub_total'),
-            'modified_by' => $this->put('user_id'),
-            'modified_at' => time()
-        ];
+        if (empty($transaction)) {
+            // Set the response and exit
+            $this->response([
+                'status' => false,
+                'message' => 'Transaksi dengan id tersebut tidak tersedia'
+            ], 404);
+        }
 
-        $transaksi = $this->M_api->update_transaction($body_transaction, $body_detail);
+        if (!is_null($this->put('user_id'))) {
+            $body_transaction["user_id"] = $this->put('user_id');
+        }
+
+        if (!is_null($this->put('akun_tujuan'))) {
+            $body_transaction["account"] = $this->put('akun_tujuan');
+        }
+
+        if (!is_null($this->put('no_tujuan'))) {
+            $body_transaction["no_tujuan"] = $this->put('no_tujuan');
+        }
+
+        if (!is_null($this->put('no_rek'))) {
+            $body_transaction["no_rek"] = $this->put('no_rek');
+        }
+
+        if (!is_null($this->put('blockchain'))) {
+            $body_transaction["m_blockchain_id"] = $this->put('blockchain');
+        }
+
+        if (!is_null($this->put('id_vcc'))) {
+            $body_transaction["m_vcc_id"] = $this->put('id_vcc');
+        }
+
+        if (!is_null($this->put('jenis_transaksi_vcc'))) {
+            $body_transaction["jenis_transaksi_vcc"] = $this->put('jenis_transaksi_vcc');
+        }
+
+        if (!is_null($this->put('m_metode_id'))) {
+            $body_transaction["m_metode_id"] = $this->put('m_metode_id');
+        }
+
+        if (!is_null($this->put('m_promo_id'))) {
+            $body_transaction["m_promo_id"] = $this->put('m_promo_id');
+        }
+
+        if (!is_null($this->put('total_bayar'))) {
+            $body_transaction["sub_total"] = $this->put('total_bayar');
+        }
+
+        $body_transaction['modified_by'] = $this->put('user_id');
+        $body_transaction['modified_at'] = time();
+
+        // $body_transaction = [
+        //     'id' => $this->put('id'),
+        //     'user_id' => $this->put('user_id'),
+        //     'account' => $this->put('akun_tujuan'),
+        //     'no_tujuan' => $this->put('no_tujuan'),
+        //     'no_rek' => $this->put('no_rek'),
+        //     'm_blockchain_id' => $this->put('blockchain'),
+        //     'm_vcc_id' => $this->put('id_vcc'),
+        //     'jenis_transaksi_vcc' => $this->put('jenis_transaksi_vcc'),
+        //     'm_metode_id' => $this->put('m_metode_id'),
+        //     'm_promo_id' => $this->put('m_promo_id'),
+        //     'sub_total' => $this->put('total_bayar'),
+        //     'modified_by' => $this->put('user_id'),
+        //     'modified_at' => time()
+        // ];
+
+        if (!is_null($this->put('m_price_id'))) {
+            $body_detail["m_price_id"] = $this->put('m_price_id');
+        }
+
+        if (!is_null($this->put('jumlah'))) {
+            $body_detail["quantity"] = $this->put('jumlah');
+        }
+
+        if (!is_null($this->put('sub_total'))) {
+            $body_detail["total"] = $this->put('sub_total');
+        }
+
+        $body_detail['modified_by'] = $this->put('user_id');
+        $body_detail['modified_at'] = time();
+
+        // $body_detail = [
+        //     'm_price_id' => $this->put('m_rate_id'),
+        //     'quantity' => $this->put('jumlah'),
+        //     'total' => $this->put('sub_total'),
+        //     'modified_by' => $this->put('user_id'),
+        //     'modified_at' => time()
+        // ];
+        $transaksi = $this->M_api->update_transaction($this->put('id'), $body_transaction, $body_detail);
 
         if ($transaksi['status'] === true) {
 

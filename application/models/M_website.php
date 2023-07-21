@@ -111,7 +111,7 @@ class M_website extends CI_Model
         $this->db->update('tb_settings', ['value' => $penggunaan_referral]);
 
         $interest = [
-            'interest_transaksi' => (float) $this->input->post('interest_transaksi'),
+            'interest_quantity' => (float) $this->input->post('interest_quantity'),
             'interest_cashback' => (float) $this->input->post('interest_cashback'),
             'interest_minimal' => (float) $this->input->post('interest_minimal')
         ];

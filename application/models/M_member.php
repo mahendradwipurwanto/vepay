@@ -235,9 +235,19 @@ class M_member extends CI_Model
             ->join('tb_transaksi', 'tb_transaksi_referral.transaksi_id = tb_transaksi.id', 'inner')
             ->where(['tb_transaksi.status' => 2, 'tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
 
-        $model = $this->db->get()->row();
+        $cashback = $this->db->get()->row();
 
-        return is_null($model->nominal) ? 0 : $model->nominal;
+        $this->db->select_sum('tb_transaksi_referral.nominal')
+            ->from('tb_transaksi_referral')
+            ->join('tb_transaksi', 'tb_transaksi_referral.transaksi_id = tb_transaksi.id', 'inner')
+            ->where(['tb_transaksi.status' => 1, 'tb_transaksi.is_deleted' => 0, 'tb_transaksi_referral.referral' => $user_id]);
+
+        $withdraw = $this->db->get()->row();
+
+        $cashback = is_null($cashback->nominal) ? 0 : $cashback->nominal;
+        $withdraw = is_null($withdraw->nominal) ? 0 : $withdraw->nominal;
+
+        return ($cashback - $withdraw >= 0 ? $cashback - $withdraw : 0);
     }
 
     function getDetailMember($user_id = null)
