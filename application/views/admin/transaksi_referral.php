@@ -2,7 +2,7 @@
 <div class="docs-page-header">
     <div class="row align-items-center">
         <div class="col-sm">
-            <h1 class="docs-page-header-title">Transaksi Referral
+            <h1 class="docs-page-header-title">Transaksi REFERRAL
             </h1>
             <p class="docs-page-header-text">Kelola semua informasi mengenai transaksi referral anda.</p>
         </div>
@@ -79,10 +79,31 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mdlDeleteLabel">Detail Transaksi Referral</h5>
+                <h5 class="modal-title" id="mdlDeleteLabel">Detail Transaksi REFERRAL</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalTransContent">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="mdlTransDetailRef" tabindex="-1" aria-labelledby="mdlDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mdlDeleteLabel">Detail Transaksi pembelian asal cashback</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert bg-soft-primary">
+                    <span>Detail transaksi ini, merupakan transaksi asal dari cashback yang didapat. Anda dapat menggunakan detail transaksi pembelian ini, untuk memvalidasi apakah cashback referral valid atau tidak</span>
+                </div>
+                <div id="modalTransContentRef">
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -113,7 +134,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mdlDeleteLabel">Verifikasi Transaksi Referral</h5>
+                <h5 class="modal-title" id="mdlDeleteLabel">Verifikasi Transaksi REFERRAL</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -233,6 +254,25 @@
             },
             success: function(data) {
                 $("#modalTransContent").html(data);
+            }
+        });
+    }
+
+    const showMdlTransRefDetail = id => {
+        $("#modalTransContent").html(
+            `<center class="py-5"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sedang memuat ...</center>`
+        );
+
+        $('#mdlTransDetailRef').modal('show')
+
+        jQuery.ajax({
+            url: "<?= site_url('ajax/transaksi/getDetailTrans') ?>",
+            type: 'POST',
+            data: {
+                transaksi_id: id
+            },
+            success: function(data) {
+                $("#modalTransContentRef").html(data);
             }
         });
     }

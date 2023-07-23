@@ -239,7 +239,8 @@ class M_api extends CI_Model
             ->from('m_promo a')
             ->where(['a.is_deleted' => 0, 'a.jenis_pengguna !=' => 2])
             ->where('a.publish <=', time())
-            ->where('a.expired >=', time());
+            ->where('a.expired >=', time())
+            ->where('a.status', 1);
 
         $this->db->order_by('a.nama ASC');
 
@@ -781,7 +782,7 @@ class M_api extends CI_Model
             ->from('tb_referral')
             ->join('tb_auth', 'tb_referral.user_id = tb_auth.user_id', 'inner')
             ->join('tb_user', 'tb_referral.user_id = tb_user.user_id', 'inner')
-            ->where(['tb_referral.is_deleted' => 0, 'tb_auth.is_deleted' => 0, 'tb_referral.referral' => $user_id]);
+            ->where(['tb_referral.is_deleted' => 0, 'tb_auth.is_deleted' => 0, 'tb_referral.referral' => $user_id, 'tb_referral.user_id !=' => $user_id]);
 
         $models = $this->db->get()->result();
 

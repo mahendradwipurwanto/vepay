@@ -2,9 +2,9 @@
 <div class="docs-page-header">
     <div class="row align-items-center">
         <div class="col-sm">
-            <h1 class="docs-page-header-title">Referral</h1>
+            <h1 class="docs-page-header-title">REFERRAL</h1>
             </h1>
-            <p class="docs-page-header-text">Manage Referral of your website</p>
+            <p class="docs-page-header-text">Manage REFERRAL of your website</p>
         </div>
     </div>
 </div>
@@ -16,7 +16,7 @@
             <div class="card-body">
                 <form action="<?= site_url('api/website/ubahReferral'); ?>" method="post" class="js-validate needs-validation" novalidate enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="inputWebsiteTitle" class="form-label">Referral Title <small class="text-danger">*</small></label>
+                        <label for="inputWebsiteTitle" class="form-label">REFERRAL Title <small class="text-danger">*</small></label>
                         <input type="text" id="inputWebsiteTitle" class="form-control form-control-sm" name="referral_title" value="<?= $referral_title; ?>" required>
                     </div>
                     <div class="mb-3">
@@ -30,9 +30,9 @@
                         <small class="text-muted">Max file size 1Mb</small>
                     </div>
                     <div class="mb-3">
-                        <label for="inputWebsiteTitle" class="form-label">Referral Interest <small class="text-danger">*</small></label>
+                        <label for="inputWebsiteTitle" class="form-label">REFERRAL Interest <small class="text-danger">*</small></label>
                         <div class="alert bg-soft-primary">
-                            <p class="my-0">Referral interest, adalah pengaturan komponen rumus perhitungan cashback yang didapat oleh pengguna yang memiliki referral, saat teman mereka melakukan transaksi dan transaksi tersebut berhasil diverifikasi oleh admin.</p>
+                            <p class="my-0">REFERRAL interest, adalah pengaturan komponen rumus perhitungan cashback yang didapat oleh pengguna yang memiliki referral, saat teman mereka melakukan transaksi dan transaksi tersebut berhasil diverifikasi oleh admin.</p>
                             <br>
                             <p class="my-0 fw-bolder">Rumus: <span class="fw-bold"><span class="text-success">quantity pembelian</span> * <span class="text-success">nominal cashback</span></span></p>
                         </div>
@@ -40,8 +40,8 @@
                             <div class="col-6">
                                 <label for="inputWebsiteTitle" class="form-label fw-normal">Quantity Transaksi <small class="text-danger">*</small></label>
                                 <div class="input-group input-group-sm mb-3">
-                                    <span class="input-group-text" id="inputMailerMode">Rp</span>
                                     <input type="number" id="inputWebsiteTitle" class="form-control form-control-sm" name="interest_quantity" value="<?= isset($referral_interest['interest_quantity']) ? $referral_interest['interest_quantity'] : 0; ?>" required>
+                                    <span class="input-group-text" id="inputMailerMode">quantity</span>
                                 </div>
                                 <small class="text-secondary">Jumlah tiap quantity yang akan dikalikan ke cashback</small>
                             </div>
@@ -66,7 +66,7 @@
                                 <small class="text-secondary">Jumlah minimal transaksi agar mendapatkan cashback (0 untuk selalu mendapatkan cashback)</small>
                             </div>
                             <div class="col-6">
-                                <label class="form-label fw-normal" for="inputWebDesc">Minimum penarikan saldo Referral <small class="text-danger">*</small></label>  
+                                <label class="form-label fw-normal" for="inputWebDesc">Minimal penarikan saldo REFERRAL <small class="text-danger">*</small></label>  
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputMailerMode">Rp</span>
                                     <input type="number" id="inputWebsiteTitle" class="form-control form-control-sm" name="referral_withdraw_minimum" value="<?= isset($referral_withdraw_minimum) ? $referral_withdraw_minimum : 0; ?>" required>
@@ -80,16 +80,16 @@
                         <textarea type="text" id="inputWebsitePenggunaan" class="form-control editor" rows="3" name="penggunaan_referral" placeholder="Penggunaan" required><?= $penggunaan_referral; ?></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="inputWebDesc">Referral Description <small class="text-danger">*</small></label>
-                        <textarea type="text" id="inputWebDesc" class="form-control editor" rows="4" name="referral_description" placeholder="Referral Description" required><?= $referral_description; ?></textarea>
+                        <label class="form-label" for="inputWebDesc">REFERRAL Description <small class="text-danger">*</small></label>
+                        <textarea type="text" id="inputWebDesc" class="form-control editor" rows="4" name="referral_description" placeholder="REFERRAL Description" required><?= $referral_description; ?></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="inputWebDesc">Referral Description Intro <small class="text-danger">*</small></label>
-                        <textarea type="text" id="inputWebDescReferral" class="form-control editor" rows="4" name="desc_referral_intro" placeholder="Referral Description" required><?= $desc_referral_intro; ?></textarea>
+                        <label class="form-label" for="inputWebDesc">REFERRAL Description Intro <small class="text-danger">*</small></label>
+                        <textarea type="text" id="inputWebDescReferral" class="form-control editor" rows="4" name="desc_referral_intro" placeholder="REFERRAL Description" required><?= $desc_referral_intro; ?></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="inputWebDesc">Referral Description Info <small class="text-danger">*</small></label>
-                        <textarea type="text" id="inputWebDescReferralInfo" class="form-control editor" rows="4" name="referral_desc_info" placeholder="Referral Description" required><?= $referral_desc_info; ?></textarea>
+                        <label class="form-label" for="inputWebDesc">REFERRAL Description Info <small class="text-danger">*</small></label>
+                        <textarea type="text" id="inputWebDescReferralInfo" class="form-control editor" rows="4" name="referral_desc_info" placeholder="REFERRAL Description" required><?= $referral_desc_info; ?></textarea>
                     </div>
                     <div class="card-footer px-0">
                         <button type="submit" class="btn btn-primary btn-sm float-end">Save Changes</button>

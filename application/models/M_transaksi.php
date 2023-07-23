@@ -211,13 +211,21 @@ class M_transaksi extends CI_Model
         // ej($models);
         foreach ($models as $key => $val) {
 
+            if(!is_null($val->transaksi_id)){
+                if($this->checkTransactionReferral($val->transaksi_id) > 0){
+                    unset($models[$key]);
+                    continue;
+                }
+            }
+
+            $btnDetailRef          = '<button onclick="showMdlTransRefDetail(\'' . $val->transaksi_id . '\')" class="btn btn-soft-success btn-icon btn-sm me-2"><i class="bi-receipt"></i></button>';
             $btnDetail          = '<button onclick="showMdlTransDetail(\'' . $val->id . '\')" class="btn btn-soft-info btn-icon btn-sm me-2"><i class="bi-eye"></i></button>';
             $btnVerif           = '<button onclick="showMdlTransVerif(\'' . $val->user_id . '\', \'' . $val->id . '\', \'' . base_url() . $val->bukti . '\')" class="btn btn-soft-primary btn-icon btn-sm me-2"><i class="bi-check"></i></button>';
             $btnHapus          = '<button onclick="showMdlTransDelete(\'' . $val->id . '\', \'' . $val->kode . '\')" class="btn btn-soft-danger btn-icon btn-sm me-2"><i class="bi-trash"></i></button>';
 
             $status             = '<span class="badge bg-secondary">Pending</span>';
             if ($val->type == 1) {
-                $models[$key]->action = $btnDetail;
+                $models[$key]->action = $btnDetail.$btnDetailRef;
                 switch ($val->status_withdraw) {
                     case 1:
                         $status = '<span class="badge bg-secondary">Pending</span>';
@@ -291,6 +299,10 @@ class M_transaksi extends CI_Model
 
         $models = array_slice($models, $offset, $limit);
         return ['records' => array_values($models), 'totalDisplayRecords' => count($models), 'totalRecords' => $totalRecords];
+    }
+
+    function checkTransactionReferral($id_transaksi = null){
+        return $this->db->get_where('tb_transaksi', ['id' => $id_transaksi, 'is_deleted' => 1])->num_rows();
     }
 
     function getProductTransaksi($id_transaksi = null)

@@ -2,9 +2,9 @@
 <div class="docs-page-header">
 	<div class="row align-items-center">
 		<div class="col-sm">
-			<h1 class="docs-page-header-title">Referral
+			<h1 class="docs-page-header-title">REFERRAL
 			</h1>
-			<p class="docs-page-header-text">Kelola daftar referral dari member anda.</p>
+			<p class="docs-page-header-text">Kelola daftar REFERRAL dari member anda.</p>
 		</div>
 	</div>
 </div>
@@ -14,7 +14,7 @@
 	<div class="col-12">
 		<div class="card">
 			<div class="card-header py-3">
-				<h4 class="card-header-title">Filter data referral</h4>
+				<h4 class="card-header-title">Filter data REFERRAL</h4>
 			</div>
 			<div class="card-body">
 				<div class="row">
@@ -44,7 +44,7 @@
 				</div>
 			</div>
 			<div class="card-header py-3">
-				<h4 class="card-header-title">Data referral</h4>
+				<h4 class="card-header-title">Data REFERRAL</h4>
 			</div>
 			<div class="card-body">
 				<!-- End Row -->
@@ -54,7 +54,7 @@
 							<th scope="col">No</th>
 							<!-- <th scope="col"></th> -->
 							<th scope="col">Member</th>
-							<th scope="col">Referral</th>
+							<th scope="col">REFERRAL</th>
 							<th scope="col">Saldo</th>
 							<th scope="col">Bergabung</th>
 						</tr>

@@ -70,7 +70,7 @@
 							<!-- End Col -->
 
 							<div class="col-sm-8 mb-2 mb-sm-0">
-								<span><?= date("d F Y", $transaksi->created_at);?></span>
+								<span><?= date("d F Y, H:i:s", $transaksi->created_at);?></span>
 							</div>
 							<!-- End Col -->
 						</div>
